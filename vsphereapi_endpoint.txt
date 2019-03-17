@@ -1,0 +1,74 @@
+
+KEYSTONE_IP='172.30.126.51'
+USE_PWD='123456'
+
+## add user
+[root@controller ~]# openstack user create vsphere-api --password=$USE_PWD --email="vsphere-api@localhost" --enable
++-----------+----------------------------------+
+| Field     | Value                            |
++-----------+----------------------------------+
+| domain_id | default                          |
+| email     | vsphere-api@localhost            |
+| enabled   | True                             |
+| id        | 9f93e42afbd94c1883845ee20685e37c |
+| name      | vsphere-api                      |
++-----------+----------------------------------+
+
+## user add role
+[root@controller ~]# openstack role add --user vsphere-api --project services admin
+
+## add service
+[root@controller ~]# openstack service create vsphere-api --name vsphere-api --description "vCenter reset interface service"
++-------------+----------------------------------+
+| Field       | Value                            |
++-------------+----------------------------------+
+| description | vCenter reset interface service  |
+| enabled     | True                             |
+| id          | b435dfe73d824f67a0898494d54c4b08 |
+| name        | vsphere-api                      |
+| type        | vsphere-api                      |
++-------------+----------------------------------+
+
+## add endpoint
+[root@controller ~]# openstack endpoint create vsphere-api --region RegionOne --publicurl http://${KEYSTONE_IP}:9886/v1.0/%\(tenant_id\)s 
++--------------+----------------------------------------------+
+| Field        | Value                                        |
++--------------+----------------------------------------------+
+| enabled      | True                                         |
+| id           | eee2d7a52ac04238b52ee7c0fc9311eb             |
+| interface    | public                                       |
+| region       | RegionOne                                    |
+| region_id    | RegionOne                                    |
+| service_id   | b435dfe73d824f67a0898494d54c4b08             |
+| service_name | vsphere-api                                  |
+| service_type | vsphere-api                                  |
+| url          | http://172.30.126.51:9886/v1.0/%(tenant_id)s |
++--------------+----------------------------------------------+
+[root@controller ~]# openstack endpoint create vsphere-api --region RegionOne --adminurl http://${KEYSTONE_IP}:9886/v1.0/%\(tenant_id\)s 
++--------------+----------------------------------------------+
+| Field        | Value                                        |
++--------------+----------------------------------------------+
+| enabled      | True                                         |
+| id           | c8955230e868414592ab65100efca659             |
+| interface    | admin                                        |
+| region       | RegionOne                                    |
+| region_id    | RegionOne                                    |
+| service_id   | b435dfe73d824f67a0898494d54c4b08             |
+| service_name | vsphere-api                                  |
+| service_type | vsphere-api                                  |
+| url          | http://172.30.126.51:9886/v1.0/%(tenant_id)s |
++--------------+----------------------------------------------+
+[root@controller ~]# openstack endpoint create vsphere-api --region RegionOne --internalurl http://${KEYSTONE_IP}:9886/v1.0/%\(tenant_id\)s 
++--------------+----------------------------------------------+
+| Field        | Value                                        |
++--------------+----------------------------------------------+
+| enabled      | True                                         |
+| id           | a4895d32237744789579180c600700fc             |
+| interface    | internal                                     |
+| region       | RegionOne                                    |
+| region_id    | RegionOne                                    |
+| service_id   | b435dfe73d824f67a0898494d54c4b08             |
+| service_name | vsphere-api                                  |
+| service_type | vsphere-api                                  |
+| url          | http://172.30.126.51:9886/v1.0/%(tenant_id)s |
++--------------+----------------------------------------------+
