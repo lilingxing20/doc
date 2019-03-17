@@ -1,0 +1,238 @@
+openstack集群更改网络配置
+
+# 现有节点网卡配置
+## 角色: compute + ceph-mon
+hostname    eno2            br-ironic       team0
+con23       172.30.126.23   172.30.250.23   192.168.100.23
+con24       172.30.126.24   172.30.250.24   192.168.100.24
+con25       172.30.126.25   172.30.250.25   192.168.100.25
+## 角色: control + ceph-osd
+con26       172.30.126.26   172.30.250.26   192.168.100.26
+con27       172.30.126.27   172.30.250.27   192.168.100.27
+con28       172.30.126.28   172.30.250.28   192.168.100.28
+
+172.30.126.30 vip
+
+# 新规划节点网卡配置
+## 角色: compute + ceph-mon
+hostname    eno2            br-ironic       team0
+con23       172.30.126.33   172.30.250.33   192.168.100.33
+con24       172.30.126.34   172.30.250.34   192.168.100.34
+con25       172.30.126.35   172.30.250.35   192.168.100.35
+## 角色: control + ceph-osd                               
+con26       172.30.126.36   172.30.250.36   192.168.100.36
+con27       172.30.126.37   172.30.250.37   192.168.100.37
+con28       172.30.126.38   172.30.250.38   192.168.100.38
+
+172.30.126.40 vip
+
+
+# 手工操作更新节点网卡配置
+0. 备份数据
+备份 monmap（任一 mon 节点执行）
+ceph mon dump > monmap.bak
+or
+ceph mon getmap -o monmap.map
+
+备份 osdmap（任一 mon 节点执行）
+ceph osd dump > osdmap.bak
+
+备份 pcs 集群（任一节点执行）
+pcs cluster cib > pcs_cluster.cib
+
+备份 openstack 集群配置文件（每一节点执行）
+cp -r /etc /etc.bak
+
+备份 galare 数据库集群（每一节点执行）
+cp -r /var/lib/mysql /var/lib/mysql.bak
+
+
+1. 停止服务
+## 角色: control + ceph-osd
+三控任一节点执行: pcs cluster stop --all
+每一节点执行:
+service ceph stop osd
+
+## 角色: compute + ceph-mon
+每一节点执行: 
+systemctl stop openstack-nova-compute
+service  ceph stop mon
+
+## 注意正式环境备份
+
+2. 更新网卡配置
+## 角色: compute + ceph-mon / control + ceph-osd
+每一节点执行:
+sed -i -e 's/172.30.126.2/172.30.126.3/' -e 's/172.30.126.354/172.30.126.254/' /etc/sysconfig/network-scripts/ifcfg-eno2
+sed -i 's/172.30.250.2/172.30.250.3/' /etc/sysconfig/network-scripts/ifcfg-br-ironic && ifdown br-ironic && ifup br-ironic && ifdown eno1 && ifup eno1
+sed -i 's/192.168.100.2/192.168.200.3/' /etc/sysconfig/network-scripts/ifcfg-team0 && ifdown team0 && ifup team0
+
+如果team网卡不通，可以重新下对应的物理网卡
+ifdown ens2f0 && ifup ens2f0 && ifdown ens2f1 && ifup ens2f1
+ifdown ens1f0 && ifup ens1f0 && ifdown ens1f1 && ifup ens1f1
+
+sed -i 's/172.30.126.2/172.30.126.3/' /etc/hosts
+
+
+3. 更新服务使用的 ip 配置信息
+## 角色: compute + ceph-mon / control + ceph-osd
+### ceph-mon (sed -i -e 's/192.168.100.2/192.168.200.3/g' -e 's/192.168.100.0/192.168.200.0/' /etc/ceph/ceph.conf)
+/etc/ceph/ceph.conf:mon_host = 192.168.100.25,192.168.100.24,192.168.100.23
+/etc/ceph/ceph.conf:cluster_network = 192.168.100.0/24
+/etc/ceph/ceph.conf:public_network = 192.168.100.0/24
+
+## 角色: compute + ceph-mon
+每一节点执行:
+### nova-compute (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/nova/nova.conf)
+/etc/nova/nova.conf:my_ip=172.30.126.23
+/etc/nova/nova.conf:rabbit_hosts=172.30.126.27,172.30.126.26,172.30.126.28
+/etc/nova/nova.conf:vncserver_proxyclient_address=172.30.126.23
+### neutron ovs agent (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/neutron/neutron.conf)
+/etc/neutron/neutron.conf:bind_host = 172.30.126.23
+/etc/neutron/neutron.conf:rabbit_hosts = 172.30.126.27,172.30.126.26,172.30.126.28
+
+## 角色: control + ceph-osd
+每一节点执行:
+### swift (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/swift/proxy-server.conf)
+/etc/swift/proxy-server.conf:bind_ip = 172.30.126.26
+/etc/swift/proxy-server.conf:memcache_servers = 172.30.126.27:11211,172.30.126.26:11211,172.30.126.28:11211
+### httpd (sed -i 's/172.30.126.2/172.30.126.3/' /etc/httpd/conf/ports.conf /etc/httpd/conf.d/15-default.conf /etc/httpd/conf.d/10-horizon_vhost.conf /etc/httpd/conf.d/10-keystone_wsgi_main.conf  /etc/httpd/conf.d/10-keystone_wsgi_admin.conf)
+/etc/httpd/conf/ports.conf:Listen 172.30.126.26:35357
+/etc/httpd/conf/ports.conf:Listen 172.30.126.26:5000
+/etc/httpd/conf/ports.conf:Listen 172.30.126.26:80
+/etc/httpd/conf.d/15-default.conf:<VirtualHost 172.30.126.26:80>
+/etc/httpd/conf.d/10-horizon_vhost.conf:<VirtualHost 172.30.126.26:80>
+/etc/httpd/conf.d/10-keystone_wsgi_main.conf:<VirtualHost 172.30.126.26:5000>
+/etc/httpd/conf.d/10-keystone_wsgi_admin.conf:<VirtualHost 172.30.126.26:35357>
+### galera (sed -i 's/172.30.126.2/172.30.126.3/' /etc/my.cnf.d/galera.cnf)
+/etc/my.cnf.d/galera.cnf:bind-address = 172.30.126.26
+### rabbitmq (sed -i 's/172.30.126.2/172.30.126.3/' /etc/rabbitmq/rabbitmq.config /etc/rabbitmq/rabbitmq-env.conf)
+/etc/rabbitmq/rabbitmq.config:      ,{ip, "172.30.126.26"}
+/etc/rabbitmq/rabbitmq-env.conf:NODE_IP_ADDRESS=172.30.126.26
+### haproxy 注意根据实际环境修改
+(sed -i -e 's/172.30.126.2/172.30.126.3/' -e 's/172.30.250.2/172.30.250.3/' /etc/haproxy/haproxy.cfg)
+### storage_api (sed -i 's/172.30.126.2/172.30.126.3/' /etc/storage-api/storage_api.conf)
+/etc/storage-api/storage_api.conf:bind_host = 172.30.126.26
+### glance (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/glance/glance-registry.conf /etc/glance/glance-api.conf)
+/etc/glance/glance-registry.conf:bind_host = 172.30.126.26
+/etc/glance/glance-api.conf:bind_host = 172.30.126.26
+/etc/glance/glance-api.conf:rabbit_hosts = 172.30.126.27,172.30.126.26,172.30.126.28
+### dashboard (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/openstack-dashboard/local_settings)
+/etc/openstack-dashboard/local_settings:        'LOCATION': [ '172.30.126.27:11211','172.30.126.26:11211','172.30.126.28:11211', ],
+###  neutron (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/neutron/neutron.conf /etc/neutron/metadata_agent.ini)
+/etc/neutron/neutron.conf:bind_host = 172.30.126.26
+/etc/neutron/neutron.conf:rabbit_hosts = 172.30.126.27,172.30.126.26,172.30.126.28
+/etc/neutron/metadata_agent.ini:nova_metadata_ip = 172.30.126.26
+### iscsi (sed -i 's/172.30.126.2/172.30.126.3/' /etc/target/saveconfig.json)
+/etc/target/saveconfig.json:              "ip_address": "172.30.126.26", 
+/etc/target/saveconfig.json:              "ip_address": "172.30.126.26", 
+/etc/target/saveconfig.json:              "ip_address": "172.30.126.26", 
+/etc/target/saveconfig.json:              "ip_address": "172.30.126.26", 
+/etc/target/saveconfig.json:              "ip_address": "172.30.126.26", 
+### cinder (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/cinder/cinder.conf)
+/etc/cinder/cinder.conf:osapi_volume_listen = 172.30.126.26
+/etc/cinder/cinder.conf:rabbit_hosts = 172.30.126.27,172.30.126.26,172.30.126.28
+/etc/cinder/cinder.conf:iscsi_ip_address=172.30.126.26
+### ironic (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/ironic/ironic.conf)
+/etc/ironic/ironic.conf:rabbit_hosts=172.30.126.27,172.30.126.26,172.30.126.28
+### ironic (sed -i 's/172.30.250.2/172.30.250.3/' /etc/ironic/ironic.conf)
+/etc/ironic/ironic.conf:host_ip=172.30.250.26
+/etc/ironic/ironic.conf:api_url=http://172.30.250.26:6385
+/etc/ironic/ironic.conf:tftp_server=172.30.250.26
+### nova (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/nova/nova.conf)
+/etc/nova/nova.conf:osapi_compute_listen=172.30.126.26
+/etc/nova/nova.conf:metadata_listen=172.30.126.26
+/etc/nova/nova.conf:novncproxy_host=172.30.126.26
+/etc/nova/nova.conf:osapi_volume_listen=172.30.126.26
+/etc/nova/nova.conf:memcache_servers=172.30.126.27:11211,172.30.126.26:11211,172.30.126.28:11211
+/etc/nova/nova.conf:memcached_servers=172.30.126.27:11211,172.30.126.26:11211,172.30.126.28:11211
+/etc/nova/nova.conf:rabbit_hosts=172.30.126.27,172.30.126.26,172.30.126.28
+/etc/nova/nova.conf:novncproxy_base_url=http://172.30.126.26:6080/vnc_auto.html
+### heat (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/heat/heat.conf)
+/etc/heat/heat.conf:bind_host = 172.30.126.26
+/etc/heat/heat.conf:bind_host = 172.30.126.26
+/etc/heat/heat.conf:bind_host = 172.30.126.26
+/etc/heat/heat.conf:rabbit_hosts = 172.30.126.27,172.30.126.26,172.30.126.28
+### keystone (sed -i 's/172.30.126.2/172.30.126.3/g' /etc/keystone/keystone.conf)
+/etc/keystone/keystone.conf:admin_bind_host=172.30.126.26
+/etc/keystone/keystone.conf:public_bind_host=172.30.126.26
+/etc/keystone/keystone.conf:rabbit_hosts = 172.30.126.27,172.30.126.26,172.30.126.28
+
+检查是否有未更新的ip
+示例命令: grep  172.30.126.2 /etc/ -r
+
+
+更新服务使用的 vip 配置信息
+## 角色: compute + ceph-mon
+### nova-cmopute (sed -i 's/172.30.126.30/172.30.126.40/' /etc/nova/nova.conf)
+/etc/nova/nova.conf:api_servers=http://172.30.126.30:9292
+/etc/nova/nova.conf:url=http://172.30.126.30:9696
+/etc/nova/nova.conf:auth_url=http://172.30.126.30:35357/v3
+/etc/nova/nova.conf:novncproxy_base_url=http://172.30.126.30:6080/vnc_auto.html
+
+## 角色: control + ceph-osd
+sed -i 's/172.30.126.30/172.30.126.40/' /etc/swift/proxy-server.conf /etc/haproxy/haproxy.cfg /etc/storage-api/storage_api.conf /etc/glance/glance-cache.conf /etc/glance/glance-registry.conf /etc/glance/glance-swift.conf /etc/glance/glance-api.conf /etc/openstack-dashboard/local_settings /etc/neutron/neutron.conf /etc/neutron/api-paste.ini /etc/cinder/cinder.conf /etc/ironic/ironic.conf /etc/nova/nova.conf /etc/heat/heat.conf /etc/keystone/keystone.conf
+### 快捷命令: sed -i 's/172.30.126.30/172.30.126.40/' $(grep  172.30.126.30 /etc/ -r | awk -F":" '{print $1}' | uniq)
+
+
+更新 openrc 文件
+## 角色: control + ceph-osd
+sed -i 's/172.30.126.30/172.30.126.40/' /root/openrc_main /root/openrc_admin
+
+
+4. 修改ceph-mon
+monmaptool --fsid <457eb676-33da-42ec-9a8c-9293d545c337> --create /tmp/monmap
+monmaptool --add con23 192.168.200.33:6789 --add con24 192.168.200.34:6789 --add con25 192.168.200.35:6789 /tmp/monmap
+ceph-mon -i con23 --inject-monmap /tmp/monmap
+ceph-mon -i con24 --inject-monmap /tmp/monmap
+ceph-mon -i con25 --inject-monmap /tmp/monmap
+
+
+5. 启动服务(注意顺序)
+## 角色: compute + ceph-mon
+每一节点执行: service ceph start osd
+## 角色: control + ceph-osd
+每一节点执行: service  ceph start mon
+
+## 角色: control + ceph-osd
+三控任一节点执行: pcs cluster start --all
+## 角色: compute + ceph-mon
+每一节点执行: systemctl start openstack-nova-compute
+
+
+6. 更改 vip
+pcs resource create ip-172.30.126.40 ocf:heartbeat:IPaddr2 ip=172.30.126.40 cidr_netmask=32 op start interval=0s timeout=20s stop interval=0s timeout=20s monitor interval=10s timeout=20s
+pcs constraint order ip-172.30.126.40 then start haproxy-clone kind=Optional
+pcs constraint colocation add slave ip-172.30.126.40 with master haproxy-clone INFINITY
+pcs constraint colocation add openstack-cinder-volume with ip-172.30.126.40 INFINITY
+pcs resource delete ip-172.30.126.30
+
+或者
+pcs cluster cib /tmp/pcs_vip
+sed -i 's/172.30.126.30/172.30.126.40/g' /tmp/pcs_vip
+pcs cluster cib-push /tmp/pcs_vip
+
+
+7. 数据库启动后，修改endpoint表
+修改endpoint（更改数据库记录）,以下操作示例：
+mysql -e 'use keystone; select * from endpoint;'
+mysql -e 'use keystone; update endpoint set url=replace(url, "172.30.126.30", "172.30.126.40");'
+
+如果有 boot-from-volume 方式创建的虚机，需要修改 nova 库中 block_device_mapping 表
+select * from block_device_mapping where connection_info like '%"192.168.100.23", "192.168.100.24", "192.168.100.25"%';
+update  block_device_mapping set connection_info=replace(connection_info, '"192.168.100.23", "192.168.100.24", "192.168.100.25"', '"192.168.200.33", "192.168.200.34", "192.168.200.35"') where connection_info like '%"192.168.100.23", "192.168.100.24", "192.168.100.25"%';
+select * from block_device_mapping where connection_info like '%"172.30.126.23"%'
+update block_device_mapping set connection_info=replace(connection_info, '"172.30.126.23"', '"172.30.126.33"') where connection_info like '%"172.30.126.23"%'
+select * from block_device_mapping where connection_info like '%"172.30.126.24"%'
+update block_device_mapping set connection_info=replace(connection_info, '"172.30.126.24"', '"172.30.126.34"') where connection_info like '%"172.30.126.24"%'
+select * from block_device_mapping where connection_info like '%"172.30.126.25"%'
+update block_device_mapping set connection_info=replace(connection_info, '"172.30.126.25"', '"172.30.126.35"') where connection_info like '%"172.30.126.25"%'
+
+
+8. 检查服务状态，测试接口
+pcs status
+openstack-status
+rabbitctl cluster_status
+nova service-list
+cinder service-list
+neutron agent-list
