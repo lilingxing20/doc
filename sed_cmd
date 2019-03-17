@@ -1,0 +1,58 @@
+1. 删除倒数一行最简单：
+seq 1 5 |sed -n ':a;N;P;D;t a'
+或者
+seq 1 5 | sed '$d'
+seq 1 5 | sed -n '$q;p'
+
+2. 删除倒数两行：
+seq 1 5 | sed -n '1{N;};:a;N;P;D;t a'
+seq 1 5 | sed 'N;$!P;$!D;$d'
+
+3. 删除倒数三行：
+seq 1 5 |sed -n '1{N;N;};:a;N;P;D;t a'
+
+4. 其他依次类推，增加N的数量就行。
+seq 1 5 |sed -n '1{N;N;..n};:a;N;P;D;t a'
+or
+lines_num=$(sed -n '$=' file)
+sed $(($lines_num-n+1)),${lines_num}d file
+
+5. 其他示例
+5.1 输出(p)
+[root@ansible-node ~]# seq 1 5 | sed '$p'
+1
+2
+3
+4
+5
+5
+[root@ansible-node ~]# seq 1 5 | sed '$!p'
+1
+1
+2
+2
+3
+3
+4
+4
+5
+
+5.2 删除(d)
+[root@ansible-node ~]# seq 1 5 | sed '$p'
+1
+2
+3
+4
+5
+5
+[root@ansible-node ~]# seq 1 5 | sed '$!p'
+1
+1
+2
+2
+3
+3
+4
+4
+5
+
