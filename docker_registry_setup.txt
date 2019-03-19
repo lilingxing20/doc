@@ -1,0 +1,98 @@
+1、什么是Docker私有仓库Registry
+
+官方的Docker hub是一个用于管理公共镜像的好地方，我们可以在上面找到我们想要的镜像，也可以把我们自己的镜像推送上去。但是，有时候我们的服务器无法访问互联网，或者你不希望将自己的镜像放到公网当中，那么你就需要Docker Registry，它可以用来存储和管理自己的镜像。
+
+
+2、部署Registry
+
+官方安装文档地址
+https://docs.docker.com/engine/installation/linux/centos/
+
+很简单，只需要运行一个Registry容器即可（包括下载镜像和启动容器、服务）
+[root@docker01 ~]# docker run -d -p 5000:5000 -v /data/registry:/var/lib/registry --name registry --restart=always registry
+Unable to find image 'registry:latest' locally
+latest: Pulling from library/registry
+d6a5679aa3cf: Pull complete 
+ad0eac849f8f: Pull complete 
+2261ba058a15: Pull complete 
+f296fda86f10: Pull complete 
+bcd4a541795b: Pull complete 
+Digest: sha256:5a156ff125e5a12ac7fdec2b90b7e2ae5120fa249cf62248337b6d04abc574c8
+Status: Downloaded newer image for registry:latest
+5673b17d9895c99a88c1d1e36dce40c15cb5b4470763b74b94026e4a19fd0248
+[root@docker01 ~]# docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                    NAMES
+5673b17d9895        registry            "/entrypoint.sh /etc…"   About a minute ago   Up About a minute   0.0.0.0:5000->5000/tcp   registry
+
+查看镜像信息
+[root@docker01 ~]# curl http://127.0.0.1:5000/v2/_catalog
+{"repositories":[]}
+
+
+3. 下载https://hub.docker.com上的镜像
+[root@docker01 ~]# docker pull nginx
+Using default tag: latest
+latest: Pulling from library/nginx
+f17d81b4b692: Pull complete 
+82dca86e04c3: Pull complete 
+046ccb106982: Pull complete 
+Digest: sha256:d59a1aa7866258751a261bae525a1842c7ff0662d4f34a355d5f36826abc0341
+Status: Downloaded newer image for nginx:latest
+[root@docker01 ~]# docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx               latest              62f816a209e6        2 days ago          109MB
+registry            latest              2e2f252f3c88        8 weeks ago         33.3MB
+
+
+4、通过 docker tag重命名镜像，使之与registry匹配
+[root@docker01 ~]# docker tag nginx:latest 172.16.134.54:5000/nginx:latest
+
+
+五、上传镜像到Registry
+
+[root@docker01 ~]# docker push 172.16.134.54:5000/nginx:latest
+The push refers to repository [172.16.134.54:5000/nginx]
+ad9ac0e6043b: Pushed 
+6ccbee34dd10: Pushed 
+237472299760: Pushed 
+latest: digest: sha256:427498d66ad8a3437939bb7ef613fe76458b550f6c43b915d8d4471c7d34a544 size: 948
+
+
+六、查看Registry中所有镜像信息
+
+[root@docker01 ~]# curl http://127.0.0.1:5000/v2/_catalog
+{"repositories":["nginx"]}
+
+
+七、其他Docker服务器下载镜像
+[root@docker01 ~]# docker pull 172.16.134.54:5000/nginx:latest
+latest: Pulling from nginx
+Digest: sha256:427498d66ad8a3437939bb7ef613fe76458b550f6c43b915d8d4471c7d34a544
+Status: Image is up to date for 172.16.134.54:5000/nginx:latest
+
+
+八、启动镜像
+[root@docker01 ~]# docker run -it 172.16.134.54:5000/nginx:latest /bin/bash
+root@b62a68955e6e:/#
+
+
+九、错误总结
+[root@docker01 ~]# docker push 172.16.134.54:5000/nginx:latest
+The push refers to repository [172.16.134.54:5000/nginx]
+[root@docker01 ~]# docker pull 172.16.134.54:5000/nginx:latest
+Error response from daemon: Get https://172.16.134.54:5000/v2/: http: server gave HTTP response to HTTPS client
+
+这是由于Registry为了安全性考虑，默认是需要https证书支持的.
+
+但是我们可以通过一个简单的办法解决：
+
+修改/etc/docker/daemon.json文件
+
+# vim /etc/docker/daemon.json
+{
+    "insecure-registries": ["<ip>:5000"] 
+}
+# systemctl daemon-reload 
+# systemctl restart docker
+
+注：<ip>：Registry的机器ip地址，在安装registry的节点和客户端需要访问私有Registry的节点都需要执行此步操作。
