@@ -1,0 +1,998 @@
+OpenStack O版部署手册
+
+目录
+
+一、 环境准备 
+1、 引言 
+2、 实验环境 
+3、 基础环境配置 
+二、 配置Mariadb 
+1、 安装mariadb数据库 
+2、 配置mariadb 
+三、 配置RabbitMQ 
+3、 安装RabbitMQ 
+4、 配置rabbitmq 
+四、 配置Keystone 
+1、 创建keystone数据库 
+2、 安装keystone和memcached 
+3、 启动memcache服务并设置开机自启动 
+4、 配置/etc/keystone/keystone.conf文件 
+5、 配置httpd.conf文件&memcached文件 
+6、 配置keystone与httpd结合 
+7、 数据库同步 
+8、 初始化fernet 
+9、 启动httpd，并设置httpd开机启动 
+10、 创建 admin 用户角色 
+11、 验证 
+12、 创建admin用户环境变量 
+13、 创建demo用户环境变量 
+14、 创建service项目 
+15、 创建domo的租户 
+16、 创建demo用户 
+17、 创建domo角色 
+18、 验证keystone 
+五、 配置Glance 
+1、 创建glance数据库 
+2、 创建数据库用户并赋予权限 
+3、 创建glance用户信息，添加 admin 角色到 glance 用户和 service 项目上 
+4、 创建glance服务目录： 
+5、 创建glance的endpoint 分别为 public internal admin--（创建镜像服务的 API 端点） 
+6、 安装glance 
+7、 配置/etc/glance/glance-api.conf 
+8、 配置/etc/glance/glance-registry.conf 
+9、 同步glance数据库 
+10、 启动glance及设置开机启动 
+11、 上传小镜像到glance 
+六、 配置Nova 
+1、 创建nova数据库 
+2、 创建数据库用户并赋予权限 
+3、 创建nova用户及赋予admin权限 
+4、 创建computer服务 
+5、 创建nova的endpoint 
+6、 安装nova相关软件 
+7、 配置/etc/nova/nova.conf 
+8、 设置cell 
+9、 设置cell_v2 
+10、 创建一个常规cell 
+11、 检查部署是否正常 
+12、 安装placement 
+13、 nova.conf整合placement 
+14、 配置00-nova-placement-api.conf 
+15、 配置nova相关服务 
+七、 配置Neutron 
+1、 创建neutron数据库 
+2、 创建数据库用户并赋予权限 
+3、 创建neutron用户及赋予admin权限 
+4、 创建network服务 
+5、 创建endpoint端点 
+6、 安装neutron相关软件 
+7、 配置neutron 
+8、 配置ml2扩展 
+9、 配置linux bridge agent 
+10、 配置3层网络 
+11、 配置dhcp 
+12、 配置/etc/nova/nova.conf 
+13、 配置/etc/neutron/dnsmasq-neutron.conf 
+14、 配置/etc/neutron/metadata_agent.ini 
+15、 创建扩展连接 
+16、 同步数据库 
+17、 重启nova服务 
+18、 重启neutron服务并设置开机启动 
+19、 启动neutron-l3-agent.service并设置开机启动 
+20、 执行验证 
+八、 配置Cinder 
+1、 创建数据库用户并赋予权限 
+2、 创建cinder用户并赋予admin权限 
+3、 创建volume服务 
+4、 创建endpoint 
+5、 安装cinder相关服务 
+6、 配置cinder配置文件 
+7、 同步数据库 
+8、 在controller上启动cinder服务，并设置开机启动 
+九、 配置Dashboard 
+1、 安装Dashboard组件 
+2、 配置Dashboard组件 
+3、 重启服务并验证 
+十、 计算节点配置Nova 
+1、 安装nova服务 
+2、 配置nova.conf 
+3、 设置libvirtd.service 和openstack-nova-compute.service开机启动 
+4、 controller执行验证 
+十一、 计算节点配置Neutron 
+1、 安装相关软件包 
+2、 配置neutron.conf 
+3、 配置桥接 
+4、 配置nova.conf 
+5、 重启和enable相关服务 
+
+
+环境准备
+引言
+部署OpenStack的服务器官方推荐两台以上，主要是创建的实例（Instances）实际上占用的是计算节点的资源，因此你的计算节点所拥有的vCPU、Memory，将决定你所创建的实例的最大vCPU数和内存，或许是基于此种原因考虑，官方建议控制节点和计算节点分离，此次部署是基于VMware虚拟机，主要是用于测试环境，因此规划为单控制节点和1个计算节点，本系列会涉及到的部署组件为keystone，glance，nova，neutron，cinder，dashboard。这次是在2台CentOS 7.4的服务器进行部署。
+
+实验环境
+主机名称    网卡ens192/ens224                         资源信息
+controller  ens192:172.16.194.78/ens224:172.16.193.78 centos7.4/4C/8GB/100GB 
+compute1    ens192:172.16.194.79/ens224:172.16.193.79 centos7.4/4C/8GB/100GB 
+
+基础环境配置
+1. 关闭selinux、firewalld、NetworkManager
+1) sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/sysconfig/selinux
+2) setenforce 0
+3) systemctl stop firewalld.service
+4) systemctl disable firewalld.service
+5) systemctl stop NetworkManager
+6) systemctl disable NetworkManager
+7) systemctl restart network 
+
+2. 配置O版源
+# yum install centos-release-openstack-ocata
+
+3. 安装相关基础工具（各个节点以情况选择是否安装）
+# yum install net-tools wget vim ntpdate bash-completion -y 
+
+4. 更改hostname（各个节点）
+# hostnamectl set-hostname controller
+# hostnamectl set-hostname compute1
+# vi /etc/hosts
+172.16.194.78 controller
+172.16.194.79 compute1
+ 
+5. 安装配置ntp时间同步（各个节点）
+# yum install ntp -y
+# systemctl start ntpd
+# systemctl status ntpd
+# systemctl enable ntpd
+# ntpq -p 
+
+6. 设备之间ssh互信
+# ssh-keygen -q -t rsa -N "" -f ~/.ssh/id_rsa
+# ssh 172.16.194.78 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+# ssh 172.16.194.79 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+# chmod 600 ~/.ssh/authorized_keys
+# scp /.ssh/authorized_keys 172.16.194.79:/.ssh/ 
+
+
+配置Mariadb
+1. 安装mariadb数据库
+# yum install -y mariadb-server mariadb MySQL-python 
+
+2. 配置mariadb
+# vim /etc/my.cnf.d/mariadb-server.cnf
+在mysqld区块添加如下内容：
+[mysqld]
+default-storage-engine = innodb
+innodb_file_per_table 
+collation-server = utf8_general_ci
+max_connections = 4096
+init-connect = 'SET NAMES utf8'
+character-set-server = utf8
+bind-address = 172.16.194.78 ----数据库IP地址
+ 
+3. 启动数据库及设置mariadb开机启动
+# systemctl enable mariadb.service
+# systemctl restart mariadb.service
+# systemctl status mariadb.service
+# systemctl list-unit-files |grep mariadb.service
+ 
+4. 配置mariadb，并给mariadb设置密码
+# mysql_secure_installation
+a)为root用户设置密码 回车
+b)删除匿名账号 y
+c)取消root用户远程登录 n
+d)删除test库和对test库的访问权限 y
+e)刷新授权表使修改生效 y
+查看数据库用户列表 select user,host,password from mysql.user;
+---------------------
+建议直接运行命令
+# echo -e "\nY\n123456\n123456\nY\nn\nY\nY\n" | mysql_secure_installation
+来代替原来的mysql_secure_installation。这样将免去中间的设置。 
+
+
+配置RabbitMQ
+1. 安装RabbitMQ
+# yum install -y rabbitmq-server 
+
+2. 配置rabbitmq启动rabbitmq及设置开机启动
+# systemctl enable rabbitmq-server.service
+# systemctl restart rabbitmq-server.service
+# systemctl status rabbitmq-server.service
+# systemctl list-unit-files |grep rabbitmq-server.service
+ 
+3. 创建openstack用户，并将openstack用户赋予权限
+# rabbitmqctl add_user openstack passw0rd
+Creating user "openstack" ...
+# rabbitmqctl set_permissions openstack "." "." ".*"
+Setting permissions for user "openstack" in vhost "/" ...
+# rabbitmqctl set_user_tags openstack administrator
+# rabbitmqctl list_users
+ 
+4. 看下监听端口 rabbitmq用的是5672端口
+netstat -ntlp |grep 5672
+ 
+5. 查看RabbitMQ插件
+# /usr/lib/rabbitmq/bin/rabbitmq-plugins list 
+
+6. 打开RabbitMQ相关插件
+# /usr/lib/rabbitmq/bin/rabbitmq-plugins enable rabbitmq_management mochiweb webmachine rabbitmq_web_dispatch
+amqp_client rabbitmq_management_agent
+打开相关插件后，重启下rabbitmq服务
+# systemctl restart rabbitmq-server
+浏览器输入：http://172.16.194.78:15672 默认用户名密码：guest/guest
+通过这个界面，可以能很直观的看到rabbitmq的运行和负载情况
+ 
+7. 查看rabbitmq状态
+用浏览器登录http://172.30.126.4:15672 输入openstack/passw0rd也可以查看状态信息：
+
+
+配置Keystone
+创建keystone数据库
+MariaDB > create database keystone; 
+创建数据库keystone用户&root用户及赋予权限
+MariaDB> grant all privileges on keystone.* to 'keystone'@'localhost' identified by 'passw0rd';
+MariaDB> grant all privileges on keystone.* to 'keystone'@'%' identified by 'passw0rd';
+MariaDB> flush privileges;
+生成admin_token的随机值：
+# openssl rand -hex 10
+# vi /etc/keystone/keystone.conf
+使用刚刚生成的随机值替换掉[DEFAULT]中的
+#admin_token = 随机值（主要为安全，也可以不用替换） 
+安装keystone和memcached
+# yum -y install openstack-keystone httpd mod_wsgi python-openstackclient memcached python-memcached openstack-utils 
+启动memcache服务并设置开机自启动
+# systemctl enable memcached.service
+# systemctl restart memcached.service
+# systemctl status memcached.service
+ 
+配置/etc/keystone/keystone.conf文件
+# cp /etc/keystone/keystone.conf /etc/keystone/keystone.conf.bak 做好备份
+# >/etc/keystone/keystone.conf 清空源配置文件从新写入
+# openstack-config --set /etc/keystone/keystone.conf DEFAULT transport_url rabbit://openstack:passw0rd@controller
+# openstack-config --set /etc/keystone/keystone.conf database connection mysql://keystone:passw0rd@controller/keystone
+# openstack-config --set /etc/keystone/keystone.conf cache backend oslo_cache.memcache_pool
+# openstack-config --set /etc/keystone/keystone.conf cache enabled true
+# openstack-config --set /etc/keystone/keystone.conf cache memcache_servers controller:11211
+# openstack-config --set /etc/keystone/keystone.conf memcache servers controller:11211
+# openstack-config --set /etc/keystone/keystone.conf token expiration 3600
+# openstack-config --set /etc/keystone/keystone.conf token provider fernet
+##########
+[DEFAULT]
+transport_url = rabbit://openstack:passw0rd@controller
+[database]
+connection = mysql://keystone:passw0rd@controller/keystone
+[cache]
+backend = oslo_cache.memcache_pool
+enabled = true
+memcache_servers = controller:11211
+[memcache]
+servers = controller:11211
+[token]
+expiration = 3600
+provider = fernet
+########## 
+
+配置httpd.conf文件&memcached文件 
+# sed -i "s/#ServerName www.example.com:80/ServerName controller/" /etc/httpd/conf/httpd.conf
+# sed -i 's/OPTIONS*.*/OPTIONS="-l 127.0.0.1,::1,172.16.194.78"/' /etc/sysconfig/memcached
+生成wsgi配置文件：安装完mod_wsgi会自动生成。
+# vi /etc/httpd/conf.d/wsgi-keystone.conf 
+配置keystone与httpd结合
+# ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/ 
+数据库同步
+# su -s /bin/sh -c "keystone-manage db_sync" keystone 同步完一定要查看keystone 数据库是否有表存在
+ 
+有说明同步成功 
+初始化fernet
+# keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
+# keystone-manage credential_setup --keystone-user keystone --keystone-group keystone 
+启动httpd，并设置httpd开机启动
+# systemctl enable httpd.service
+# systemctl restart httpd.service
+# systemctl status httpd.service
+# systemctl list-unit-files |grep httpd.service
+ 
+创建 admin 用户角色
+# keystone-manage bootstrap \
+--bootstrap-password passw0rd \
+--bootstrap-username admin \
+--bootstrap-project-name admin \
+--bootstrap-role-name admin \
+--bootstrap-service-name keystone \
+--bootstrap-region-id RegionOne \
+--bootstrap-admin-url http://controller:35357/v3 \
+--bootstrap-internal-url http://controller:35357/v3 \
+--bootstrap-public-url http://controller:5000/v3
+验证
+# openstack project list --os-username admin --os-project-name admin --os-user-domain-id default --os-project-domain-id default --os-identity-api-version 3 --os-auth-url http://controller:5000 --os-password passw0rd
+ 
+创建admin用户环境变量
+# vim /root/admin-openrc
+添加以下内容：
+export OS_USER_DOMAIN_ID=default
+export OS_PROJECT_DOMAIN_ID=default
+export OS_USERNAME=admin
+export OS_PROJECT_NAME=admin
+export OS_PASSWORD=passw0rd
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+export OS_AUTH_URL=http://controller:35357/v3 
+
+创建demo用户环境变量
+# vim /root/demo-openrc
+export OS_PROJECT_DOMAIN_NAME=default
+export OS_USER_DOMAIN_NAME=default
+export OS_PROJECT_NAME=demo
+export OS_USERNAME=demo
+export OS_PASSWORD=passw0rd
+export OS_AUTH_URL=http://controller:35357/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+
+
+创建域、项目、用户和角色 
+创建service项目
+# source /root/admin-openrc
+# openstack project create --domain default --description "Service Project" service
+ 
+[root@controller ~]# openstack endpoint -h
+Command "endpoint" matches:
+endpoint create
+endpoint delete
+endpoint list
+endpoint set
+endpoint show 
+创建domo的租户
+# openstack project create --domain default --description "Demo Project" demo
+ 
+创建demo用户
+# openstack user create --domain default demo --password passw0rd
+注意：passw0rd为demo用户密码
+ 
+创建domo角色
+# openstack role create user
+将demo用户租户连接起来：
+# openstack role add --project demo --user demo user
+ 
+验证keystone
+# vi /etc/keystone/keystone-paste.ini
+从``[pipeline:public_api]``，[pipeline:admin_api]``和``[pipeline:api_v3]``部分删除``admin_token_auth 
+作为admin用户，请求认证令牌：
+# unset OS_TOKEN OS_URL
+# openstack --os-auth-url http://controller:35357/v3 --os-project-domain-name default --os-user-domain-name default --os-project-name admin --os-username admin token issue --os-password passw0rd
+ 
+作为demo用户，请求认证令牌：
+# openstack --os-auth-url http://controller:5000/v3 --os-project-domain-name default --os-user-domain-name default –
+os-project-name demo --os-username demo token issue --os-password passw0rd
+ 
+# openstack token issue （请求认证令牌）
+ 
+配置Glance
+创建glance数据库
+MariaDB > CREATE DATABASE glance;
+创建数据库用户并赋予权限
+MariaDB > GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'passw0rd';
+MariaDB > GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'passw0rd';
+ 
+创建glance用户信息，添加 admin 角色到 glance 用户和 service 项目上
+# source /root/admin-openrc
+# openstack user create --domain default glance --password passw0rd
+# openstack role add --project service --user glance admin
+ 
+创建glance服务目录：
+# openstack service create --name glance --description "OpenStack Image service" image
+ 
+创建glance的endpoint 分别为 public internal admin--（创建镜像服务的 API 端点）
+# openstack endpoint create --region RegionOne image public http://controller:9292
+# openstack endpoint create --region RegionOne image internal http://controller:9292
+# openstack endpoint create --region RegionOne image admin http://controller:9292
+
+ 
+安装glance
+# yum install openstack-glance -y 
+配置/etc/glance/glance-api.conf
+# cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf.bak
+# >/etc/glance/glance-api.conf
+# openstack-config --set /etc/glance/glance-api.conf DEFAULT transport_url rabbit://openstack:passw0rd@controller
+# openstack-config --set /etc/glance/glance-api.conf database connection mysql+pymysql://glance:passw0rd@controller/glance
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://controller:5000
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_url http://controller:35357
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken memcached_servers controller:11211
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken auth_type password
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken project_domain_name default
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken user_domain_name default
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken username glance
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken password passw0rd
+# openstack-config --set /etc/glance/glance-api.conf keystone_authtoken project_name service
+# openstack-config --set /etc/glance/glance-api.conf paste_deploy flavor keystone
+# openstack-config --set /etc/glance/glance-api.conf glance_store stores file,http
+# openstack-config --set /etc/glance/glance-api.conf glance_store default_store file
+# openstack-config --set /etc/glance/glance-api.conf glance_store filesystem_store_datadir /var/lib/glance/images/
+#######
+[DEFAULT]
+transport_url = rabbit://openstack:passw0rd@controller
+[database]
+connection = mysql+pymysql://glance:passw0rd@controller/glance
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+username = glance
+password = passw0rd
+project_name = service
+[paste_deploy]
+flavor = keystone
+[glance_store]
+stores = file,http
+default_store = file
+filesystem_store_datadir = /var/lib/glance/images/
+####### 
+
+配置/etc/glance/glance-registry.conf
+# cp /etc/glance/glance-registry.conf /etc/glance/glance-registry.conf.bak
+# >/etc/glance/glance-registry.conf
+# vi /etc/glance/glance-registry.conf
+配置如下：
+[DEFAULT]
+transport_url = rabbit://openstack:passw0rd@controller
+[database]
+connection = mysql+pymysql://glance:passw0rd@controller/glance
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = glance
+password = passw0rd
+[paste_deploy]
+flavor = keystone 
+
+同步glance数据库
+# su -s /bin/sh -c "glance-manage db_sync" glance
+ 
+启动glance及设置开机启动
+# systemctl enable openstack-glance-api.service openstack-glance-registry.service
+# systemctl restart openstack-glance-api.service openstack-glance-registry.service
+# systemctl status openstack-glance-api.service openstack-glance-registry.service 
+上传小镜像到glance
+# source /root/admin-openrc
+# glance image-create --name "cirros-0.3.4-x86_64" --file cirros-0.3.4-x86_64-disk.img --disk-format qcow2 --container-format bare --visibility public --progress
+查看镜像列表：
+# glance image-list
+# openstack image list
+ 
+配置Nova
+创建nova数据库
+MariaDB > create database nova;
+MariaDB > create database nova_api;
+MariaDB > create database nova_cell0;
+创建数据库用户并赋予权限
+MariaDB > grant all privileges on nova.* to 'nova'@'localhost' identified by 'passw0rd';
+MariaDB > grant all privileges on nova.* to 'nova'@'%' identified by 'passw0rd';
+MariaDB > grant all privileges on nova_api.* to 'nova'@'localhost' identified by 'passw0rd';
+MariaDB > grant all privileges on nova_api.* to 'nova'@'%' identified by 'passw0rd';
+MariaDB > grant all privileges on nova_cell0.* to 'nova'@'localhost' identified by 'passw0rd';
+MariaDB > grant all privileges on nova_cell0.* to 'nova'@'%' identified by 'passw0rd';
+MariaDB > grant all privileges on . to 'root'@'controller' identified by 'passw0rd';
+注：查看授权列表信息：
+MariaDB > select distinct concat('User: ''',user,'''@''',host,''';') as query from mysql.user; 
+ 
+创建nova用户及赋予admin权限
+# source /root/admin-openrc
+# openstack user create --domain default nova --password passw0rd
+# openstack role add --project service --user nova admin
+ 
+创建computer服务
+# openstack service create --name nova --description "OpenStack Compute" compute
+ 
+------------------------------------------- 
+创建nova的endpoint
+# openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1/%\(tenant_id\)s
+ 
+安装nova相关软件
+# yum install -y openstack-nova-api openstack-nova-conductor openstack-nova-cert openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler 
+配置/etc/nova/nova.conf
+# cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
+# >/etc/nova/nova.conf
+# vi /etc/nova/nova.conf
+[DEFAULT]
+enabled_apis = osapi_compute,metadata
+auth_strategy = keystone
+my_ip = 172.16.194.78 ------控制节点IP
+use_neutron = True
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+transport_url = rabbit://openstack:passw0rd@controller 
+[database]
+connection = mysql+pymysql://nova:passw0rd@controller/nova
+[api_database]
+connection = mysql+pymysql://nova:passw0rd@controller/nova_api
+[scheduler]
+discover_hosts_in_cells_interval = -1
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = nova
+password = passw0rd
+service_token_roles_required = True
+[vnc]
+vncserver_listen = 172.16.194.78
+vncserver_proxyclient_address = 172.16.194.78
+[glance]
+api_servers = http://controller:9292
+[oslo_concurrency]
+lock_path = /var/lib/nova/tmp 
+
+设置cell
+同步nova-api 数据库：
+# su -s /bin/sh -c "nova-manage api_db sync" nova
+# su -s /bin/sh -c "nova-manage db sync" nova
+ 
+设置cell_v2
+# nova-manage cell_v2 map_cell0 --database_connection mysql+pymysql://root:passw0rd@controller/nova_cell0
+# nova-manage cell_v2 list_cells
+create_cell,delete_cell,discover_hosts,list_cells,map_cell0,map_cell_and_hosts,map_
+instances,simple_cell_setup,update_cell,verify_instance
+# nova-manage cell_v2 delete_cell --cell_uuid 00000000-0000-0000-0000-000000000000
+
+创建一个常规cell
+# nova-manage cell_v2 create_cell --verbose --name cell1 --database_connection
+mysql+pymysql://root:passw0rd@controller/nova_cell0 --transport-url rabbit://openstack:passw0rd@controller:5672/
+ 
+检查部署是否正常
+# nova-status upgrade check （如果还没有计算节点检查肯定会报错）
+ 
+创建和映射cell0，并将现有计算主机和实例映射到单元格中 最后在执行
+# nova-manage cell_v2 simple_cell_setup 没有主机会报错
+ 
+查看已经创建好的单元格列表
+# nova-manage cell_v2 list_cells --verbose
+ 
+删除cell
+# nova-manage cell_v2 delete_cell --cell_uuid e2fc325d-b13a-40a8-954e-2ca801c4c9c5
+注意，如果有新添加的计算节点，需要运行下面命令来发现
+# nova-manage cell_v2 discover_hosts
+可以在控制节点的nova.conf文件里[scheduler]模块下添加 discover_hosts_in_cells_interval=-1 这个设置来自动发现
+ 
+安装placement
+注意：从Ocata开始，需要安装配置placement参与nova调度了，不然虚拟机将无法创建！
+# yum install -y openstack-nova-placement-api
+创建placement用户和placement 服务
+# openstack user create --domain default placement --password passw0rd
+# openstack role add --project service --user placement admin
+# openstack service create --name placement --description "OpenStack Placement" placement
+ 
+创建placement的 endpoint
+# openstack endpoint create --region RegionOne placement public http://controller:8778
+# openstack endpoint create --region RegionOne placement admin http://controller:8778
+# openstack endpoint create --region RegionOne placement internal http://controller:8778
+ 
+nova.conf整合placement 
+# vi /etc/nova/nova.conf
+[placement]
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = nova
+password = passw0rd
+os_region_name = RegionOne 
+
+配置00-nova-placement-api.conf
+# cd /etc/httpd/conf.d/
+# cp 00-nova-placement-api.conf 00-nova-placement-api.conf.bak
+# >00-nova-placement-api.conf
+# vim 00-nova-placement-api.conf
+添加以下内容：
+Listen 8778
+<VirtualHost *:8778>
+WSGIProcessGroup nova-placement-api
+WSGIApplicationGroup %{GLOBAL}
+WSGIPassAuthorization On
+WSGIDaemonProcess nova-placement-api processes=3 threads=1 user=nova group=nova
+WSGIScriptAlias / /usr/bin/nova-placement-api
+<Directory "/">
+Order allow,deny
+Allow from all
+Require all granted
+</Directory>
+<IfVersion >= 2.4>
+ErrorLogFormat "%M"
+</IfVersion>
+ErrorLog /var/log/nova/nova-placement-api.log
+</VirtualHost>
+Alias /nova-placement-api /usr/bin/nova-placement-api
+<Location /nova-placement-api>
+SetHandler wsgi-script
+Options +ExecCGI
+WSGIProcessGroup nova-placement-api
+WSGIApplicationGroup %{GLOBAL}
+WSGIPassAuthorization On
+</Location> 
+
+重启下httpd服务
+# systemctl restart httpd
+检查下是否配置成功
+# nova-status upgrade check
+ 
+配置nova相关服务
+# systemctl enable openstack-nova-api.service openstack-nova-cert.service openstack-nova-consoleauth.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+启动nova服务：
+# systemctl restart openstack-nova-api.service openstack-nova-cert.service openstack-nova-consoleauth.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+查看nova服务：
+# systemctl status openstack-nova-api.service openstack-nova-cert.service openstack-nova-consoleauth.service openstack-nova-scheduler.service openstack-nova-conductor.service openstack-nova-novncproxy.service
+# systemctl list-unit-files |grep openstack-nova-*
+ 
+验证nova服务
+# unset OS_TOKEN OS_URL
+# source /root/admin-openrc
+# nova service-list
+# openstack endpoint list 查看是否有结果正确输出
+# openstack hypervisor list
+ 
+配置Neutron
+创建neutron数据库
+MariaDB> create database neutron;
+创建数据库用户并赋予权限
+MariaDB> grant all privileges on neutron.* to 'neutron'@'localhost' identified by 'passw0rd';
+MariaDB> grant all privileges on neutron.* to 'neutron'@'%' identified by 'passw0rd';
+创建neutron用户及赋予admin权限
+# source /root/admin-openrc
+# openstack user create --domain default neutron --password passw0rd
+# openstack role add --project service --user neutron admin
+添加``admin`` 角色到``neutron`` 用户 
+创建network服务
+# openstack service create --name neutron --description "OpenStack Networking" network
+创建endpoint端点
+# openstack endpoint create --region RegionOne network public http://controller:9696
+# openstack endpoint create --region RegionOne network internal http://controller:9696
+# openstack endpoint create --region RegionOne network admin http://controller:9696
+ 
+安装neutron相关软件
+# yum install openstack-neutron openstack-neutron-ml2 openstack-neutron-linuxbridge ebtables -y 
+配置neutron
+# cp /etc/neutron/neutron.conf /etc/neutron/neutron.conf.bak
+# >/etc/neutron/neutron.conf
+# vi /etc/neutron/neutron.conf
+[DEFAULT]
+core_plugin = ml2
+service_plugins = router
+allow_overlapping_ips = True
+auth_strategy = keystone
+transport_url = rabbit://openstack:passw0rd@controller
+notify_nova_on_port_status_changes = True
+notify_nova_on_port_data_changes = True
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = passw0rd
+[database]
+connection = mysql+pymysql://neutron:passw0rd@controller/neutron
+[nova]
+auth_url = http://controller:35357
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = nova
+password = passw0rd
+[oslo_concurrency]
+lock_path = /var/lib/neutron/tmp 
+
+配置ml2扩展
+# vi /etc/neutron/plugins/ml2/ml2_conf.ini
+[DEFAULT]
+[ml2]
+type_drivers = flat,vlan,vxlan
+mechanism_drivers = linuxbridge,l2population
+extension_drivers = port_security
+tenant_network_types = vxlan
+path_mtu = 1500
+[ml2_type_flat]
+flat_networks = provider
+[ml2_type_geneve]
+[ml2_type_gre]
+[ml2_type_vlan]
+[ml2_type_vxlan]
+vni_ranges = 1:1000
+[securitygroup]
+enable_ipset = True 
+
+配置linux bridge agent
+# vi /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+[DEFAULT]
+debug = false
+[agent]
+prevent_arp_spoofing = True
+[linux_bridge]
+physical_interface_mappings = provider:ens224
+[securitygroup]
+enable_security_group = True
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+[vxlan]
+enable_vxlan = True
+local_ip = 172.16.193.78
+l2_population = True
+注意ens224是定义的外网网卡，这里是193网段，做floating_ip 用
+local_ip定义的是隧道网络，vxLan下vm-linuxbridge->vxlan-tunvxlan>linuxbridge-vm 
+配置3层网络
+# vi /etc/neutron/l3_agent.ini
+[DEFAULT]
+interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
+external_network_bridge =
+debug = false 
+配置dhcp
+# vi /etc/neutron/dhcp_agent.ini
+[DEFAULT]
+interface_driver = neutron.agent.linux.interface.BridgeInterfaceDriver
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+enable_isolated_metadata = True
+verbose = True
+debug = false 
+配置/etc/nova/nova.conf
+[neutron]
+url = http://controller:9696
+auth_url = http://controller:35357
+auth_plugin = password
+project_domain_id = default
+user_domain_id = default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = passw0rd
+service_metadata_proxy = True
+metadata_proxy_shared_secret = passw0rd
+配置/etc/neutron/dnsmasq-neutron.conf
+# echo "dhcp-option-force=26,1450" >/etc/neutron/dnsmasq-neutron.conf 
+配置/etc/neutron/metadata_agent.ini
+[DEFAULT]
+nova_metadata_ip = controller
+metadata_proxy_shared_secret = passw0rd
+metadata_workers = 4
+verbose = True
+debug = false
+nova_metadata_protocol = http
+创建扩展连接
+# ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini 
+同步数据库
+# su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
+ 
+重启nova服务
+# systemctl restart openstack-nova-api.service
+# systemctl status openstack-nova-api.service 
+重启neutron服务并设置开机启动
+# systemctl enable neutron-server.service neutron-linuxbridge-agent.service neutron-dhcp-agent.service neutron-metadata-agent.service
+# systemctl restart neutron-server.service neutron-linuxbridge-agent.service neutron-dhcp-agent.service neutron-metadata-agent.service
+# systemctl status neutron-server.service neutron-linuxbridge-agent.service neutron-dhcp-agent.service neutron-metadata-agent.service 
+启动neutron-l3-agent.service并设置开机启动
+# systemctl enable neutron-l3-agent.service
+# systemctl restart neutron-l3-agent.service
+# systemctl status neutron-l3-agent.service 
+执行验证
+# source /root/admin-openrc
+# neutron ext-list
+# neutron agent-list
+ 
+
+配置Cinder
+创建数据库用户并赋予权限
+MariaDB> create database cinder;
+MariaDB> grant all privileges on cinder.* to 'cinder'@'localhost' identified by 'passw0rd';
+MariaDB> grant all privileges on cinder.* to 'cinder'@'%' identified by 'passw0rd';
+创建cinder用户并赋予admin权限
+# source /root/admin-openrc
+# openstack user create --domain default cinder --password passw0rd
+# openstack role add --project service --user cinder admin
+ 
+创建volume服务
+# openstack service create --name cinder --description "OpenStack Block Storage" volume
+# openstack service create --name cinderv2 --description "OpenStack Block Storage" volumev2
+ 
+创建endpoint
+# openstack endpoint create --region RegionOne volume public http://controller:8776/v1/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne volume internal http://controller:8776/v1/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne volume admin http://controller:8776/v1/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne volumev2 public http://controller:8776/v2/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne volumev2 internal http://controller:8776/v2/%\(tenant_id\)s
+# openstack endpoint create --region RegionOne volumev2 admin http://controller:8776/v2/%\(tenant_id\)s 
+
+安装cinder相关服务
+# yum install openstack-cinder -y 
+配置cinder配置文件
+# cp /etc/cinder/cinder.conf /etc/cinder/cinder.conf.bak
+# >/etc/cinder/cinder.conf
+# vi /etc/cinder/cinder.conf
+[DEFAULT]
+my_ip = 172.16.194.78 -----计算节点IP或者单独cinderIP
+auth_strategy = keystone
+transport_url = rabbit://openstack:passw0rd@controller
+[database]
+connection = mysql+pymysql://cinder:passw0rd@controller/cinder
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = cinder
+password = passw0rd
+[oslo_concurrency]
+lock_path = /var/lib/cinder/tmp 
+同步数据库
+# su -s /bin/sh -c "cinder-manage db sync" cinder
+同步完一定要查看数据库中是否有表存在
+ 
+在controller上启动cinder服务，并设置开机启动
+# systemctl enable openstack-cinder-api.service openstack-cinder-scheduler.service
+# systemctl restart openstack-cinder-api.service openstack-cinder-scheduler.service
+# systemctl status openstack-cinder-api.service openstack-cinder-scheduler.service 
+
+
+配置Dashboard
+安装Dashboard组件
+# yum install openstack-dashboard -y 
+配置Dashboard组件
+# vi /etc/openstack-dashboard/local_settings
+OPENSTACK_HOST = "controller" ###修改的
+OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST ###修改的
+ALLOWED_HOSTS = ['*',] ###修改的
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache' ###新增的
+CACHES = {
+'default': {
+'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache', ###修改的
+'LOCATION': 'controller:11211', ###新增的
+},
+}
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True ###去掉注释，修改值为True(python会区别值的大小写，因此值第一个字母不能为小写) 使用默认的即可，此选项为真时，dashboard页面会开启域的选择
+OPENSTACK_API_VERSIONS = { ###去掉注释
+"identity": 3, ###去掉注释
+"image": 2, ###新增的
+"volume": 2, ###去掉注释
+} ###去掉注释
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'default' ###去掉注释
+OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user" ###修改的
+OPENSTACK_NEUTRON_NETWORK = {
+'enable_router': False, ###修改的
+'enable_quotas': False, ###修改的
+'enable_ipv6': True,
+'enable_distributed_router': False, ###修改的
+'enable_ha_router': False, ###修改的
+'enable_lb': False, ###修改的
+'enable_firewall': False, ###修改的
+'enable_vpn': False, ###修改的
+'enable_fip_topology_check': False, ###修改的
+'default_ipv4_subnet_pool_label': None,
+'default_ipv6_subnet_pool_label': None,
+'profile_support': None,
+'supported_provider_types': ['*'],
+'supported_vnic_types': ['*'],
+}
+TIME_ZONE = "Asia/Chongqing" ###修改的 
+重启服务并验证
+# systemctl restart httpd.service memcached.service
+打开浏览器：http://172.16.194.78/dashboard 
+
+
+计算节点配置Nova
+安装nova服务
+# yum install openstack-nova-compute 
+配置nova.conf
+# cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
+# >/etc/nova/nova.conf
+# openstack-config --set /etc/nova/nova.conf DEFAULT auth_strategy keystone
+# openstack-config --set /etc/nova/nova.conf DEFAULT my_ip 172.16.194.79
+# openstack-config --set /etc/nova/nova.conf DEFAULT use_neutron True
+# openstack-config --set /etc/nova/nova.conf DEFAULT firewall_driver nova.virt.firewall.NoopFirewallDriver
+# openstack-config --set /etc/nova/nova.conf DEFAULT transport_url rabbit://openstack:passw0rd@controller
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_uri http://controller:5000
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_url http://controller:35357
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken memcached_servers controller:11211
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken auth_type password
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken project_domain_name default
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken user_domain_name default
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken project_name service
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken username nova
+# openstack-config --set /etc/nova/nova.conf keystone_authtoken password passw0rd
+# openstack-config --set /etc/nova/nova.conf placement auth_uri http://controller:5000
+# openstack-config --set /etc/nova/nova.conf placement auth_url http://controller:35357
+# openstack-config --set /etc/nova/nova.conf placement memcached_servers controller:11211
+# openstack-config --set /etc/nova/nova.conf placement auth_type password
+# openstack-config --set /etc/nova/nova.conf placement project_domain_name default
+# openstack-config --set /etc/nova/nova.conf placement user_domain_name default
+# openstack-config --set /etc/nova/nova.conf placement project_name service
+# openstack-config --set /etc/nova/nova.conf placement username nova
+# openstack-config --set /etc/nova/nova.conf placement password passw0rd
+# openstack-config --set /etc/nova/nova.conf placement os_region_name RegionOne
+# openstack-config --set /etc/nova/nova.conf vnc enabled True
+# openstack-config --set /etc/nova/nova.conf vnc keymap en-us
+# openstack-config --set /etc/nova/nova.conf vnc vncserver_listen 0.0.0.0
+# openstack-config --set /etc/nova/nova.conf vnc vncserver_proxyclient_address 172.16.194.79 
+# openstack-config --set /etc/nova/nova.conf vnc novncproxy_base_url http://172.16.194.78:6080/vnc_auto.html
+# openstack-config --set /etc/nova/nova.conf glance api_servers http://controller:9292
+# openstack-config --set /etc/nova/nova.conf oslo_concurrency lock_path /var/lib/nova/tmp
+# openstack-config --set /etc/nova/nova.conf libvirt virt_type qemu #如果是物理机记得改为kvm
+#########
+3.  egrep -c '(vmx|svm)' /proc/cpuinfo
+如果为0则需要修改/etc/nova/nova.conf
+[libvirt]
+virt_type = qemu
+为大于0则不需要
+######### 
+设置libvirtd.service 和openstack-nova-compute.service开机启动
+# systemctl enable libvirtd.service openstack-nova-compute.service
+# systemctl restart libvirtd.service openstack-nova-compute.service
+# systemctl status libvirtd.service openstack-nova-compute.service 
+controller执行验证
+# source /root/admin-openrc
+# openstack compute service list
+ 
+计算节点配置Neutron
+安装相关软件包
+# yum install openstack-neutron-linuxbridge ebtables ipset -y 
+配置neutron.conf
+# cp /etc/neutron/neutron.conf /etc/neutron/neutron.conf.bak
+# >/etc/neutron/neutron.conf
+# openstack-config --set /etc/neutron/neutron.conf DEFAULT auth_strategy keystone
+# openstack-config --set /etc/neutron/neutron.conf DEFAULT advertise_mtu True
+# openstack-config --set /etc/neutron/neutron.conf DEFAULT dhcp_agents_per_network 2
+# openstack-config --set /etc/neutron/neutron.conf DEFAULT control_exchange neutron
+# openstack-config --set /etc/neutron/neutron.conf DEFAULT nova_url http://controller:8774/v2
+# openstack-config --set /etc/neutron/neutron.conf DEFAULT transport_url rabbit://openstack:passw0rd@controller
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://controller:5000
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken auth_url http://controller:35357
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken memcached_servers controller:11211
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken auth_type password
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken project_domain_name default
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken user_domain_name default
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken project_name service
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken username neutron
+# openstack-config --set /etc/neutron/neutron.conf keystone_authtoken password passw0rd
+# openstack-config --set /etc/neutron/neutron.conf oslo_concurrency lock_path /var/lib/neutron/tmp 
+配置桥接
+/etc/neutron/plugins/ml2/linuxbridge_agent.ini
+# openstack-config --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini linux_bridge physical_interface_mappings provider:ens224
+# openstack-config --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan enable_vxlan True
+# openstack-config --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan local_ip 172.16.194.79 ------计算节点IP
+# openstack-config --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini vxlan l2_population True
+# openstack-config --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup enable_security_group True
+# openstack-config --set /etc/neutron/plugins/ml2/linuxbridge_agent.ini securitygroup firewall_driver neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+注意provider后面那个ens224网卡名做floating_ip 网卡的名称。 
+
+配置nova.conf
+# openstack-config --set /etc/nova/nova.conf neutron url http://controller:9696
+# openstack-config --set /etc/nova/nova.conf neutron auth_url http://controller:35357
+# openstack-config --set /etc/nova/nova.conf neutron auth_type password
+# openstack-config --set /etc/nova/nova.conf neutron project_domain_name default
+# openstack-config --set /etc/nova/nova.conf neutron user_domain_name default
+# openstack-config --set /etc/nova/nova.conf neutron region_name RegionOne
+# openstack-config --set /etc/nova/nova.conf neutron project_name service
+# openstack-config --set /etc/nova/nova.conf neutron username neutron
+# openstack-config --set /etc/nova/nova.conf neutron password passw0rd 
+重启和enable相关服务
+# systemctl restart libvirtd.service openstack-nova-compute.service
+# systemctl enable neutron-linuxbridge-agent.service
+# systemctl restart neutron-linuxbridge-agent.service
+# systemctl status libvirtd.service openstack-nova-compute.service neutron-linuxbridge-agent.service
+
