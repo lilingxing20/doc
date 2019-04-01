@@ -1,0 +1,124 @@
+开启虚拟机: 
+driver.py:power_on 
+-> _hard_reboot
+- -> _destroy(instance)
+- - -> guest.poweroff()
+- -> _get_guest_xml
+- - -> _get_guest_config
+- - -> write_to_file
+- -> _create_domain_and_network
+- - -> block_device_info_get_mapping
+- - -> _create_domain
+- - - -> Guest.create
+- - - - -> host.write_instance_config(xml)
+- - - -> guest.launch
+- - - - -> _domain.createWithFlags
+
+关闭虚拟机:
+driver.py:power_off
+-> _destroy
+- -> _host.get_guest
+- -> guest.poweroff()
+- - -> _domain.destroy()
+
+创建虚拟机:
+driver.py:spawn
+-> _create_image
+-> _get_guest_xml
+- - -> _get_guest_config
+- - -> write_to_file
+-> _create_domain_and_network
+- - -> block_device_info_get_mapping
+- - -> _create_domain
+- - - -> Guest.create(xml, self._host)
+- - - - -> host.write_instance_config(xml)
+- - - -> guest.launch
+- - - - -> _domain.createWithFlags
+
+删除虚拟机:
+driver.py:destroy
+-> _destroy
+- -> _host.get_guest
+- -> guest.poweroff()
+- - -> _domain.destroy()
+-> cleanup
+- -> _unplug_vifs
+- -> _disconnect_volume
+- -> destroy_disks
+- -> _undefine_domain
+- - -> guest.delete_configuration()
+- - - -> _domain.undefineFlags
+
+
+软重启: 
+driver.py:reboot
+-> _soft_reboot
+- -> guest.shutdown()
+- - -> _domain.shutdown()
+-> _create_domain
+- -> Guest(domain)
+- -> guest.launch(pause=pause)
+- - -> _domain.createWithFlags(flags)
+
+
+硬重启: 
+driver.py:reboot
+-> _hard_reboot
+- -> _destroy(instance)
+- - -> guest.poweroff()
+- -> _get_guest_xml
+- - -> _get_guest_config
+- - -> write_to_file
+- -> _create_domain_and_network
+- - -> block_device_info_get_mapping
+- - -> _create_domain
+- - - -> Guest.create
+- - - - -> host.write_instance_config(xml)
+- - - -> guest.launch
+- - - - -> _domain.createWithFlags
+
+
+挂起/恢复:
+挂起操作状态变化过程: running->paused->instance-0000001b.save->shutoff
+恢复操作状态变化过程: shutoff->paused->running
+
+driver.py:suspend
+-> _host.get_guest(instance)
+-> save_memory_state
+- -> _domain.managedSave(0)
+
+driver.py:resume
+-> _get_existing_domain_xml
+-> _create_domain_and_network
+- -> block_device_info_get_mapping
+- -> _create_domain
+- -> Guest(domain)
+- -> guest.launch(pause=pause)
+- - -> _domain.createWithFlags(flags)
+- -> guest.resume()
+- - -> _domain.resume()
+
+
+
+暂停/恢复:
+挂起操作状态变化过程: running->paused
+恢复操作状态变化过程: paused->running
+
+driver.py:pause
+-> _host.get_guest(instance).pause()
+- -> _domain.suspend()
+
+driver.py:unpause
+-> _host.get_guest(instance).resume()
+- -> _domain.resume()
+
+
+锁定
+解锁
+调整大小
+废弃
+重建
+查看日志
+控制台
+分离接口
+连接接口
