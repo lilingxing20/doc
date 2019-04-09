@@ -1,0 +1,117 @@
+0.创建虚拟机
+[root@node54 lixx]# virt-install --connect qemu:///system --name centos74 --virt-type=kvm --memballoon=virtio --vcpus 2 --ram 4096 --disk /home/lixx/centos74.qcow2,format=qcow2,bus=virtio,size=80 --network network=pxe-net,model=virtio --network network=mgmt-net,model=virtio --network network=storage-net,model=virtio --network network=tenant-net,model=virtio --vnc --vnclisten=0.0.0.0 --os-type=linux --boot hd
+WARNING  No operating system detected, VM performance may suffer. Specify an OS with --os-variant for optimal results.
+
+[root@node54 lixx]# virsh list
+ Id    Name                           State
+----------------------------------------------------
+ 1108  centos74                       running
+
+
+1.克隆虚拟机
+[root@node54 lixx]# virt-clone --original centos74 --name clone-vm --file /home/lixx/test-clone-vm.qcow2
+ERROR    Domain with devices to clone must be paused or shutoff.
+[root@node54 lixx]# virsh vncdisplay 1108
+:9
+[root@node54 lixx]# virsh shutdown 1108
+Domain 1108 is being shutdown
+[root@node54 lixx]# virsh list --all
+ Id    Name                           State
+----------------------------------------------------
+ -     centos74                       shut off
+[root@node54 lixx]# virt-clone --original centos74 --name clone-vm --file /home/lixx/test-clone-vm.qcow2
+WARNING  The requested volume capacity will exceed the available pool space when the volume is fully allocated. (81920 M requested capacity > 25811 M available)
+Allocating 'test-clone-vm.qcow2'                                                                                                                                                                                     |  80 GB  00:00:07 
+
+Clone 'clone-vm' created successfully.
+[root@node54 lixx]# ll /home/lixx/*qcow2
+-rw-r--r-- 1 root root  548798464 Apr  8 10:45 /home/lixx/centos74.qcow2
+-rw------- 1 root root 1158086656 Apr  8 10:47 /home/lixx/test-clone-vm.qcow2
+[root@node54 lixx]# qemu-img  info /home/lixx/test-clone-vm.qcow2 
+image: /home/lixx/test-clone-vm.qcow2
+file format: qcow2
+virtual size: 80G (85899345920 bytes)
+disk size: 2.0G
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    lazy refcounts: true
+    refcount bits: 16
+    corrupt: false
+[root@node54 lixx]# qemu-img  info /home/lixx/centos74.qcow2 
+image: /home/lixx/centos74.qcow2
+file format: qcow2
+virtual size: 80G (85899345920 bytes)
+disk size: 523M
+cluster_size: 65536
+Format specific information:
+    compat: 1.1
+    lazy refcounts: false
+    refcount bits: 16
+    corrupt: false
+
+[root@node54 lixx]# virsh list --all
+ Id    Name                           State
+----------------------------------------------------
+ -     centos74                       shut off
+ -     clone-vm                       shut off
+
+[root@node54 lixx]# virsh start clone-vm
+Domain clone-vm started
+
+[root@node54 lixx]# virsh list --all
+ Id    Name                           State
+----------------------------------------------------
+ 1109  clone-vm                       running
+ -     centos74                       shut off
+
+
+
+2. 定义一个新的存储池
+[root@node54 lixx]# mkdir /home/lixx/mystorage
+[root@node54 lixx]# cat /home/lixx/mystorage.xml 
+<pool type='dir'>
+  <name>mystorage</name>
+  <capacity>0</capacity>
+  <allocation>0</allocation>
+  <available>0</available>
+  <source>
+  </source>
+  <target>
+    <path>/home/mystorage</path>
+    <permissions>
+    <mode>0700</mode>
+    <owner>-1</owner>
+    <group>-1</group>
+    </permissions>
+  </target>
+</pool>
+
+[root@node54 lixx]# vim mystorage.xml 
+[root@node54 lixx]# virsh pool-define mystorage.xml 
+Pool mystorage defined from mystorage.xml
+
+[root@node54 lixx]# virsh pool-list --all
+ Name                 State      Autostart 
+-------------------------------------------
+ mystorage            inactive   no        
+[root@node54 lixx]# virsh pool-start mystorage
+Pool mystorage started
+
+[root@node54 lixx]# virsh pool-autostart mystorage
+Pool mystorage marked as autostarted
+
+[root@node54 lixx]# virsh pool-list --all
+ Name                 State      Autostart 
+-------------------------------------------
+ mystorage            active     yes
+
+[root@node54 lixx]# virsh pool-info mystorage
+Name:           mystorage
+UUID:           c2b14d65-f3cd-4359-9a3c-7610c276a87b
+State:          running
+Persistent:     yes
+Autostart:      yes
+Capacity:       249.98 GiB
+Allocation:     225.88 GiB
+Available:      24.09 GiB
