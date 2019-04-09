@@ -1,0 +1,352 @@
+[root@con25 ~]# while test True;do sleep 1; docker exec -it nova_libvirt virsh domjobinfo instance-00000062;done
+Job type:         None        
+
+Job type:         None        
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     823          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     2127         ms
+Data processed:   510.466 KiB
+Data remaining:   64.004 GiB
+Data total:       64.005 GiB
+Memory processed: 510.466 KiB
+Memory remaining: 64.004 GiB
+Memory total:     64.005 GiB
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   166         
+Normal pages:     127         
+Normal data:      508.000 KiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     3319         ms
+Data processed:   112.383 MiB
+Data remaining:   59.306 GiB
+Data total:       64.005 GiB
+Memory processed: 112.383 MiB
+Memory remaining: 59.306 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 111.581 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   1205668     
+Normal pages:     26070       
+Normal data:      101.836 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     4516         ms
+Data processed:   189.117 MiB
+Data remaining:   49.401 GiB
+Data total:       64.005 GiB
+Memory processed: 189.117 MiB
+Memory remaining: 49.401 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 28.301 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   3788202     
+Normal pages:     40012       
+Normal data:      156.297 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     5708         ms
+Data processed:   221.228 MiB
+Data remaining:   35.130 GiB
+Data total:       64.005 GiB
+Memory processed: 221.228 MiB
+Memory remaining: 35.130 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 27.579 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   7529413     
+Normal pages:     40012       
+Normal data:      156.297 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     6910         ms
+Data processed:   258.211 MiB
+Data remaining:   18.693 GiB
+Data total:       64.005 GiB
+Memory processed: 258.211 MiB
+Memory remaining: 18.693 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 30.552 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   11838238    
+Normal pages:     40012       
+Normal data:      156.297 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     8088         ms
+Data processed:   290.224 MiB
+Data remaining:   4.465 GiB
+Data total:       64.005 GiB
+Memory processed: 290.224 MiB
+Memory remaining: 4.465 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 20.448 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   15567954    
+Normal pages:     40012       
+Normal data:      156.297 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     9282         ms
+Data processed:   405.296 MiB
+Data remaining:   1.508 GiB
+Data total:       64.005 GiB
+Memory processed: 405.296 MiB
+Memory remaining: 1.508 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 113.922 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16315284    
+Normal pages:     67774       
+Normal data:      264.742 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     10473        ms
+Data processed:   538.993 MiB
+Data remaining:   1.377 GiB
+Data total:       64.005 GiB
+Memory processed: 538.993 MiB
+Memory remaining: 1.377 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 111.911 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16315640    
+Normal pages:     101933      
+Normal data:      398.176 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     11640        ms
+Data processed:   669.715 MiB
+Data remaining:   1.229 GiB
+Data total:       64.005 GiB
+Memory processed: 669.715 MiB
+Memory remaining: 1.229 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 110.603 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16320888    
+Normal pages:     135321      
+Normal data:      528.598 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     12823        ms
+Data processed:   801.930 MiB
+Data remaining:   1.066 GiB
+Data total:       64.005 GiB
+Memory processed: 801.930 MiB
+Memory remaining: 1.066 GiB
+Memory total:     64.005 GiB
+Memory bandwidth: 110.934 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330008    
+Normal pages:     169082      
+Normal data:      660.477 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     14014        ms
+Data processed:   933.105 MiB
+Data remaining:   957.691 MiB
+Data total:       64.005 GiB
+Memory processed: 933.105 MiB
+Memory remaining: 957.691 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 109.375 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     202596      
+Normal data:      791.391 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     15199        ms
+Data processed:   1.041 GiB
+Data remaining:   824.605 MiB
+Data total:       64.005 GiB
+Memory processed: 1.041 GiB
+Memory remaining: 824.605 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 113.503 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     236666      
+Normal data:      924.477 MiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     16358        ms
+Data processed:   1.168 GiB
+Data remaining:   695.395 MiB
+Data total:       64.005 GiB
+Memory processed: 1.168 GiB
+Memory remaining: 695.395 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 113.503 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     269744      
+Normal data:      1.029 GiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     17531        ms
+Data processed:   1.296 GiB
+Data remaining:   564.559 MiB
+Data total:       64.005 GiB
+Memory processed: 1.296 GiB
+Memory remaining: 564.559 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 109.659 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     303238      
+Normal data:      1.157 GiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     18717        ms
+Data processed:   1.426 GiB
+Data remaining:   431.473 MiB
+Data total:       64.005 GiB
+Memory processed: 1.426 GiB
+Memory remaining: 431.473 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 113.503 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     337308      
+Normal data:      1.287 GiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     19890        ms
+Data processed:   1.555 GiB
+Data remaining:   300.137 MiB
+Data total:       64.005 GiB
+Memory processed: 1.555 GiB
+Memory remaining: 300.137 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 111.140 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     370930      
+Normal data:      1.415 GiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     21078        ms
+Data processed:   1.684 GiB
+Data remaining:   167.801 MiB
+Data total:       64.005 GiB
+Memory processed: 1.684 GiB
+Memory remaining: 167.801 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 112.198 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     404808      
+Normal data:      1.544 GiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+Job type:         Unbounded   
+Operation:        Outgoing migration
+Time elapsed:     22259        ms
+Data processed:   1.814 GiB
+Data remaining:   35.215 MiB
+Data total:       64.005 GiB
+Memory processed: 1.814 GiB
+Memory remaining: 35.215 MiB
+Memory total:     64.005 GiB
+Memory bandwidth: 112.442 MiB/s
+Dirty rate:       0            pages/s
+Page size:        4096         bytes
+Iteration:        1           
+Constant pages:   16330684    
+Normal pages:     438750      
+Normal data:      1.674 GiB
+Expected downtime: 50           ms
+Setup time:       820          ms
+
+error: failed to get domain 'instance-00000062'
+error: Domain not found: no domain with matching name 'instance-00000062'
