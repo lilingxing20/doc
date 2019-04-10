@@ -256,6 +256,11 @@ error: Unable to pre-create chardev file '/var/lib/nova/instances/b4702c2f-daae-
 root@compute2's password: 
 Migration: [100 %]
 
+or
+
+[root@compute1 ~]# virsh migrate --live --verbose instance-000012f9 qemu+tcp://compute2/system
+Migration: [100 %]
+
 
 5. 迁移过程内存拷贝状态
 [root@compute1 ~]# while test True;do sleep 0.5;  virsh  domjobinfo instance-000012f9;done
@@ -385,3 +390,9 @@ Setup time:       14           ms
 
 error: Requested operation is not valid: domain is not running
 
+
+6. 查看虚机
+[root@compute1 ~]# virsh  list
+ Id    Name                           State
+----------------------------------------------------
+ 388   instance-000012f9              running
