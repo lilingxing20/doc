@@ -1,0 +1,387 @@
+0. 环境
+[root@compute1 ~]# virsh  -V
+Virsh command line tool of libvirt 1.2.17
+See web site at http://libvirt.org/
+
+Compiled with support for:
+ Hypervisors: QEMU/KVM LXC ESX Test
+ Networking: Remote Network Bridging Interface netcf Nwfilter VirtualPort
+ Storage: Dir Disk Filesystem SCSI Multipath iSCSI LVM RBD Gluster
+ Miscellaneous: Daemon Nodedev SELinux Secrets Debug DTrace Readline Modular
+
+
+[root@compute2 ~]# virsh  -V
+Virsh command line tool of libvirt 1.2.17
+See web site at http://libvirt.org/
+
+Compiled with support for:
+ Hypervisors: QEMU/KVM LXC ESX Test
+ Networking: Remote Network Bridging Interface netcf Nwfilter VirtualPort
+ Storage: Dir Disk Filesystem SCSI Multipath iSCSI LVM RBD Gluster
+ Miscellaneous: Daemon Nodedev SELinux Secrets Debug DTrace Readline Modular
+ 
+
+1. 准备虚机
+[root@compute1 ~]# virsh  list
+ Id    Name                           State
+----------------------------------------------------
+ 386   instance-000012f9              running
+
+
+
+2. 查看虚机详情
+[root@compute1 ~]# virsh  dumpxml instance-000012f9
+<domain type='kvm' id='386'>
+  <name>instance-000012f9</name>
+  <uuid>b4702c2f-daae-4c07-9cec-3e8a2bed6807</uuid>
+  <metadata>
+    <nova:instance xmlns:nova="http://openstack.org/xmlns/libvirt/nova/1.0">
+      <nova:package version="13.0.0-2.el7.ceos"/>
+      <nova:name>xx1</nova:name>
+      <nova:creationTime>2019-04-08 09:03:36</nova:creationTime>
+      <nova:flavor name="20180706143017-2">
+        <nova:memory>2048</nova:memory>
+        <nova:disk>25</nova:disk>
+        <nova:swap>0</nova:swap>
+        <nova:ephemeral>0</nova:ephemeral>
+        <nova:vcpus>1</nova:vcpus>
+      </nova:flavor>
+      <nova:owner>
+        <nova:user uuid="5f34f780add44bf587107ea602508f21">admin</nova:user>
+        <nova:project uuid="cafc67aeade64bf9ba6cb7f96a8b1ef2">admin</nova:project>
+      </nova:owner>
+      <nova:root type="image" uuid="25cc3812-3ba1-49a2-8adf-797ddd2ae359"/>
+    </nova:instance>
+  </metadata>
+  <memory unit='KiB'>2097152</memory>
+  <currentMemory unit='KiB'>2097152</currentMemory>
+  <vcpu placement='static'>1</vcpu>
+  <cputune>
+    <shares>1024</shares>
+  </cputune>
+  <resource>
+    <partition>/machine</partition>
+  </resource>
+  <sysinfo type='smbios'>
+    <system>
+      <entry name='manufacturer'>Fedora Project</entry>
+      <entry name='product'>OpenStack Nova</entry>
+      <entry name='version'>13.0.0-2.el7.ceos</entry>
+      <entry name='serial'>6103e56c-684e-4170-9390-907beef92c29</entry>
+      <entry name='uuid'>b4702c2f-daae-4c07-9cec-3e8a2bed6807</entry>
+      <entry name='family'>Virtual Machine</entry>
+    </system>
+  </sysinfo>
+  <os>
+    <type arch='x86_64' machine='pc-i440fx-rhel7.2.0'>hvm</type>
+    <boot dev='hd'/>
+    <smbios mode='sysinfo'/>
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+  </features>
+  <cpu mode='host-model'>
+    <model fallback='allow'>IvyBridge</model>
+    <vendor>Intel</vendor>
+    <topology sockets='1' cores='1' threads='1'/>
+    <feature policy='require' name='pdpe1gb'/>
+    <feature policy='require' name='osxsave'/>
+    <feature policy='require' name='dca'/>
+    <feature policy='require' name='pcid'/>
+    <feature policy='require' name='pdcm'/>
+    <feature policy='require' name='xtpr'/>
+    <feature policy='require' name='tm2'/>
+    <feature policy='require' name='est'/>
+    <feature policy='require' name='smx'/>
+    <feature policy='require' name='vmx'/>
+    <feature policy='require' name='ds_cpl'/>
+    <feature policy='require' name='monitor'/>
+    <feature policy='require' name='dtes64'/>
+    <feature policy='require' name='pbe'/>
+    <feature policy='require' name='tm'/>
+    <feature policy='require' name='ht'/>
+    <feature policy='require' name='ss'/>
+    <feature policy='require' name='acpi'/>
+    <feature policy='require' name='ds'/>
+  </cpu>
+  <clock offset='utc'>
+    <timer name='pit' tickpolicy='delay'/>
+    <timer name='rtc' tickpolicy='catchup'/>
+    <timer name='hpet' present='no'/>
+  </clock>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <devices>
+    <emulator>/usr/libexec/qemu-kvm</emulator>
+    <disk type='network' device='disk'>
+      <driver name='qemu' type='raw' cache='writeback'/>
+      <auth username='cinder'>
+        <secret type='ceph' uuid='96188fa4-73d7-444a-a737-22a48a0dd48c'/>
+      </auth>
+      <source protocol='rbd' name='vms/b4702c2f-daae-4c07-9cec-3e8a2bed6807_disk'>
+        <host name='192.168.100.51' port='6789'/>
+        <host name='192.168.100.52' port='6789'/>
+        <host name='192.168.100.53' port='6789'/>
+      </source>
+      <backingStore/>
+      <target dev='vda' bus='virtio'/>
+      <alias name='virtio-disk0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0'/>
+    </disk>
+    <disk type='network' device='cdrom'>
+      <driver name='qemu' type='raw' cache='writeback'/>
+      <auth username='cinder'>
+        <secret type='ceph' uuid='96188fa4-73d7-444a-a737-22a48a0dd48c'/>
+      </auth>
+      <source protocol='rbd' name='vms/b4702c2f-daae-4c07-9cec-3e8a2bed6807_disk.config'>
+        <host name='192.168.100.51' port='6789'/>
+        <host name='192.168.100.52' port='6789'/>
+        <host name='192.168.100.53' port='6789'/>
+      </source>
+      <backingStore/>
+      <target dev='hdd' bus='ide'/>
+      <readonly/>
+      <alias name='ide0-1-1'/>
+      <address type='drive' controller='0' bus='1' target='0' unit='1'/>
+    </disk>
+    <controller type='ide' index='0'>
+      <alias name='ide'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x1'/>
+    </controller>
+    <controller type='usb' index='0'>
+      <alias name='usb'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x01' function='0x2'/>
+    </controller>
+    <controller type='pci' index='0' model='pci-root'>
+      <alias name='pci.0'/>
+    </controller>
+    <interface type='bridge'>
+      <mac address='fa:16:3e:ef:91:63'/>
+      <source bridge='br-int'/>
+      <virtualport type='openvswitch'>
+        <parameters interfaceid='f170f770-6f80-45c0-9dd2-125da6e36ee1'/>
+      </virtualport>
+      <target dev='tapf170f770-6f'/>
+      <model type='virtio'/>
+      <alias name='net0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
+    </interface>
+    <serial type='file'>
+      <source path='/var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807/console.log'/>
+      <target port='0'/>
+      <alias name='serial0'/>
+    </serial>
+    <serial type='pty'>
+      <source path='/dev/pts/2'/>
+      <target port='1'/>
+      <alias name='serial1'/>
+    </serial>
+    <console type='file'>
+      <source path='/var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807/console.log'/>
+      <target type='serial' port='0'/>
+      <alias name='serial0'/>
+    </console>
+    <input type='tablet' bus='usb'>
+      <alias name='input0'/>
+    </input>
+    <input type='mouse' bus='ps2'/>
+    <input type='keyboard' bus='ps2'/>
+    <graphics type='vnc' port='5901' autoport='yes' listen='0.0.0.0' keymap='en-us'>
+      <listen type='address' address='0.0.0.0'/>
+    </graphics>
+    <video>
+      <model type='cirrus' vram='16384' heads='1'/>
+      <alias name='video0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
+    </video>
+    <memballoon model='virtio'>
+      <stats period='10'/>
+      <alias name='balloon0'/>
+      <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+    </memballoon>
+  </devices>
+</domain>
+
+[root@compute1 ~]# virsh  domblkinfo instance-000012f9
+error: command 'domblkinfo' requires <device> option
+[root@compute1 ~]# virsh  domblklist instance-000012f9
+Target     Source
+------------------------------------------------
+vda        vms/b4702c2f-daae-4c07-9cec-3e8a2bed6807_disk
+hdd        vms/b4702c2f-daae-4c07-9cec-3e8a2bed6807_disk.config
+
+[root@compute1 ~]# virsh  domblkstat instance-000012f9
+ rd_req 60
+ rd_bytes 958464
+ wr_req 181
+ wr_bytes 1719808
+ flush_operations 86
+ rd_total_times 442823822
+ wr_total_times 193927159
+ flush_total_times 393444219
+
+[root@compute1 ~]# virsh  domblkinfo instance-000012f9 vda
+Capacity:       26843545600
+Allocation:     21473312256
+Physical:       26843545600
+
+[root@compute1 ~]# virsh  domblkinfo instance-000012f9 hdd
+Capacity:       438272
+Allocation:     0
+Physical:       438272
+
+[root@compute1 ~]# virsh  domblkerror instance-000012f9
+No errors found
+
+[root@compute1 ~]# ll /var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807
+total 52
+-rw-rw---- 1 qemu qemu 47165 Apr  8 17:04 console.log
+-rw-r--r-- 1 nova nova  3583 Apr  8 17:03 libvirt.xml
+[root@compute1 ~]# ls -dhl /var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807
+drwxr-xr-x 2 nova nova 4.0K Apr  8 17:03 /var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807
+
+
+3. 在目标节点创建虚机目录
+[root@compute2 ~]# mkdir -p /var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807/
+[root@compute2 ~]# chmow nova:nova /var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807/
+
+
+4. 在源节点执行虚机热迁移
+[root@compute1 ~]# virsh migrate --live --verbose instance-000012f9 qemu+tcp://compute2/system tcp://compute2
+error: Unable to pre-create chardev file '/var/lib/nova/instances/b4702c2f-daae-4c07-9cec-3e8a2bed6807/console.log': No such file or directory
+
+[root@compute1 ~]# virsh migrate --live --verbose instance-000012f9 qemu+ssh://compute2/system
+root@compute2's password: 
+Migration: [100 %]
+
+
+5. 迁移过程内存拷贝状态
+[root@compute1 ~]# while test True;do sleep 0.5;  virsh  domjobinfo instance-000012f9;done
+Job type:         None        
+
+Job type:         Unbounded   
+Time elapsed:     389          ms
+
+Job type:         Unbounded   
+Time elapsed:     924          ms
+Data processed:   8.780 MiB
+Data remaining:   2.001 GiB
+Data total:       2.016 GiB
+Memory processed: 8.780 MiB
+Memory remaining: 2.001 GiB
+Memory total:     2.016 GiB
+Constant pages:   1929        
+Normal pages:     2239        
+Normal data:      8.746 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     1455         ms
+Data processed:   52.904 MiB
+Data remaining:   1.213 GiB
+Data total:       2.016 GiB
+Memory processed: 52.904 MiB
+Memory remaining: 1.213 GiB
+Memory total:     2.016 GiB
+Memory bandwidth: 111.381 MiB/s
+Constant pages:   197454      
+Normal pages:     13084       
+Normal data:      51.109 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     1990         ms
+Data processed:   102.413 MiB
+Data remaining:   352.992 MiB
+Data total:       2.016 GiB
+Memory processed: 102.413 MiB
+Memory remaining: 352.992 MiB
+Memory total:     2.016 GiB
+Memory bandwidth: 111.341 MiB/s
+Constant pages:   412966      
+Normal pages:     25261       
+Normal data:      98.676 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     2520         ms
+Data processed:   142.245 MiB
+Data remaining:   313.215 MiB
+Data total:       2.016 GiB
+Memory processed: 142.245 MiB
+Memory remaining: 313.215 MiB
+Memory total:     2.016 GiB
+Memory bandwidth: 28.054 MiB/s
+Constant pages:   412972      
+Normal pages:     35438       
+Normal data:      138.430 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     3051         ms
+Data processed:   201.713 MiB
+Data remaining:   253.668 MiB
+Data total:       2.016 GiB
+Memory processed: 201.713 MiB
+Memory remaining: 253.668 MiB
+Memory total:     2.016 GiB
+Memory bandwidth: 120.127 MiB/s
+Constant pages:   413022      
+Normal pages:     50632       
+Normal data:      197.781 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     3582         ms
+Data processed:   261.290 MiB
+Data remaining:   190.508 MiB
+Data total:       2.016 GiB
+Memory processed: 261.290 MiB
+Memory remaining: 190.508 MiB
+Memory total:     2.016 GiB
+Memory bandwidth: 121.543 MiB/s
+Constant pages:   413971      
+Normal pages:     65852       
+Normal data:      257.234 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     4113         ms
+Data processed:   319.404 MiB
+Data remaining:   130.773 MiB
+Data total:       2.016 GiB
+Memory processed: 319.404 MiB
+Memory remaining: 130.773 MiB
+Memory total:     2.016 GiB
+Memory bandwidth: 112.526 MiB/s
+Constant pages:   414416      
+Normal pages:     80699       
+Normal data:      315.230 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+Job type:         Unbounded   
+Time elapsed:     4651         ms
+Data processed:   380.414 MiB
+Data remaining:   58.754 MiB
+Data total:       2.016 GiB
+Memory processed: 380.414 MiB
+Memory remaining: 58.754 MiB
+Memory total:     2.016 GiB
+Memory bandwidth: 111.733 MiB/s
+Constant pages:   417271      
+Normal pages:     96282       
+Normal data:      376.102 MiB
+Expected downtime: 300          ms
+Setup time:       14           ms
+
+error: Requested operation is not valid: domain is not running
+
