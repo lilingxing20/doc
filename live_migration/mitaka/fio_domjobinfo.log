@@ -1,0 +1,1333 @@
+Job type:         Unbounded   
+Time elapsed:     810363       ms
+Data processed:   61.572 GiB
+Data remaining:   818.457 MiB
+Data total:       64.016 GiB
+Memory processed: 61.572 GiB
+Memory remaining: 818.457 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 119.465 MiB/s
+Constant pages:   11515666    
+Normal pages:     40905755    
+Normal data:      156.043 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     811404       ms
+Data processed:   61.677 GiB
+Data remaining:   711.012 MiB
+Data total:       64.016 GiB
+Memory processed: 61.677 GiB
+Memory remaining: 711.012 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 110.647 MiB/s
+Constant pages:   11515666    
+Normal pages:     40933261    
+Normal data:      156.148 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     812446       ms
+Data processed:   61.729 GiB
+Data remaining:   657.473 MiB
+Data total:       64.016 GiB
+Memory processed: 61.729 GiB
+Memory remaining: 657.473 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 112.677 MiB/s
+Constant pages:   11515666    
+Normal pages:     40946967    
+Normal data:      156.200 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     813478       ms
+Data processed:   61.837 GiB
+Data remaining:   547.785 MiB
+Data total:       64.016 GiB
+Memory processed: 61.837 GiB
+Memory remaining: 547.785 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 90.404 MiB/s
+Constant pages:   11515666    
+Normal pages:     40975047    
+Normal data:      156.307 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     814509       ms
+Data processed:   61.950 GiB
+Data remaining:   432.082 MiB
+Data total:       64.016 GiB
+Memory processed: 61.950 GiB
+Memory remaining: 432.082 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 121.741 MiB/s
+Constant pages:   11515666    
+Normal pages:     41004667    
+Normal data:      156.420 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     815547       ms
+Data processed:   61.984 GiB
+Data remaining:   397.691 MiB
+Data total:       64.016 GiB
+Memory processed: 61.984 GiB
+Memory remaining: 397.691 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 14.522 MiB/s
+Constant pages:   11515666    
+Normal pages:     41013471    
+Normal data:      156.454 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     816595       ms
+Data processed:   62.058 GiB
+Data remaining:   321.762 MiB
+Data total:       64.016 GiB
+Memory processed: 62.058 GiB
+Memory remaining: 321.762 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 86.443 MiB/s
+Constant pages:   11515666    
+Normal pages:     41032909    
+Normal data:      156.528 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     817631       ms
+Data processed:   62.156 GiB
+Data remaining:   221.320 MiB
+Data total:       64.016 GiB
+Memory processed: 62.156 GiB
+Memory remaining: 221.320 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 89.696 MiB/s
+Constant pages:   11515666    
+Normal pages:     41058622    
+Normal data:      156.626 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     818669       ms
+Data processed:   62.241 GiB
+Data remaining:   134.641 MiB
+Data total:       64.016 GiB
+Memory processed: 62.241 GiB
+Memory remaining: 134.641 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 83.551 MiB/s
+Constant pages:   11515666    
+Normal pages:     41080812    
+Normal data:      156.711 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     819702       ms
+Data processed:   62.305 GiB
+Data remaining:   69.215 MiB
+Data total:       64.016 GiB
+Memory processed: 62.305 GiB
+Memory remaining: 69.215 MiB
+Memory total:     64.016 GiB
+Memory bandwidth: 7.108 MiB/s
+Constant pages:   11515666    
+Normal pages:     41097561    
+Normal data:      156.775 GiB
+Expected downtime: 46           ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     820743       ms
+Data processed:   62.363 GiB
+Data remaining:   37.097 GiB
+Data total:       64.016 GiB
+Memory processed: 62.363 GiB
+Memory remaining: 37.097 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 14.470 MiB/s
+Constant pages:   11520347    
+Normal pages:     41112841    
+Normal data:      156.833 GiB
+Expected downtime: 3206         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     821774       ms
+Data processed:   62.385 GiB
+Data remaining:   37.075 GiB
+Data total:       64.016 GiB
+Memory processed: 62.385 GiB
+Memory remaining: 37.075 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 7.952 MiB/s
+Constant pages:   11520347    
+Normal pages:     41118581    
+Normal data:      156.855 GiB
+Expected downtime: 5835         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     822809       ms
+Data processed:   62.414 GiB
+Data remaining:   37.046 GiB
+Data total:       64.016 GiB
+Memory processed: 62.414 GiB
+Memory remaining: 37.046 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 27.569 MiB/s
+Constant pages:   11520347    
+Normal pages:     41126051    
+Normal data:      156.883 GiB
+Expected downtime: 1682         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     823840       ms
+Data processed:   62.422 GiB
+Data remaining:   37.038 GiB
+Data total:       64.016 GiB
+Memory processed: 62.422 GiB
+Memory remaining: 37.038 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 5.509 MiB/s
+Constant pages:   11520347    
+Normal pages:     41128167    
+Normal data:      156.892 GiB
+Expected downtime: 8422         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     824871       ms
+Data processed:   62.455 GiB
+Data remaining:   37.006 GiB
+Data total:       64.016 GiB
+Memory processed: 62.455 GiB
+Memory remaining: 37.006 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 20.929 MiB/s
+Constant pages:   11520347    
+Normal pages:     41136723    
+Normal data:      156.924 GiB
+Expected downtime: 2216         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     825902       ms
+Data processed:   62.466 GiB
+Data remaining:   36.995 GiB
+Data total:       64.016 GiB
+Memory processed: 62.466 GiB
+Memory remaining: 36.995 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 10.457 MiB/s
+Constant pages:   11520347    
+Normal pages:     41139609    
+Normal data:      156.935 GiB
+Expected downtime: 4436         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     826940       ms
+Data processed:   62.469 GiB
+Data remaining:   36.992 GiB
+Data total:       64.016 GiB
+Memory processed: 62.469 GiB
+Memory remaining: 36.992 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 1.619 MiB/s
+Constant pages:   11520347    
+Normal pages:     41140347    
+Normal data:      156.938 GiB
+Expected downtime: 28667        ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     827979       ms
+Data processed:   62.472 GiB
+Data remaining:   36.989 GiB
+Data total:       64.016 GiB
+Memory processed: 62.472 GiB
+Memory remaining: 36.989 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 1.326 MiB/s
+Constant pages:   11520347    
+Normal pages:     41141180    
+Normal data:      156.941 GiB
+Expected downtime: 34998        ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     829017       ms
+Data processed:   62.526 GiB
+Data remaining:   36.934 GiB
+Data total:       64.016 GiB
+Memory processed: 62.526 GiB
+Memory remaining: 36.934 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 41.468 MiB/s
+Constant pages:   11520352    
+Normal pages:     41155462    
+Normal data:      156.996 GiB
+Expected downtime: 1118         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     830048       ms
+Data processed:   62.531 GiB
+Data remaining:   36.930 GiB
+Data total:       64.016 GiB
+Memory processed: 62.531 GiB
+Memory remaining: 36.930 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 3.897 MiB/s
+Constant pages:   11520352    
+Normal pages:     41156617    
+Normal data:      157.000 GiB
+Expected downtime: 11908        ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     831078       ms
+Data processed:   62.544 GiB
+Data remaining:   36.916 GiB
+Data total:       64.016 GiB
+Memory processed: 62.544 GiB
+Memory remaining: 36.916 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 18.811 MiB/s
+Constant pages:   11520352    
+Normal pages:     41160209    
+Normal data:      157.014 GiB
+Expected downtime: 2466         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     832109       ms
+Data processed:   62.559 GiB
+Data remaining:   36.902 GiB
+Data total:       64.016 GiB
+Memory processed: 62.559 GiB
+Memory remaining: 36.902 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 32.494 MiB/s
+Constant pages:   11520352    
+Normal pages:     41163992    
+Normal data:      157.028 GiB
+Expected downtime: 1427         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     833146       ms
+Data processed:   62.590 GiB
+Data remaining:   36.870 GiB
+Data total:       64.016 GiB
+Memory processed: 62.590 GiB
+Memory remaining: 36.870 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 36.243 MiB/s
+Constant pages:   11520352    
+Normal pages:     41172168    
+Normal data:      157.059 GiB
+Expected downtime: 1280         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     834178       ms
+Data processed:   62.610 GiB
+Data remaining:   36.851 GiB
+Data total:       64.016 GiB
+Memory processed: 62.610 GiB
+Memory remaining: 36.851 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 9.201 MiB/s
+Constant pages:   11520352    
+Normal pages:     41177394    
+Normal data:      157.079 GiB
+Expected downtime: 5042         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     835211       ms
+Data processed:   62.627 GiB
+Data remaining:   36.834 GiB
+Data total:       64.016 GiB
+Memory processed: 62.627 GiB
+Memory remaining: 36.834 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 9.979 MiB/s
+Constant pages:   11520352    
+Normal pages:     41181753    
+Normal data:      157.096 GiB
+Expected downtime: 4649         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     836249       ms
+Data processed:   62.628 GiB
+Data remaining:   36.832 GiB
+Data total:       64.016 GiB
+Memory processed: 62.628 GiB
+Memory remaining: 36.832 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 1.983 MiB/s
+Constant pages:   11520352    
+Normal pages:     41182138    
+Normal data:      157.097 GiB
+Expected downtime: 23399        ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     837285       ms
+Data processed:   62.651 GiB
+Data remaining:   36.810 GiB
+Data total:       64.016 GiB
+Memory processed: 62.651 GiB
+Memory remaining: 36.810 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 40.627 MiB/s
+Constant pages:   11520352    
+Normal pages:     41187971    
+Normal data:      157.120 GiB
+Expected downtime: 1141         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     838318       ms
+Data processed:   62.664 GiB
+Data remaining:   36.797 GiB
+Data total:       64.016 GiB
+Memory processed: 62.664 GiB
+Memory remaining: 36.797 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 2.617 MiB/s
+Constant pages:   11520352    
+Normal pages:     41191496    
+Normal data:      157.133 GiB
+Expected downtime: 17728        ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     839352       ms
+Data processed:   62.694 GiB
+Data remaining:   36.767 GiB
+Data total:       64.016 GiB
+Memory processed: 62.694 GiB
+Memory remaining: 36.767 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 48.231 MiB/s
+Constant pages:   11520352    
+Normal pages:     41199286    
+Normal data:      157.163 GiB
+Expected downtime: 961          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     840383       ms
+Data processed:   62.702 GiB
+Data remaining:   36.759 GiB
+Data total:       64.016 GiB
+Memory processed: 62.702 GiB
+Memory remaining: 36.759 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 6.865 MiB/s
+Constant pages:   11520352    
+Normal pages:     41201499    
+Normal data:      157.171 GiB
+Expected downtime: 6758         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     841414       ms
+Data processed:   62.728 GiB
+Data remaining:   36.722 GiB
+Data total:       64.016 GiB
+Memory processed: 62.728 GiB
+Memory remaining: 36.722 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 38.137 MiB/s
+Constant pages:   11523260    
+Normal pages:     41208288    
+Normal data:      157.197 GiB
+Expected downtime: 1216         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     842451       ms
+Data processed:   62.763 GiB
+Data remaining:   36.686 GiB
+Data total:       64.016 GiB
+Memory processed: 62.763 GiB
+Memory remaining: 36.686 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 21.850 MiB/s
+Constant pages:   11523260    
+Normal pages:     41217493    
+Normal data:      157.232 GiB
+Expected downtime: 2123         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     843483       ms
+Data processed:   62.801 GiB
+Data remaining:   36.649 GiB
+Data total:       64.016 GiB
+Memory processed: 62.801 GiB
+Memory remaining: 36.649 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 57.880 MiB/s
+Constant pages:   11523260    
+Normal pages:     41227393    
+Normal data:      157.270 GiB
+Expected downtime: 801          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     844514       ms
+Data processed:   62.832 GiB
+Data remaining:   36.618 GiB
+Data total:       64.016 GiB
+Memory processed: 62.832 GiB
+Memory remaining: 36.618 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 42.187 MiB/s
+Constant pages:   11523260    
+Normal pages:     41235532    
+Normal data:      157.301 GiB
+Expected downtime: 1099         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     845544       ms
+Data processed:   62.872 GiB
+Data remaining:   36.578 GiB
+Data total:       64.016 GiB
+Memory processed: 62.872 GiB
+Memory remaining: 36.578 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 36.154 MiB/s
+Constant pages:   11523260    
+Normal pages:     41246007    
+Normal data:      157.341 GiB
+Expected downtime: 1283         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     846591       ms
+Data processed:   62.898 GiB
+Data remaining:   36.552 GiB
+Data total:       64.016 GiB
+Memory processed: 62.898 GiB
+Memory remaining: 36.552 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 28.963 MiB/s
+Constant pages:   11523260    
+Normal pages:     41252665    
+Normal data:      157.366 GiB
+Expected downtime: 1601         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     847625       ms
+Data processed:   62.929 GiB
+Data remaining:   36.522 GiB
+Data total:       64.016 GiB
+Memory processed: 62.929 GiB
+Memory remaining: 36.522 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 31.640 MiB/s
+Constant pages:   11523260    
+Normal pages:     41260673    
+Normal data:      157.397 GiB
+Expected downtime: 1466         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     848656       ms
+Data processed:   62.960 GiB
+Data remaining:   36.490 GiB
+Data total:       64.016 GiB
+Memory processed: 62.960 GiB
+Memory remaining: 36.490 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 32.566 MiB/s
+Constant pages:   11523260    
+Normal pages:     41268895    
+Normal data:      157.428 GiB
+Expected downtime: 1424         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     849688       ms
+Data processed:   62.993 GiB
+Data remaining:   36.457 GiB
+Data total:       64.016 GiB
+Memory processed: 62.993 GiB
+Memory remaining: 36.457 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 36.506 MiB/s
+Constant pages:   11523260    
+Normal pages:     41277561    
+Normal data:      157.461 GiB
+Expected downtime: 1270         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     850721       ms
+Data processed:   63.024 GiB
+Data remaining:   36.427 GiB
+Data total:       64.016 GiB
+Memory processed: 63.024 GiB
+Memory remaining: 36.427 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 35.335 MiB/s
+Constant pages:   11523260    
+Normal pages:     41285614    
+Normal data:      157.492 GiB
+Expected downtime: 1313         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     851754       ms
+Data processed:   63.058 GiB
+Data remaining:   36.393 GiB
+Data total:       64.016 GiB
+Memory processed: 63.058 GiB
+Memory remaining: 36.393 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 24.028 MiB/s
+Constant pages:   11523260    
+Normal pages:     41294519    
+Normal data:      157.526 GiB
+Expected downtime: 1930         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     852790       ms
+Data processed:   63.097 GiB
+Data remaining:   36.354 GiB
+Data total:       64.016 GiB
+Memory processed: 63.097 GiB
+Memory remaining: 36.354 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 40.745 MiB/s
+Constant pages:   11523260    
+Normal pages:     41304684    
+Normal data:      157.565 GiB
+Expected downtime: 1138         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     853830       ms
+Data processed:   63.132 GiB
+Data remaining:   36.319 GiB
+Data total:       64.016 GiB
+Memory processed: 63.132 GiB
+Memory remaining: 36.319 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 33.921 MiB/s
+Constant pages:   11523260    
+Normal pages:     41313917    
+Normal data:      157.600 GiB
+Expected downtime: 1367         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     854862       ms
+Data processed:   63.168 GiB
+Data remaining:   36.283 GiB
+Data total:       64.016 GiB
+Memory processed: 63.168 GiB
+Memory remaining: 36.283 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 51.449 MiB/s
+Constant pages:   11523260    
+Normal pages:     41323318    
+Normal data:      157.636 GiB
+Expected downtime: 901          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     855892       ms
+Data processed:   63.200 GiB
+Data remaining:   36.251 GiB
+Data total:       64.016 GiB
+Memory processed: 63.200 GiB
+Memory remaining: 36.251 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 38.604 MiB/s
+Constant pages:   11523260    
+Normal pages:     41331706    
+Normal data:      157.668 GiB
+Expected downtime: 1201         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     856923       ms
+Data processed:   63.236 GiB
+Data remaining:   36.215 GiB
+Data total:       64.016 GiB
+Memory processed: 63.236 GiB
+Memory remaining: 36.215 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 36.463 MiB/s
+Constant pages:   11523260    
+Normal pages:     41341031    
+Normal data:      157.704 GiB
+Expected downtime: 1272         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     857956       ms
+Data processed:   63.271 GiB
+Data remaining:   36.180 GiB
+Data total:       64.016 GiB
+Memory processed: 63.271 GiB
+Memory remaining: 36.180 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 27.663 MiB/s
+Constant pages:   11523260    
+Normal pages:     41350354    
+Normal data:      157.739 GiB
+Expected downtime: 1677         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     858989       ms
+Data processed:   63.300 GiB
+Data remaining:   36.151 GiB
+Data total:       64.016 GiB
+Memory processed: 63.300 GiB
+Memory remaining: 36.151 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 38.434 MiB/s
+Constant pages:   11523260    
+Normal pages:     41357847    
+Normal data:      157.768 GiB
+Expected downtime: 1207         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     860020       ms
+Data processed:   63.343 GiB
+Data remaining:   36.108 GiB
+Data total:       64.016 GiB
+Memory processed: 63.343 GiB
+Memory remaining: 36.108 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 30.654 MiB/s
+Constant pages:   11523260    
+Normal pages:     41369099    
+Normal data:      157.811 GiB
+Expected downtime: 1513         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     861052       ms
+Data processed:   63.381 GiB
+Data remaining:   36.070 GiB
+Data total:       64.016 GiB
+Memory processed: 63.381 GiB
+Memory remaining: 36.070 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 32.458 MiB/s
+Constant pages:   11523260    
+Normal pages:     41379066    
+Normal data:      157.849 GiB
+Expected downtime: 1429         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     862094       ms
+Data processed:   63.414 GiB
+Data remaining:   36.037 GiB
+Data total:       64.016 GiB
+Memory processed: 63.414 GiB
+Memory remaining: 36.037 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 16.350 MiB/s
+Constant pages:   11523260    
+Normal pages:     41387768    
+Normal data:      157.882 GiB
+Expected downtime: 2837         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     863125       ms
+Data processed:   63.433 GiB
+Data remaining:   36.019 GiB
+Data total:       64.016 GiB
+Memory processed: 63.433 GiB
+Memory remaining: 36.019 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 33.745 MiB/s
+Constant pages:   11523260    
+Normal pages:     41392597    
+Normal data:      157.900 GiB
+Expected downtime: 1374         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     864159       ms
+Data processed:   63.505 GiB
+Data remaining:   35.946 GiB
+Data total:       64.016 GiB
+Memory processed: 63.505 GiB
+Memory remaining: 35.946 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 80.369 MiB/s
+Constant pages:   11523260    
+Normal pages:     41411509    
+Normal data:      157.972 GiB
+Expected downtime: 577          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     865192       ms
+Data processed:   63.602 GiB
+Data remaining:   35.849 GiB
+Data total:       64.016 GiB
+Memory processed: 63.602 GiB
+Memory remaining: 35.849 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 119.241 MiB/s
+Constant pages:   11523260    
+Normal pages:     41436983    
+Normal data:      158.070 GiB
+Expected downtime: 389          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     866222       ms
+Data processed:   63.645 GiB
+Data remaining:   35.807 GiB
+Data total:       64.016 GiB
+Memory processed: 63.645 GiB
+Memory remaining: 35.807 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 12.677 MiB/s
+Constant pages:   11523260    
+Normal pages:     41448083    
+Normal data:      158.112 GiB
+Expected downtime: 3659         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     867254       ms
+Data processed:   63.678 GiB
+Data remaining:   35.774 GiB
+Data total:       64.016 GiB
+Memory processed: 63.678 GiB
+Memory remaining: 35.774 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 102.949 MiB/s
+Constant pages:   11523260    
+Normal pages:     41456828    
+Normal data:      158.145 GiB
+Expected downtime: 450          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     868285       ms
+Data processed:   63.734 GiB
+Data remaining:   35.718 GiB
+Data total:       64.016 GiB
+Memory processed: 63.734 GiB
+Memory remaining: 35.718 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 72.112 MiB/s
+Constant pages:   11523260    
+Normal pages:     41471434    
+Normal data:      158.201 GiB
+Expected downtime: 643          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     869320       ms
+Data processed:   63.829 GiB
+Data remaining:   35.623 GiB
+Data total:       64.016 GiB
+Memory processed: 63.829 GiB
+Memory remaining: 35.623 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 106.206 MiB/s
+Constant pages:   11523260    
+Normal pages:     41496380    
+Normal data:      158.296 GiB
+Expected downtime: 436          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     870357       ms
+Data processed:   63.922 GiB
+Data remaining:   35.531 GiB
+Data total:       64.016 GiB
+Memory processed: 63.922 GiB
+Memory remaining: 35.531 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 100.261 MiB/s
+Constant pages:   11523260    
+Normal pages:     41520524    
+Normal data:      158.388 GiB
+Expected downtime: 462          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     871389       ms
+Data processed:   63.969 GiB
+Data remaining:   35.483 GiB
+Data total:       64.016 GiB
+Memory processed: 63.969 GiB
+Memory remaining: 35.483 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 50.629 MiB/s
+Constant pages:   11523260    
+Normal pages:     41532862    
+Normal data:      158.435 GiB
+Expected downtime: 916          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     872420       ms
+Data processed:   64.001 GiB
+Data remaining:   35.451 GiB
+Data total:       64.016 GiB
+Memory processed: 64.001 GiB
+Memory remaining: 35.451 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 28.140 MiB/s
+Constant pages:   11523260    
+Normal pages:     41541368    
+Normal data:      158.468 GiB
+Expected downtime: 1648         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     873455       ms
+Data processed:   64.038 GiB
+Data remaining:   35.414 GiB
+Data total:       64.016 GiB
+Memory processed: 64.038 GiB
+Memory remaining: 35.414 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 90.658 MiB/s
+Constant pages:   11523260    
+Normal pages:     41551069    
+Normal data:      158.505 GiB
+Expected downtime: 511          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     874486       ms
+Data processed:   64.043 GiB
+Data remaining:   35.409 GiB
+Data total:       64.016 GiB
+Memory processed: 64.043 GiB
+Memory remaining: 35.409 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 1.851 MiB/s
+Constant pages:   11523260    
+Normal pages:     41552375    
+Normal data:      158.510 GiB
+Expected downtime: 25063        ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     875518       ms
+Data processed:   64.085 GiB
+Data remaining:   35.367 GiB
+Data total:       64.016 GiB
+Memory processed: 64.085 GiB
+Memory remaining: 35.367 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 48.837 MiB/s
+Constant pages:   11523260    
+Normal pages:     41563379    
+Normal data:      158.552 GiB
+Expected downtime: 949          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     876554       ms
+Data processed:   64.134 GiB
+Data remaining:   35.319 GiB
+Data total:       64.016 GiB
+Memory processed: 64.134 GiB
+Memory remaining: 35.319 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 31.664 MiB/s
+Constant pages:   11523260    
+Normal pages:     41575969    
+Normal data:      158.600 GiB
+Expected downtime: 1465         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     877585       ms
+Data processed:   64.175 GiB
+Data remaining:   35.278 GiB
+Data total:       64.016 GiB
+Memory processed: 64.175 GiB
+Memory remaining: 35.278 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 32.384 MiB/s
+Constant pages:   11523260    
+Normal pages:     41586839    
+Normal data:      158.641 GiB
+Expected downtime: 1432         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     878617       ms
+Data processed:   64.214 GiB
+Data remaining:   35.239 GiB
+Data total:       64.016 GiB
+Memory processed: 64.214 GiB
+Memory remaining: 35.239 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 43.851 MiB/s
+Constant pages:   11523260    
+Normal pages:     41596929    
+Normal data:      158.680 GiB
+Expected downtime: 1058         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     879649       ms
+Data processed:   64.251 GiB
+Data remaining:   35.202 GiB
+Data total:       64.016 GiB
+Memory processed: 64.251 GiB
+Memory remaining: 35.202 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 30.654 MiB/s
+Constant pages:   11523260    
+Normal pages:     41606739    
+Normal data:      158.717 GiB
+Expected downtime: 1513         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     880679       ms
+Data processed:   64.293 GiB
+Data remaining:   35.160 GiB
+Data total:       64.016 GiB
+Memory processed: 64.293 GiB
+Memory remaining: 35.160 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 46.894 MiB/s
+Constant pages:   11523260    
+Normal pages:     41617687    
+Normal data:      158.759 GiB
+Expected downtime: 989          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     881711       ms
+Data processed:   64.337 GiB
+Data remaining:   35.116 GiB
+Data total:       64.016 GiB
+Memory processed: 64.337 GiB
+Memory remaining: 35.116 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 13.999 MiB/s
+Constant pages:   11523260    
+Normal pages:     41629122    
+Normal data:      158.802 GiB
+Expected downtime: 3314         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     882741       ms
+Data processed:   64.381 GiB
+Data remaining:   35.072 GiB
+Data total:       64.016 GiB
+Memory processed: 64.381 GiB
+Memory remaining: 35.072 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 44.553 MiB/s
+Constant pages:   11523260    
+Normal pages:     41640753    
+Normal data:      158.847 GiB
+Expected downtime: 1041         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     883763       ms
+Data processed:   64.432 GiB
+Data remaining:   35.021 GiB
+Data total:       64.016 GiB
+Memory processed: 64.432 GiB
+Memory remaining: 35.021 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 39.620 MiB/s
+Constant pages:   11523260    
+Normal pages:     41654024    
+Normal data:      158.897 GiB
+Expected downtime: 1171         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     884784       ms
+Data processed:   64.474 GiB
+Data remaining:   34.979 GiB
+Data total:       64.016 GiB
+Memory processed: 64.474 GiB
+Memory remaining: 34.979 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 50.606 MiB/s
+Constant pages:   11523260    
+Normal pages:     41665035    
+Normal data:      158.939 GiB
+Expected downtime: 916          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     885814       ms
+Data processed:   64.509 GiB
+Data remaining:   34.945 GiB
+Data total:       64.016 GiB
+Memory processed: 64.509 GiB
+Memory remaining: 34.945 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 36.177 MiB/s
+Constant pages:   11523260    
+Normal pages:     41674143    
+Normal data:      158.974 GiB
+Expected downtime: 1282         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     886843       ms
+Data processed:   64.564 GiB
+Data remaining:   34.890 GiB
+Data total:       64.016 GiB
+Memory processed: 64.564 GiB
+Memory remaining: 34.890 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 17.049 MiB/s
+Constant pages:   11523260    
+Normal pages:     41688462    
+Normal data:      159.029 GiB
+Expected downtime: 2721         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     887875       ms
+Data processed:   64.597 GiB
+Data remaining:   34.856 GiB
+Data total:       64.016 GiB
+Memory processed: 64.597 GiB
+Memory remaining: 34.856 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 34.322 MiB/s
+Constant pages:   11523260    
+Normal pages:     41697262    
+Normal data:      159.062 GiB
+Expected downtime: 1351         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     888906       ms
+Data processed:   64.649 GiB
+Data remaining:   34.805 GiB
+Data total:       64.016 GiB
+Memory processed: 64.649 GiB
+Memory remaining: 34.805 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 46.033 MiB/s
+Constant pages:   11523260    
+Normal pages:     41710801    
+Normal data:      159.114 GiB
+Expected downtime: 1007         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     889944       ms
+Data processed:   64.691 GiB
+Data remaining:   34.763 GiB
+Data total:       64.016 GiB
+Memory processed: 64.691 GiB
+Memory remaining: 34.763 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 47.988 MiB/s
+Constant pages:   11523260    
+Normal pages:     41721677    
+Normal data:      159.156 GiB
+Expected downtime: 966          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     890977       ms
+Data processed:   64.735 GiB
+Data remaining:   34.719 GiB
+Data total:       64.016 GiB
+Memory processed: 64.735 GiB
+Memory remaining: 34.719 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 39.871 MiB/s
+Constant pages:   11523260    
+Normal pages:     41733354    
+Normal data:      159.200 GiB
+Expected downtime: 1163         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     892008       ms
+Data processed:   64.782 GiB
+Data remaining:   34.672 GiB
+Data total:       64.016 GiB
+Memory processed: 64.782 GiB
+Memory remaining: 34.672 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 41.468 MiB/s
+Constant pages:   11523260    
+Normal pages:     41745627    
+Normal data:      159.247 GiB
+Expected downtime: 1118         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     893042       ms
+Data processed:   64.844 GiB
+Data remaining:   34.610 GiB
+Data total:       64.016 GiB
+Memory processed: 64.844 GiB
+Memory remaining: 34.610 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 35.551 MiB/s
+Constant pages:   11523260    
+Normal pages:     41761865    
+Normal data:      159.309 GiB
+Expected downtime: 1305         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     894071       ms
+Data processed:   64.905 GiB
+Data remaining:   34.550 GiB
+Data total:       64.016 GiB
+Memory processed: 64.905 GiB
+Memory remaining: 34.550 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 45.838 MiB/s
+Constant pages:   11523260    
+Normal pages:     41777687    
+Normal data:      159.369 GiB
+Expected downtime: 1012         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     895101       ms
+Data processed:   64.961 GiB
+Data remaining:   34.493 GiB
+Data total:       64.016 GiB
+Memory processed: 64.961 GiB
+Memory remaining: 34.493 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 54.522 MiB/s
+Constant pages:   11523260    
+Normal pages:     41792541    
+Normal data:      159.426 GiB
+Expected downtime: 850          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     896132       ms
+Data processed:   65.064 GiB
+Data remaining:   34.391 GiB
+Data total:       64.016 GiB
+Memory processed: 65.064 GiB
+Memory remaining: 34.391 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 81.775 MiB/s
+Constant pages:   11523261    
+Normal pages:     41819328    
+Normal data:      159.528 GiB
+Expected downtime: 567          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     897167       ms
+Data processed:   65.130 GiB
+Data remaining:   34.324 GiB
+Data total:       64.016 GiB
+Memory processed: 65.130 GiB
+Memory remaining: 34.324 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 38.937 MiB/s
+Constant pages:   11523261    
+Normal pages:     41836772    
+Normal data:      159.595 GiB
+Expected downtime: 1191         ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     898196       ms
+Data processed:   65.196 GiB
+Data remaining:   34.259 GiB
+Data total:       64.016 GiB
+Memory processed: 65.196 GiB
+Memory remaining: 34.259 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 96.055 MiB/s
+Constant pages:   11523261    
+Normal pages:     41853941    
+Normal data:      159.660 GiB
+Expected downtime: 483          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     899228       ms
+Data processed:   65.244 GiB
+Data remaining:   34.211 GiB
+Data total:       64.016 GiB
+Memory processed: 65.244 GiB
+Memory remaining: 34.211 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 50.166 MiB/s
+Constant pages:   11523261    
+Normal pages:     41866392    
+Normal data:      159.708 GiB
+Expected downtime: 924          ms
+Setup time:       497          ms
+
+Job type:         Unbounded   
+Time elapsed:     900258       ms
+Data processed:   65.301 GiB
+Data remaining:   34.154 GiB
+Data total:       64.016 GiB
+Memory processed: 65.301 GiB
+Memory remaining: 34.154 GiB
+Memory total:     64.016 GiB
+Memory bandwidth: 62.695 MiB/s
+Constant pages:   11523261    
+Normal pages:     41881360    
+Normal data:      159.765 GiB
+Expected downtime: 740          ms
+Setup time:       497          ms
+
+Job type:         Cancelled   
+
+Job type:         Cancelled   
+
+Job type:         Cancelled   
+
+Job type:         Cancelled   
+
+Job type:         Cancelled   
+
+Job type:         Cancelled   
+
+Job type:         None 
