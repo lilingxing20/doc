@@ -388,6 +388,8 @@ Normal data:      376.102 MiB
 Expected downtime: 300          ms
 Setup time:       14           ms
 
+Job type:         Completed 
+
 error: Requested operation is not valid: domain is not running
 
 
