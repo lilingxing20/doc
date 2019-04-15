@@ -1,0 +1,13 @@
+# initialize_connection
+2019-04-09 15:48:03.898 34157 INFO cinder.volume.drivers.macrosan.driver [req-e3e2c8b1-ab67-42b0-a172-06ff42bc6e43 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] ========== start initialize_connection
+2019-04-09 15:48:04.893 34157 INFO cinder.volume.drivers.macrosan.driver [req-e3e2c8b1-ab67-42b0-a172-06ff42bc6e43 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] initialize_connection, initiator: [u'iqn.1994-05.com.redhat:8a31233847a1'],volume name: 4c4ee776-a158-410e-bf60-92a9ee0f312f.
+2019-04-09 15:48:13.783 34157 INFO cinder.volume.drivers.macrosan.driver [req-e3e2c8b1-ab67-42b0-a172-06ff42bc6e43 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] initialize_connection, iSCSI properties: {'target_luns': [2, 2], 'target_iqns': [u'iqn.2010-05.com.macrosan.target:storage-jinyun-ms7010-h02.sp1.bond-1:1.9709', u'iqn.2010-05.com.macrosan.target:storage-jinyun-ms7010-h02.sp2.bond-2:1.7742'], 'target_discovered': False, 'target_iqn': u'iqn.2010-05.com.macrosan.target:storage-jinyun-ms7010-h02.sp1.bond-1:1.9709', 'target_portals': [u'172.31.55.246:3260', u'172.31.55.247:3260'], 'target_lun': 2, 'target_portal': u'172.31.55.246:3260'}
+2019-04-09 15:48:13.784 34157 INFO cinder.volume.drivers.macrosan.driver [req-e3e2c8b1-ab67-42b0-a172-06ff42bc6e43 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] ========== end initialize_connection, cost: 9.89 secs
+2019-04-09 15:48:14.054 34157 INFO cinder.volume.manager [req-e3e2c8b1-ab67-42b0-a172-06ff42bc6e43 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] Initialize volume connection completed successfully.
+
+
+
+# terminate_connection
+2019-04-09 15:51:36.690 34157 INFO cinder.volume.drivers.macrosan.driver [req-e4225ec7-f75e-468b-8328-69e48b6b07ff 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] ========== start terminate_connection
+2019-04-09 15:51:45.194 34157 INFO cinder.volume.drivers.macrosan.driver [req-e4225ec7-f75e-468b-8328-69e48b6b07ff 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] ========== end terminate_connection, cost: 8.50 secs
+2019-04-09 15:51:45.196 34157 INFO cinder.volume.manager [req-e4225ec7-f75e-468b-8328-69e48b6b07ff 849fb56436b84eeea3b5de972de91063 2f889218ad004a0b94ece658c8fab023 - - -] Terminate volume connection completed successfully.
