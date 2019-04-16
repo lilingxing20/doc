@@ -1,0 +1,183 @@
+故障一、
+故障描述：虚拟机热迁移过程中出现异常，但是虚机已经成功迁移到目标节点正常运行（如：ssh可正常登陆虚机），源节点上虚机已经关闭并清理，此时通过修改nova库instances表中虚机记录的node和host字段更新为目标节点主机名，手工完成迁移后数据库更新操作。
+mysql -e 'use nova; update instances set node="compute2",host="compute2" where uuid="b61ad9e8-d827-41f6-97a2-af9c5f0e7726";'
+之后，可以正常管理该虚拟机。
+但是，当为此虚机附加卷时，虚机宿主计算节点有如下异常报错：
+2019-04-16 17:09:34.516 22108 INFO nova.compute.manager [req-9de4664c-00fb-4f58-85f7-8e1e9943f68f 5f34f780add44bf587107ea602508f21 cafc67aeade64bf9ba6cb7f96a8b1ef2 - - -] [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Attaching volume ac93b749-1a07-49c4-ae99-255e8a939747 to /dev/vdb
+2019-04-16 17:09:37.044 22108 INFO nova.virt.libvirt.guest [req-9de4664c-00fb-4f58-85f7-8e1e9943f68f 5f34f780add44bf587107ea602508f21 cafc67aeade64bf9ba6cb7f96a8b1ef2 - - -] ****************************persistent: True
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [req-9de4664c-00fb-4f58-85f7-8e1e9943f68f 5f34f780add44bf587107ea602508f21 cafc67aeade64bf9ba6cb7f96a8b1ef2 - - -] [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Failed to attach volume at mountpoint: /dev/vdb
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Traceback (most recent call last):
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1348, in attach_volume
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     guest.attach_device(conf, persistent=True, live=live)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/guest.py", line 251, in attach_device
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self._domain.attachDeviceFlags(conf.to_xml(), flags=flags)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 186, in doit
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     result = proxy_call(self._autowrap, f, *args, **kwargs)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 144, in proxy_call
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     rv = execute(f, *args, **kwargs)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 125, in execute
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     six.reraise(c, e, tb)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 83, in tworker
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     rv = meth(*args, **kwargs)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib64/python2.7/site-packages/libvirt.py", line 554, in attachDeviceFlags
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     if ret == -1: raise libvirtError ('virDomainAttachDeviceFlags() failed', dom=self)
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] libvirtError: Requested operation is not valid: cannot modify device on transient domain
+2019-04-16 17:09:37.061 22108 ERROR nova.virt.libvirt.driver [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] 
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [req-9de4664c-00fb-4f58-85f7-8e1e9943f68f 5f34f780add44bf587107ea602508f21 cafc67aeade64bf9ba6cb7f96a8b1ef2 - - -] [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Driver failed to attach volume ac93b749-1a07-49c4-ae99-255e8a939747 at /dev/vdb
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Traceback (most recent call last):
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 279, in attach
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     device_type=self['device_type'], encryption=encryption)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1359, in attach_volume
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self._disconnect_volume(connection_info, disk_dev)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self.force_reraise()
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1348, in attach_volume
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     guest.attach_device(conf, persistent=True, live=live)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/guest.py", line 251, in attach_device
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self._domain.attachDeviceFlags(conf.to_xml(), flags=flags)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 186, in doit
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     result = proxy_call(self._autowrap, f, *args, **kwargs)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 144, in proxy_call
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     rv = execute(f, *args, **kwargs)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 125, in execute
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     six.reraise(c, e, tb)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 83, in tworker
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     rv = meth(*args, **kwargs)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib64/python2.7/site-packages/libvirt.py", line 554, in attachDeviceFlags
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     if ret == -1: raise libvirtError ('virDomainAttachDeviceFlags() failed', dom=self)
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] libvirtError: Requested operation is not valid: cannot modify device on transient domain
+2019-04-16 17:09:37.087 22108 ERROR nova.virt.block_device [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] 
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [req-9de4664c-00fb-4f58-85f7-8e1e9943f68f 5f34f780add44bf587107ea602508f21 cafc67aeade64bf9ba6cb7f96a8b1ef2 - - -] [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Failed to attach ac93b749-1a07-49c4-ae99-255e8a939747 at /dev/vdb
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] Traceback (most recent call last):
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 4738, in _attach_volume
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     do_check_attach=False, do_driver_attach=True)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 54, in wrapped
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     ret_val = method(obj, context, *args, **kwargs)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 288, in attach
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     connector)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self.force_reraise()
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 279, in attach
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     device_type=self['device_type'], encryption=encryption)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1359, in attach_volume
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self._disconnect_volume(connection_info, disk_dev)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self.force_reraise()
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1348, in attach_volume
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     guest.attach_device(conf, persistent=True, live=live)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/guest.py", line 251, in attach_device
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     self._domain.attachDeviceFlags(conf.to_xml(), flags=flags)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 186, in doit
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     result = proxy_call(self._autowrap, f, *args, **kwargs)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 144, in proxy_call
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     rv = execute(f, *args, **kwargs)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 125, in execute
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     six.reraise(c, e, tb)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 83, in tworker
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     rv = meth(*args, **kwargs)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]   File "/usr/lib64/python2.7/site-packages/libvirt.py", line 554, in attachDeviceFlags
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726]     if ret == -1: raise libvirtError ('virDomainAttachDeviceFlags() failed', dom=self)
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] libvirtError: Requested operation is not valid: cannot modify device on transient domain
+2019-04-16 17:09:37.572 22108 ERROR nova.compute.manager [instance: b61ad9e8-d827-41f6-97a2-af9c5f0e7726] 
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher [req-9de4664c-00fb-4f58-85f7-8e1e9943f68f 5f34f780add44bf587107ea602508f21 cafc67aeade64bf9ba6cb7f96a8b1ef2 - - -] Exception during message handling: Requested operation is not valid: cannot modify device on transient domain
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher Traceback (most recent call last):
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_messaging/rpc/dispatcher.py", line 138, in _dispatch_and_reply
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     incoming.message))
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_messaging/rpc/dispatcher.py", line 183, in _dispatch
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     return self._do_dispatch(endpoint, method, ctxt, args)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_messaging/rpc/dispatcher.py", line 127, in _do_dispatch
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     result = func(ctxt, **new_args)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/exception.py", line 110, in wrapped
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     payload)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.force_reraise()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/exception.py", line 89, in wrapped
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     return f(self, context, *args, **kw)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 387, in decorated_function
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     kwargs['instance'], e, sys.exc_info())
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.force_reraise()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 375, in decorated_function
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     return function(self, context, *args, **kwargs)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 4728, in attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     do_attach_volume(context, instance, driver_bdm)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_concurrency/lockutils.py", line 271, in inner
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     return f(*args, **kwargs)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 4726, in do_attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     bdm.destroy()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.force_reraise()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 4723, in do_attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     return self._attach_volume(context, instance, driver_bdm)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 4746, in _attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.volume_api.unreserve_volume(context, bdm.volume_id)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.force_reraise()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/compute/manager.py", line 4738, in _attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     do_check_attach=False, do_driver_attach=True)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 54, in wrapped
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     ret_val = method(obj, context, *args, **kwargs)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 288, in attach
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     connector)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.force_reraise()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/virt/block_device.py", line 279, in attach
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     device_type=self['device_type'], encryption=encryption)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1359, in attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self._disconnect_volume(connection_info, disk_dev)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 220, in __exit__
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self.force_reraise()
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/oslo_utils/excutils.py", line 196, in force_reraise
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(self.type_, self.value, self.tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/driver.py", line 1348, in attach_volume
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     guest.attach_device(conf, persistent=True, live=live)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/nova/virt/libvirt/guest.py", line 251, in attach_device
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     self._domain.attachDeviceFlags(conf.to_xml(), flags=flags)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 186, in doit
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     result = proxy_call(self._autowrap, f, *args, **kwargs)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 144, in proxy_call
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     rv = execute(f, *args, **kwargs)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 125, in execute
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     six.reraise(c, e, tb)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib/python2.7/site-packages/eventlet/tpool.py", line 83, in tworker
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     rv = meth(*args, **kwargs)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher   File "/usr/lib64/python2.7/site-packages/libvirt.py", line 554, in attachDeviceFlags
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher     if ret == -1: raise libvirtError ('virDomainAttachDeviceFlags() failed', dom=self)
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher libvirtError: Requested operation is not valid: cannot modify device on transient domain
+2019-04-16 17:09:37.827 22108 ERROR oslo_messaging.rpc.dispatcher
+
+
+问题分析：
+到虚机宿主计算节点上，发现在目录/var/lib/nova/instances/b61ad9e8-d827-41f6-97a2-af9c5f0e7726/下未找到libvirt.xml，正常虚机有这个libvirt.xml文件。
+若关闭该虚机，会发现virsh list列表中没有该虚机。猜想卷附加失败和这个异常有关。
+
+解决方法：
+[root@compute2 ~]# ls /var/lib/nova/instances/b61ad9e8-d827-41f6-97a2-af9c5f0e7726/
+console.log
+[root@compute2 ~]# virsh list
+ Id    Name                           State
+----------------------------------------------------
+ 504   instance-00001335              running
+
+[root@compute2 ~]# virsh dumpxml instance-00001335 >/var/lib/nova/instances/b61ad9e8-d827-41f6-97a2-af9c5f0e7726/libvirt.xml 
+[root@compute2 ~]# chown nova:nova /var/lib/nova/instances/b61ad9e8-d827-41f6-97a2-af9c5f0e7726/libvirt.xml
+[root@compute2 ~]# virsh define /var/lib/nova/instances/b61ad9e8-d827-41f6-97a2-af9c5f0e7726/libvirt.xml
+Domain instance-00001335 defined from /var/lib/nova/instances/b61ad9e8-d827-41f6-97a2-af9c5f0e7726/libvirt.xml
+
+
