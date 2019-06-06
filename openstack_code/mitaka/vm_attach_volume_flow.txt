@@ -1,0 +1,862 @@
+# vim: set filetype=conf
+
+#####################################################################################
+#                   OpenStack虚拟机挂载volume源码分析                               #
+#####################################################################################
+
+# 以Ciner使用LVM driver为例，iSCSI驱动使用lioadm，backend配置如下:
+[lvm]
+iscsi_helper=lioadm
+volume_driver=cinder.volume.drivers.lvm.LVMVolumeDriver
+volume_backend_name=lvm
+volume_group = cinder-volumes
+
+
+# 挂载volume是在Nova端完成的:
+nova volume-attach ${server_id} ${volume_id}
+
+
+# Nova中有一个数据库表专门用户存储数据卷和虚拟机的映射关系的，这个表名为block_device_mapping，其字段如下：
+MariaDB [nova]> desc block_device_mapping;
++-----------------------+--------------+------+-----+---------+----------------+
+| Field                 | Type         | Null | Key | Default | Extra          |
++-----------------------+--------------+------+-----+---------+----------------+
+| created_at            | datetime     | YES  |     | NULL    |                |
+| updated_at            | datetime     | YES  |     | NULL    |                |
+| deleted_at            | datetime     | YES  |     | NULL    |                |
+| id                    | int(11)      | NO   | PRI | NULL    | auto_increment |
+| device_name           | varchar(255) | YES  |     | NULL    |                |
+| delete_on_termination | tinyint(1)   | YES  |     | NULL    |                |
+| snapshot_id           | varchar(36)  | YES  | MUL | NULL    |                |
+| volume_id             | varchar(36)  | YES  | MUL | NULL    |                |
+| volume_size           | int(11)      | YES  |     | NULL    |                |
+| no_device             | tinyint(1)   | YES  |     | NULL    |                |
+| connection_info       | mediumtext   | YES  |     | NULL    |                |
+| instance_uuid         | varchar(36)  | YES  | MUL | NULL    |                |
+| deleted               | int(11)      | YES  |     | NULL    |                |
+| source_type           | varchar(255) | YES  |     | NULL    |                |
+| destination_type      | varchar(255) | YES  |     | NULL    |                |
+| guest_format          | varchar(255) | YES  |     | NULL    |                |
+| device_type           | varchar(255) | YES  |     | NULL    |                |
+| disk_bus              | varchar(255) | YES  |     | NULL    |                |
+| boot_index            | int(11)      | YES  |     | NULL    |                |
+| image_id              | varchar(36)  | YES  |     | NULL    |                |
++-----------------------+--------------+------+-----+---------+----------------+
+20 rows in set (0.01 sec)
+
+# Cinder中也有一个单独的表volume_attachment用来记录挂载情况:
+MariaDB [cinder]> desc volume_attachment;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| created_at    | datetime     | YES  |     | NULL    |       |
+| updated_at    | datetime     | YES  |     | NULL    |       |
+| deleted_at    | datetime     | YES  |     | NULL    |       |
+| deleted       | tinyint(1)   | YES  |     | NULL    |       |
+| id            | varchar(36)  | NO   | PRI | NULL    |       |
+| volume_id     | varchar(36)  | NO   | MUL | NULL    |       |
+| attached_host | varchar(255) | YES  |     | NULL    |       |
+| instance_uuid | varchar(36)  | YES  |     | NULL    |       |
+| mountpoint    | varchar(255) | YES  |     | NULL    |       |
+| attach_time   | datetime     | YES  |     | NULL    |       |
+| detach_time   | datetime     | YES  |     | NULL    |       |
+| attach_mode   | varchar(36)  | YES  |     | NULL    |       |
+| attach_status | varchar(255) | YES  |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+13 rows in set (0.01 sec)
+
+
+
+# 接下来从nova-api开始一步步跟踪其过程。
+
+#-----------------------------------------------------------------------#
+#                        Step-1 Nova-api 接口分析                       # 
+#-----------------------------------------------------------------------#
+
+## nova-api挂载volume入口为nova/api/openstack/compute/volumes.py，controller为VolumeAttachmentController，create就是虚拟机挂载volume的方法。
+## 接口S1-1: nova/api/openstack/compute/volumes.py:298:VolumeAttachmentController:create
+    @extensions.expected_errors((400, 404, 409))
+    @validation.schema(volumes_schema.create_volume_attachment)
+    def create(self, req, server_id, body):
+        """Attach a volume to an instance."""
+        context = req.environ['nova.context']
+        authorize(context)
+        authorize_attach(context, action='create')
+
+        volume_id = body['volumeAttachment']['volumeId']
+        device = body['volumeAttachment'].get('device')
+
+        # 1. 获取实例
+        instance = common.get_instance(self.compute_api, context, server_id)
+
+        if instance.vm_state in (vm_states.SHELVED,
+                                 vm_states.SHELVED_OFFLOADED):
+            _check_request_version(req, '2.20', 'attach_volume',
+                                   server_id, instance.vm_state)
+
+        try:
+            # 2. 调用nova/compute/api.py的attach_volume
+            device = self.compute_api.attach_volume(context, instance,
+                                                    volume_id, device)
+        except exception.InstanceUnknownCell as e:
+            raise exc.HTTPNotFound(explanation=e.format_message())
+        except exception.VolumeNotFound as e:
+            raise exc.HTTPNotFound(explanation=e.format_message())
+        except exception.InstanceIsLocked as e:
+            raise exc.HTTPConflict(explanation=e.format_message())
+        except exception.InstanceInvalidState as state_error:
+            common.raise_http_conflict_for_instance_invalid_state(state_error,
+                    'attach_volume', server_id)
+        except (exception.InvalidVolume,
+                exception.InvalidDevicePath) as e:
+            raise exc.HTTPBadRequest(explanation=e.format_message())
+
+        # The attach is async
+        attachment = {}
+        attachment['id'] = volume_id
+        attachment['serverId'] = server_id
+        attachment['volumeId'] = volume_id
+        attachment['device'] = device
+
+        # NOTE(justinsb): And now, we have a problem...
+        # The attach is async, so there's a window in which we don't see
+        # the attachment (until the attachment completes).  We could also
+        # get problems with concurrent requests.  I think we need an
+        # attachment state, and to write to the DB here, but that's a bigger
+        # change.
+        # For now, we'll probably have to rely on libraries being smart
+
+        # TODO(justinsb): How do I return "accepted" here?
+        return {'volumeAttachment': attachment}
+
+
+
+
+## 接口S1-2: nova/compute/api.py:3142:API:attach_volume
+    @wrap_check_policy
+    @check_instance_lock
+    @check_instance_state(vm_state=[vm_states.ACTIVE, vm_states.PAUSED,
+                                    vm_states.STOPPED, vm_states.RESIZED,
+                                    vm_states.SOFT_DELETED, vm_states.SHELVED,
+                                    vm_states.SHELVED_OFFLOADED])
+    def attach_volume(self, context, instance, volume_id, device=None,
+                       disk_bus=None, device_type=None):
+        """Attach an existing volume to an existing instance."""
+        # NOTE(vish): Fail fast if the device is not going to pass. This
+        #             will need to be removed along with the test if we
+        #             change the logic in the manager for what constitutes
+        #             a valid device.
+        # 1. 检查磁盘设备路径是否正确，如: /dev/vdb
+        if device and not block_device.match_device(device):
+            raise exception.InvalidDevicePath(path=device)
+
+        is_shelved_offloaded = instance.vm_state == vm_states.SHELVED_OFFLOADED
+        if is_shelved_offloaded:
+            return self._attach_volume_shelved_offloaded(context,
+                                                         instance,
+                                                         volume_id,
+                                                         device,  
+                                                         disk_bus,
+                                                         device_type)
+
+        # 2. 函数调用
+        return self._attach_volume(context, instance, volume_id, device,
+                                   disk_bus, device_type)
+
+
+## 接口S1-3: nova/compute/api.py:3142:API:_attach_volume
+    def _attach_volume(self, context, instance, volume_id, device,
+                       disk_bus, device_type):
+        """Attach an existing volume to an existing instance.
+
+        This method is separated to make it possible for cells version
+        to override it.
+        """
+        # 1. 在block_device_mapping表中创建对应的记录
+        # 由于API节点无法拿到目标虚拟机挂载后的设备名，比如/dev/vdb，只有计算节点才知道自己虚拟机映射到哪个设备
+        # 因此bdm不是在API节点创建的，而是通过RPC请求到虚拟机所在的计算节点创建
+        # 请求方法为reserve_block_device_name，该方法首先调用libvirt分配一个设备名，比如/dev/vdb，然后创建对应的bdm实例
+        volume_bdm = self._create_volume_bdm(
+            context, instance, device, volume_id, disk_bus=disk_bus,
+            device_type=device_type)
+        try:
+            # 2. 包含check_attach和reserve_volume两个过程:
+            #   2.1. nova/volume/cinder.py:317:API:check_attach
+            #   2.1.1.检查卷状态是否为available，对于允许多挂载的卷状态是否为available或in-use，若为其他状态，则抛InvalidVolume异常
+            #   2.1.2.检查卷的附加状态，若是attached，则抛InvalidVolume异常
+            #   2.1.3.检查是否允许卷和虚机跨az挂载，若不允许跨az挂载卷，则进行az的对比检查
+            #   2.2. nova/volume/cinder.py:364:API:reserve_volume
+            #   2.2.1. nova-api会调用cinder API，仅把volume的status置为attaching。
+            #   2.2.2. 该方法流程:nova-api -> cinder-api -> reserve_volume，该方法位于cinder/volume/api.py:563:API:reserve_volume
+            self._check_attach_and_reserve_volume(context, volume_id, instance)
+            # 3. 此时nova-api会向目标计算节点发起RPC请求，异步调用nova-compute的attach_volume方法。
+            self.compute_rpcapi.attach_volume(context, instance, volume_bdm)
+        except Exception:
+            with excutils.save_and_reraise_exception():
+                volume_bdm.destroy()
+
+        return volume_bdm.device_name
+
+
+
+
+#-----------------------------------------------------------------------#
+#                       Step-2 Nova-compute 接口分析                    #
+#-----------------------------------------------------------------------#
+
+## nova-compute接收到RPC请求，callback函数入口为nova/compute/manager.py的attach_volume方法，该方法会根据之前创建的bdm实例参数转化为driver_block_device，然后调用该类的attach方法，这就已经到了具体的硬件层，它会根据volume的类型实例化不同的具体类，这里我们的类型是volume，因此对应为DriverVolumeBlockDevice，位于nova/virt/block_device.py。
+## attach方法首先调用的是virt_driver.get_volume_connector(instance)，其中virt_driver这里就是libvirt，该方法位于nova/virt/libvirt/driver.py，其实就是调用os-brick的get_connector_properties
+
+## 接口S2-1: nova/compute/manager.py:4714:ComputeManager:attach_volume
+    @wrap_exception()
+    @wrap_instance_fault
+    def attach_volume(self, context, instance, bdm):
+        """Attach a volume to an instance."""
+        # 1. 把bdm实例参数转化为driver_block_device
+        driver_bdm = driver_block_device.convert_volume(bdm)
+
+        @utils.synchronized(instance.uuid)
+        def do_attach_volume(context, instance, driver_bdm):
+            try: 
+                return self._attach_volume(context, instance, driver_bdm)
+            except Exception:
+                with excutils.save_and_reraise_exception():
+                    bdm.destroy()
+
+        do_attach_volume(context, instance, driver_bdm)
+
+    def _attach_volume(self, context, instance, bdm):
+        context = context.elevated()
+        LOG.info(_LI('Attaching volume %(volume_id)s to %(mountpoint)s'),
+                  {'volume_id': bdm.volume_id,
+                  'mountpoint': bdm['mount_device']},
+                 context=context, instance=instance)
+        try:
+            # 2. 调用attach方法
+            bdm.attach(context, instance, self.volume_api, self.driver,
+                       do_check_attach=False, do_driver_attach=True)
+        except Exception:
+            with excutils.save_and_reraise_exception():
+                LOG.exception(_LE("Failed to attach %(volume_id)s "
+                                  "at %(mountpoint)s"),
+                              {'volume_id': bdm.volume_id,
+                               'mountpoint': bdm['mount_device']},
+                              context=context, instance=instance)
+                self.volume_api.unreserve_volume(context, bdm.volume_id)
+
+        info = {'volume_id': bdm.volume_id}
+        self._notify_about_instance_usage(
+            context, instance, "volume.attach", extra_usage_info=info)
+
+
+
+# 接口S2-2: nova/virt/block_device.py:252:DriverVolumeBlockDevice:attach
+    @update_db
+    def attach(self, context, instance, volume_api, virt_driver,
+               do_check_attach=True, do_driver_attach=False, **kwargs):
+        volume = volume_api.get(context, self.volume_id)
+        if do_check_attach:
+            # 检查卷的状态，查看上文分析过程
+            volume_api.check_attach(context, volume, instance=instance)
+
+        volume_id = volume['id']
+        context = context.elevated()
+
+        # 1. 这里virt_driver就是libvirt，方法位于nova/virt/libvirt/driver.py:1224，其实就是调用os-brick的get_connector_properties，详细分析见下文
+        connector = virt_driver.get_volume_connector(instance)
+        # 2. 使用cinderclient调用Cinder API的 initialize_connection 方法，详细分析见下文
+        connection_info = volume_api.initialize_connection(context,
+                                                           volume_id,
+                                                           connector)
+        if 'serial' not in connection_info:
+            connection_info['serial'] = self.volume_id
+        self._preserve_multipath_id(connection_info)
+
+        # If do_driver_attach is False, we will attach a volume to an instance
+        # at boot time. So actual attach is done by instance creation code.
+        if do_driver_attach:
+            encryption = encryptors.get_encryption_metadata(
+                context, volume_api, volume_id, connection_info)
+
+            try:
+                # 3. 调用实际nova-compute驱动的方法，如：LibvirtDriver
+                virt_driver.attach_volume(
+                        context, connection_info, instance,
+                        self['mount_device'], disk_bus=self['disk_bus'],
+                        device_type=self['device_type'], encryption=encryption)
+            except Exception:
+                with excutils.save_and_reraise_exception():
+                    LOG.exception(_LE("Driver failed to attach volume "
+                                      "%(volume_id)s at %(mountpoint)s"),
+                                  {'volume_id': volume_id,
+                                   'mountpoint': self['mount_device']},
+                                  context=context, instance=instance)
+                    volume_api.terminate_connection(context, volume_id,
+                                                    connector)
+        self['connection_info'] = connection_info
+        if self.volume_size is None: 
+            self.volume_size = volume.get('size')
+
+        mode = 'rw'
+        if 'data' in connection_info:
+            mode = connection_info['data'].get('access_mode', 'rw')
+        if volume['attach_status'] == "detached" or volume['multiattach'] == True: 
+            # NOTE(mriedem): save our current state so connection_info is in
+            # the database before the volume status goes to 'in-use' because
+            # after that we can detach and connection_info is required for
+            # detach.
+            self.save()
+            try:
+                # 4. 向cinder-api请求，更新数据
+                volume_api.attach(context, volume_id, instance.uuid,
+                                  self['mount_device'], mode=mode)
+            except Exception:
+                with excutils.save_and_reraise_exception():
+                    if do_driver_attach:
+                        try:
+                            virt_driver.detach_volume(connection_info,
+                                                      instance,
+                                                      self['mount_device'],
+                                                      encryption=encryption)
+                        except Exception:
+                            LOG.warn(_LW("Driver failed to detach volume "
+                                         "%(volume_id)s at %(mount_point)s."),
+                                     {'volume_id': volume_id,
+                                      'mount_point': self['mount_device']},
+                                     exc_info=True, context=context,
+                                     instance=instance)
+                    volume_api.terminate_connection(context, volume_id,
+                                                    connector)
+
+                    # Cinder-volume might have completed volume attach. So
+                    # we should detach the volume. If the attach did not
+                    # happen, the detach request will be ignored.
+                    volume_api.detach(context, volume_id)
+
+
+## 接口S2-2-2.1 get_volume_connector 方法
+## nova/virt/libvirt/driver.py:1224:LibvirtDriver:get_volume_connector
+    def get_volume_connector(self, instance):
+        root_helper = utils.get_root_helper()
+        return connector.get_connector_properties(
+            root_helper, CONF.my_block_storage_ip,
+            CONF.libvirt.iscsi_use_multipath,
+            enforce_multipath=True,
+            host=CONF.host)
+
+# os-brick是从Cinder项目分离出来的，专门用于管理各种存储系统卷的库，代码仓库为os-brick。其中get_connector_properties方法位于os_brick/initiator/connector.py
+## os_brick/initiator/connector.py:99:get_connector_properties
+# 该方法最重要的工作就是返回该计算节点的信息（如ip、操作系统类型等)以及initiator name
+def get_connector_properties(root_helper, my_ip, multipath, enforce_multipath,
+                             host=None):
+    """Get the connection properties for all protocols.
+
+    When the connector wants to use multipath, multipath=True should be
+    specified. If enforce_multipath=True is specified too, an exception is
+    thrown when multipathd is not running. Otherwise, it falls back to
+    multipath=False and only the first path shown up is used.
+    For the compatibility reason, even if multipath=False is specified,
+    some cinder storage drivers may export the target for multipath, which
+    can be found via sendtargets discovery.
+
+    :param root_helper: The command prefix for executing as root.
+    :type root_helper: str
+    :param my_ip: The IP address of the local host.
+    :type my_ip: str
+    :param multipath: Enable multipath?
+    :type multipath: bool
+    :param enforce_multipath: Should we enforce that the multipath daemon is
+                              running?  If the daemon isn't running then the
+                              return dict will have multipath as False.
+    :type enforce_multipath: bool
+    :returns: dict containing all of the collected initiator values.
+    """
+
+    iscsi = ISCSIConnector(root_helper=root_helper)
+    fc = linuxfc.LinuxFibreChannel(root_helper=root_helper)
+
+    props = {}
+    props['ip'] = my_ip
+    props['host'] = host if host else socket.gethostname()
+    initiator = iscsi.get_initiator()
+    if initiator:
+        props['initiator'] = initiator
+    wwpns = fc.get_fc_wwpns()
+    if wwpns:
+        props['wwpns'] = wwpns
+    wwnns = fc.get_fc_wwnns()
+    if wwnns:
+        props['wwnns'] = wwnns
+    props['multipath'] = (multipath and
+                          _check_multipathd_running(root_helper,
+                                                    enforce_multipath))
+    props['platform'] = platform.machine()
+    props['os_type'] = sys.platform
+    return props
+
+
+
+## 接口S2-2-2.2: initialize_connection 方法
+## 该方法会调用Cinder API的initialize_connection方法，又会RPC请求给volume所在的cinder-volume服务节点。
+## nova/volume/cinder.py:415:API:initialize_connection
+    @translate_volume_exception
+    def initialize_connection(self, context, volume_id, connector):
+        try:     
+            connection_info = cinderclient(
+                context).volumes.initialize_connection(volume_id, connector)
+            connection_info['connector'] = connector
+            return connection_info
+        except cinder_exception.ClientException as ex:
+            with excutils.save_and_reraise_exception():
+                LOG.error(_LE('Initialize connection failed for volume '
+                              '%(vol)s on host %(host)s. Error: %(msg)s '
+                              'Code: %(code)s. Attempting to terminate '
+                              'connection.'),
+                          {'vol': volume_id,
+                           'host': connector.get('host'),
+                           'msg': six.text_type(ex),
+                           'code': ex.code})
+                try:     
+                    self.terminate_connection(context, volume_id, connector)
+                except Exception as exc:
+                    LOG.error(_LE('Connection between volume %(vol)s and host '
+                                  '%(host)s might have succeeded, but attempt '
+                                  'to terminate connection has failed. '
+                                  'Validate the connection and determine if '
+                                  'manual cleanup is needed. Error: %(msg)s '
+                                  'Code: %(code)s.'),
+                              {'vol': volume_id,
+                               'host': connector.get('host'),
+                               'msg': six.text_type(exc),
+                               'code': exc.code})
+
+### cinder/api/contrib/volume_actions.py:
+    @wsgi.action('os-initialize_connection')
+    def _initialize_connection(self, req, id, body):
+        """Initialize volume attachment."""
+        context = req.environ['cinder.context']
+        try:     
+            volume = self.volume_api.get(context, id)
+        except exception.VolumeNotFound as error:
+            raise webob.exc.HTTPNotFound(explanation=error.msg)
+        try:     
+            connector = body['os-initialize_connection']['connector']
+        except KeyError:
+            raise webob.exc.HTTPBadRequest(
+                explanation=_("Must specify 'connector'"))
+        try:     
+            info = self.volume_api.initialize_connection(context,
+                                                         volume,  
+                                                         connector)
+        except exception.InvalidInput as err:
+            raise webob.exc.HTTPBadRequest(
+                explanation=err)
+        except exception.VolumeBackendAPIException as error:
+            msg = _("Unable to fetch connection information from backend.")
+            raise webob.exc.HTTPInternalServerError(explanation=msg)
+
+        return {'connection_info': info}
+
+
+### cinder/volume/api.py:660:API:initialize_connection
+    @wrap_check_policy
+    def initialize_connection(self, context, volume, connector):
+        if volume['status'] == 'maintenance':
+            LOG.info(_LI('Unable to initialize the connection for '
+                         'volume, because it is in '
+                         'maintenance.'), resource=volume)
+            msg = _("The volume connection cannot be initialized in "
+                    "maintenance mode.")
+            raise exception.InvalidVolume(reason=msg)
+        init_results = self.volume_rpcapi.initialize_connection(context,
+                                                                volume,  
+                                                                connector)
+        LOG.info(_LI("Initialize volume connection completed successfully."),
+                 resource=volume)
+        return init_results
+
+### cinder/volume/rpcapi.py:237:VolumeAPI:initialize_connection
+    def initialize_connection(self, ctxt, volume, connector):
+        version = self._compat_ver('2.0', '1.0')
+        cctxt = self._get_cctxt(volume['host'], version=version)
+        return cctxt.call(ctxt, 'initialize_connection',
+                          volume_id=volume['id'],
+                          connector=connector)
+
+
+
+#-----------------------------------------------------------------------#
+#                     Step-3 Cinder-volume 接口分析                     #
+#-----------------------------------------------------------------------#
+
+### 接口S3-1: cinder/volume/manager.py:1386:VolumeManager:initialize_connection
+    def initialize_connection(self, context, volume_id, connector):
+        """Prepare volume for connection from host represented by connector.
+
+        This method calls the driver initialize_connection and returns
+        it to the caller.  The connector parameter is a dictionary with
+        information about the host that will connect to the volume in the
+        following format::
+
+            {
+                'ip': ip,
+                'initiator': initiator,
+            }
+
+        ip: the ip address of the connecting machine
+
+        initiator: the iscsi initiator name of the connecting machine.
+        This can be None if the connecting machine does not support iscsi
+        connections.
+
+        driver is responsible for doing any necessary security setup and
+        returning a connection_info dictionary in the following format::
+
+            {
+                'driver_volume_type': driver_volume_type,
+                'data': data,
+            }
+
+        driver_volume_type: a string to identify the type of volume.  This
+                           can be used by the calling code to determine the
+                           strategy for connecting to the volume. This could
+                           be 'iscsi', 'rbd', 'sheepdog', etc.
+
+        data: this is the data that the calling code will use to connect
+              to the volume. Keep in mind that this will be serialized to
+              json in various places, so it should not contain any non-json
+              data types.
+        """
+        # NOTE(flaper87): Verify the driver is enabled
+        # before going forward. The exception will be caught
+        # and the volume status updated.
+        utils.require_driver_initialized(self.driver)
+        volume = self.db.volume_get(context, volume_id)
+        model_update = None
+        try:
+            # 1. 验证connector信息
+            self.driver.validate_connector(connector)
+        except exception.InvalidConnectorException as err:
+            raise exception.InvalidInput(reason=six.text_type(err))
+        except Exception as err:
+            err_msg = (_("Validate volume connection failed "
+                         "(error: %(err)s).") % {'err': six.text_type(err)})
+            LOG.error(err_msg, resource=volume)
+            raise exception.VolumeBackendAPIException(data=err_msg)
+
+        try:
+            # 2. 创建target
+            model_update = self.driver.create_export(context.elevated(),
+                                                     volume, connector)
+        except exception.CinderException:
+            err_msg = (_("Create export for volume failed."))
+            LOG.exception(err_msg, resource=volume)
+            raise exception.VolumeBackendAPIException(data=err_msg)
+
+        try:
+            if model_update:
+                volume = self.db.volume_update(context,
+                                               volume_id,
+                                               model_update)
+        except exception.CinderException as ex:
+            LOG.exception(_LE("Model update failed."), resource=volume)
+            raise exception.ExportFailure(reason=six.text_type(ex))
+
+        initiator_data = self._get_driver_initiator_data(context, connector)
+        try:
+            # 3. 添加计算节点initiator name,导出target
+            if initiator_data:
+                conn_info = self.driver.initialize_connection(volume,
+                                                              connector,
+                                                              initiator_data)
+            else:
+                conn_info = self.driver.initialize_connection(volume,
+                                                              connector)
+        except Exception as err:
+            err_msg = (_("Driver initialize connection failed "
+                         "(error: %(err)s).") % {'err': six.text_type(err)})
+            LOG.error(err_msg, resource=volume)
+
+            self.driver.remove_export(context.elevated(), volume)
+
+            raise exception.VolumeBackendAPIException(data=err_msg)
+
+        initiator_update = conn_info.get('initiator_update', None)
+        if initiator_update:
+            self._save_driver_initiator_data(context, connector,
+                                             initiator_update)
+            del conn_info['initiator_update']
+
+        # Add qos_specs to connection info
+        typeid = volume['volume_type_id']
+        specs = None
+        if typeid:
+            res = volume_types.get_volume_type_qos_specs(typeid)
+            qos = res['qos_specs']
+            # only pass qos_specs that is designated to be consumed by
+            # front-end, or both front-end and back-end.
+            if qos and qos.get('consumer') in ['front-end', 'both']:
+                specs = qos.get('specs')
+
+        qos_spec = dict(qos_specs=specs)
+        conn_info['data'].update(qos_spec)
+
+        # Add access_mode to connection info
+        volume_metadata = self.db.volume_admin_metadata_get(context.elevated(),
+                                                            volume_id)
+        access_mode = volume_metadata.get('attached_mode')
+        if access_mode is None:
+            # NOTE(zhiyan): client didn't call 'os-attach' before
+            access_mode = ('ro'
+                           if volume_metadata.get('readonly') == 'True'
+                           else 'rw')
+        conn_info['data']['access_mode'] = access_mode
+
+        # Add encrypted flag to connection_info if not set in the driver.
+        if conn_info['data'].get('encrypted') is None:
+            encrypted = bool(volume.get('encryption_key_id'))
+            conn_info['data']['encrypted'] = encrypted
+
+        # Add discard flag to connection_info if not set in the driver and
+        # configured to be reported.
+        if conn_info['data'].get('discard') is None:
+            discard_supported = (self.driver.configuration
+                                 .safe_get('report_discard_supported'))
+            if discard_supported:
+                conn_info['data']['discard'] = True
+
+        LOG.info(_LI("Initialize volume connection completed successfully."),
+                 resource=volume)
+        return conn_info
+
+
+### 接口S3-1-1: cinder/volume/targets/iscsi.py:298:ISCSITarget:validate_connector
+# 该方法不同的driver不一样，对于LVM + iSCSI来说，就是检查有没有initiator字段，即nova-compute节点的initiator信息
+    def validate_connector(self, connector):
+        # NOTE(jdg): api passes in connector which is initiator info
+        if 'initiator' not in connector:
+            err_msg = (_LE('The volume driver requires the iSCSI initiator '
+                           'name in the connector.'))
+            LOG.error(err_msg)
+            raise exception.InvalidConnectorException(missing='initiator')
+        return True
+# 注意以上代码跳转过程：drivers/lvm.py -> targets/lio.py -> targets/iscsi.py。
+# 即lvm driver会调用target相应的方法，这里用的是lio，因此调到lio.py，而lio又继承自iscsi，因此跳到iscsi.py。
+# 下面分析将省去这些细节直接跳转。
+
+
+### 接口S3-1-2: cinder/volume/targets/iscsi.py:186:ISCSITarget:create_export
+    def create_export(self, context, volume, volume_path):
+        """Creates an export for a logical volume."""
+        # 'iscsi_name': 'iqn.2010-10.org.openstack:volume-00000001'
+        iscsi_name = "%s%s" % (self.configuration.iscsi_target_prefix,
+                               volume['name'])
+        iscsi_target, lun = self._get_target_and_lun(context, volume)
+
+        # Verify we haven't setup a CHAP creds file already
+        # if DNE no big deal, we'll just create it
+        chap_auth = self._get_target_chap_auth(context, iscsi_name)
+        if not chap_auth:
+            chap_auth = (vutils.generate_username(),
+                         vutils.generate_password())
+
+        # Get portals ips and port
+        portals_config = self._get_portals_config()
+
+        # NOTE(jdg): For TgtAdm case iscsi_name is the ONLY param we need
+        # should clean this all up at some point in the future
+        tid = self.create_iscsi_target(iscsi_name,
+                                       iscsi_target,
+                                       lun,     
+                                       volume_path,
+                                       chap_auth,
+                                       **portals_config)
+        data = {}
+        data['location'] = self._iscsi_location(
+            self.configuration.iscsi_ip_address, tid, iscsi_name, lun,
+            self.configuration.iscsi_secondary_ip_addresses)
+        LOG.debug('Set provider_location to: %s', data['location'])
+        data['auth'] = self._iscsi_authentication(
+            'CHAP', *chap_auth)
+        return data
+
+# 该方法最重要的操作是调用了create_iscsi_target方法，该方法其实就是调用了cinder-rtstool的create方法
+# cinder/volume/targets/lio.py:99
+# command_args = ['cinder-rtstool',
+#                 'create',
+#                 path,
+#                 name,
+#                 chap_auth_userid,
+#                 chap_auth_password,
+#                 self.iscsi_protocol == 'iser'] + optional_args
+# self._execute(*command_args, run_as_root=True)
+# 即create_export方法的主要工作就是调用cinder-rtstool工具创建target，并把设备添加到target中
+
+
+### 接口S3-1-3: cinder/volume/targets/lio.py:164:LioAdm:initialize_connection(为上文self.driver.initialize_connection调用的函数)
+# 该方法的重要工作就是调用cinder-rtstool的add-initiator子命令，即把计算节点的initiator增加到刚刚创建的target acls中。
+    def initialize_connection(self, volume, connector):
+        volume_iqn = volume['provider_location'].split(' ')[1]
+
+        (auth_method, auth_user, auth_pass) = \
+            volume['provider_auth'].split(' ', 3)
+
+        # Add initiator iqns to target ACL
+        try:     
+            self._execute('cinder-rtstool', 'add-initiator',
+                          volume_iqn,
+                          auth_user,
+                          auth_pass,
+                          connector['initiator'],
+                          run_as_root=True)
+        except putils.ProcessExecutionError:
+            LOG.exception(_LE("Failed to add initiator iqn %s to target"),
+                          connector['initiator'])
+            raise exception.ISCSITargetAttachFailed(
+                volume_id=volume['id'])
+
+        # We make changes persistent
+        self._persist_configuration(volume['id'])
+
+        return super(LioAdm, self).initialize_connection(volume, connector)
+
+#
+## 因此Cinder的主要工作就是创建volume的iSCSI target以及acls。cinder-volume工作结束，我们返回到nova-compute
+#
+
+
+#-----------------------------------------------------------------------#
+#                   Step-4 Nova-compute 接口分析                        #
+#-----------------------------------------------------------------------#
+
+# 回到nova-compute的第(2)步，调用volume_api.initialize_connection()后，执行第(3)步。
+## 接口S4-1: nova/virt/libvirt/driver.py:1306:LibvirtDriver:attach_volume
+    def attach_volume(self, context, connection_info, instance, mountpoint,
+                      disk_bus=None, device_type=None, encryption=None):
+        guest = self._host.get_guest(instance)
+
+        disk_dev = mountpoint.rpartition("/")[2]
+        bdm = {  
+            'device_name': disk_dev,
+            'disk_bus': disk_bus,
+            'device_type': device_type}
+
+        # Note(cfb): If the volume has a custom block size, check that
+        #            that we are using QEMU/KVM and libvirt >= 0.10.2. The
+        #            presence of a block size is considered mandatory by
+        #            cinder so we fail if we can't honor the request.
+        data = {}
+        if ('data' in connection_info):
+            data = connection_info['data']
+        if ('logical_block_size' in data or 'physical_block_size' in data):
+            if ((CONF.libvirt.virt_type != "kvm" and
+                 CONF.libvirt.virt_type != "qemu")):
+                msg = _("Volume sets block size, but the current "
+                        "libvirt hypervisor '%s' does not support custom "
+                        "block size") % CONF.libvirt.virt_type
+                raise exception.InvalidHypervisorType(msg)
+
+        disk_info = blockinfo.get_info_from_bdm(
+            instance, CONF.libvirt.virt_type, instance.image_meta, bdm)
+        # 1. 该方法会调用nova/virt/libvirt/volume/iscsi.py的connect_volume()方法，该方法其实是直接调用os-brick的connect_volume()方法，该方法位于os_brick/initiator/connector.py中ISCSIConnector类中的connect_volume方法，该方法会调用iscsiadm命令的discovory以及login子命令，即把lun设备映射到本地设备。
+        self._connect_volume(connection_info, disk_info)
+        # 2. 获取volume的信息，其实也就是生成xml需要的信息，最重要的就是拿到映射后的本地设备的路径，如/dev/disk/by-path/ip-10.0.0.2:3260-iscsi-iqn.2010-10.org.openstack:volume-060fe764-c17b-45da-af6d-868c1f5e19df-lun-0,返回的conf最终会转化成xml格式。该代码位于nova/virt/libvirt/volume/iscsi.py
+        conf = self._get_volume_config(connection_info, disk_info)
+        self._set_cache_mode(conf)
+
+        self._check_discard_for_attach_volume(conf, instance)
+
+        try:     
+            state = guest.get_power_state(self._host)
+            live = state in (power_state.RUNNING, power_state.PAUSED)
+
+            if encryption:
+                encryptor = self._get_volume_encryptor(connection_info,
+                                                       encryption)
+                encryptor.attach_volume(context, **encryption)
+
+            # 3. 该步骤其实就类似于调用virsh attach-device命令把设备挂载到虚拟机中，该代码位于nova/virt/libvirt/guest.py
+            guest.attach_device(conf, persistent=True, live=live)
+        except Exception as ex:
+            LOG.exception(_LE('Failed to attach volume at mountpoint: %s'),
+                          mountpoint, instance=instance)
+            if isinstance(ex, libvirt.libvirtError):
+                errcode = ex.get_error_code()
+                if errcode == libvirt.VIR_ERR_OPERATION_FAILED:
+                    self._disconnect_volume(connection_info, disk_dev)
+                    raise exception.DeviceIsBusy(device=disk_dev)
+
+            with excutils.save_and_reraise_exception():
+                self._disconnect_volume(connection_info, disk_dev)
+
+# 此时到达libvirt层，代码位于nova/virt/libvirt/driver.py，该方法分为如下几个步骤
+
+#
+## libvirt的工作完成，此时volume已经挂载到虚拟机中了。
+#
+
+
+## 接口S4-2: nova/volume/cinder.py:380:API:attach (为上文volume_api.attach调用的函数)
+# 回到nova/virt/block_device.py，最后调用了volume_api.attach()方法，该方法向Cinder发起API请求。
+# 此时cinder-api通过RPC请求到cinder-volume，代码位于cinder/volume/manager.py，该方法没有做什么工作，其实就是更新数据库，把volume状态改为in-use，并创建对应的attach记录。
+    @translate_volume_exception
+    def attach(self, context, volume_id, instance_uuid, mountpoint, mode='rw'):
+        cinderclient(context).volumes.attach(volume_id, instance_uuid,
+                                             mountpoint, mode=mode)
+
+
+# 到此，OpenStack整个挂载流程终于结束了，以上是从Nova的视角分析，如果从Cinder的视角分析，其实Cinder的工作并不多，总结有如下三点:
+# - reserve_volume: 把volume的状态改为attaching，阻止其它节点执行挂载操作。
+# - initialize_connection: 创建target、lun、acls等。
+# - attach_volume: 把volume状态改为in-use，挂载成功。
+
+
+
+#####################################################
+#           OpenStack虚拟机挂载rbd分析              #
+#####################################################
+
+# 前面分析了 LVM + LIO 的 volume 挂载流程，如果挂载rbd会有什么不同呢。这里不再详细介绍其细节过程，直接从cinder-volume的initialize_connection入手。前面已经分析cinder-volume的initialize_connection步骤:
+# - driver.validate_connector()
+# - driver.create_export()
+# - driver.initialize_connection()
+
+### 接口S3-1-1: cinder/volume/driver.py:1413:BaseVD:validate_connector
+     def validate_connector(self, connector):
+         """Fail if connector doesn't contain all the data needed by driver."""
+         pass
+
+### 接口S3-1-2: cinder/volume/drivers/rbd.py:818:RBDDriver:create_export
+# 这些步骤对应ceph rbd就特别简单。因为rbd不需要像iSCSI那样创建target、创建portal，因此rbd driver的create_export()方法为空:
+    def create_export(self, context, volume, connector):
+        """Exports the volume."""
+        pass
+
+
+### 接口S3-1-3: cinder/volume/drivers/rbd.py:825:RBDDriver:initialize_connection
+# initialize_connection()方法也很简单，直接返回rbd image信息，如pool、image name、mon地址以及ceph配置信息等。
+    def initialize_connection(self, volume, connector):
+        hosts, ports = self._get_mon_addrs()
+        data = {
+            'driver_volume_type': 'rbd',
+            'data': {
+                'name': '%s/%s' % (self.configuration.rbd_pool,
+                                   volume.name),
+                'hosts': hosts,
+                'ports': ports,
+                'auth_enabled': (self.configuration.rbd_user is not None),
+                'auth_username': self.configuration.rbd_user,
+                'secret_type': 'ceph',
+                'secret_uuid': self.configuration.rbd_secret_uuid,
+                'volume_id': volume.id,
+                'rbd_ceph_conf': self.configuration.rbd_ceph_conf,
+            }
+        }
+        LOG.debug('connection data: %s', data)
+        return data
+
+# 而前面介绍过了，rbd不需要映射虚拟设备到宿主机，因此connect_volume方法也是为空。
+# 剩下的工作其实就是nova-compute节点libvirt调用get_config()方法获取ceph的mon地址、rbd image信息、认证信息等，并转为成xml格式，最后调用guest.attach_device()即完成了volume的挂载。
+# 因此，相对iSCSI，rbd挂载过程简单得多。
+
+# vim: set filetype=conf

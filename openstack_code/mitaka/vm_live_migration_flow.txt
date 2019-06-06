@@ -1,0 +1,1465 @@
+# 热迁移代码分析
+
+
+## 关键接口分析:
+### nova-api的接口分析:
+#### 接口1: nova/api/openstack/compute/migrate_server.py:67:MigrateServerController._migrate_live
+    @wsgi.response(202)
+    @extensions.expected_errors((400, 404, 409))
+    @wsgi.action('os-migrateLive')
+    @validation.schema(migrate_server.migrate_live, "2.1", "2.24")
+    @validation.schema(migrate_server.migrate_live_v2_25, "2.25")
+    def _migrate_live(self, req, id, body):
+        """Permit admins to (live) migrate a server to a new host."""
+        '''
+        参数介绍:
+        req为用户请求request对象，包含请求的详细内容:
+        id为请求迁移的虚拟机id
+        body为请求体，包含请求的详细参数: 如{"os-migrateLive": {"disk_over_commit": false, "block_migration": false, "host": null}}
+        '''
+        # 1.得到请求上下文，并且验证迁移操作在上下文中是否合法
+        context = req.environ["nova.context"]
+        authorize(context, action='migrate_live')
+
+        # 2.解析body，得到host和disk_over_commit的值,其中
+        #   host为请求迁移的主机
+        #   disk_over_commit标识迁移虚拟机所需磁盘空间是真实大小，还是虚拟磁盘大小
+        host = body["os-migrateLive"]["host"]
+        block_migration = body["os-migrateLive"]["block_migration"]
+
+        if api_version_request.is_supported(req, min_version='2.25'):
+            if block_migration == 'auto':
+                block_migration = None
+            else:
+                block_migration = strutils.bool_from_string(block_migration,
+                                                            strict=True)
+            disk_over_commit = None
+        else:
+            disk_over_commit = body["os-migrateLive"]["disk_over_commit"]
+
+            block_migration = strutils.bool_from_string(block_migration,
+                                                        strict=True)
+            disk_over_commit = strutils.bool_from_string(disk_over_commit,
+                                                         strict=True)
+
+        try:
+            # 3.根据上下文和id得到instance对象: 标识虚拟机
+            instance = common.get_instance(self.compute_api, context, id)
+            # 将上面得到的host,block_migration,instance作为参数调用nova-compute提供的api: live_migrate
+            self.compute_api.live_migrate(context, instance, block_migration,
+                                          disk_over_commit, host)
+        # 4.捕获异常:
+        except exception.InstanceUnknownCell as e:
+            raise exc.HTTPNotFound(explanation=e.format_message())
+        except (exception.NoValidHost,                                # 找不到合适的目标主机
+                exception.ComputeServiceUnavailable,                  # 目标主机上`nova-compute`服务不可用
+                exception.InvalidHypervisorType,                      # 无效的hypervisor类型
+                exception.InvalidCPUInfo,                             # CPU不兼容
+                exception.UnableToMigrateToSelf,                      # 目的主机和源主机不能相同
+                exception.DestinationHypervisorTooOld,                # 目的主机hypervisor版本太旧
+                exception.InvalidLocalStorage,                        # 无效的本地存储
+                exception.InvalidSharedStorage,                       # 无效的共享存储
+                exception.HypervisorUnavailable,                      # hypervisor不可用
+                exception.MigrationPreCheckError,                     # 迁移预检查错误
+                exception.LiveMigrationWithOldNovaNotSafe,            # nova版本太旧
+                exception.LiveMigrationWithOldNovaNotSupported) as ex:
+            raise exc.HTTPBadRequest(explanation=ex.format_message())
+        except exception.InstanceIsLocked as e:
+            raise exc.HTTPConflict(explanation=e.format_message())
+        except exception.InstanceInvalidState as state_error:
+            common.raise_http_conflict_for_instance_invalid_state(state_error,
+                    'os-migrateLive', id)
+        self.compute_api.live_migrate(context, instance, block_migration,
+                                      disk_over_commit, host)
+
+
+#### 接口2: nova/compute/api.py:3354:API.live_migrate (上文 self.compute_api.live_migrate 调用的函数)
+    @check_instance_lock
+    @check_instance_cell
+    @check_instance_state(vm_state=[vm_states.ACTIVE, vm_states.PAUSED])
+    def live_migrate(self, context, instance, block_migration,
+                     disk_over_commit, host_name):
+        """Migrate a server lively to a new host."""
+        LOG.debug("Going to try to live migrate instance to %s",
+                  host_name or "another host", instance=instance)
+
+        # 1.修改云主机任务状态为: "migrating"
+        instance.task_state = task_states.MIGRATING
+        instance.save(expected_task_state=[None])
+
+        # 2.在`nova.instance_actions`数据表添加`live-migration`操作记录, LIVE_MIGRATION = 'live-migration'
+        self._record_action_start(context, instance,
+                                  instance_actions.LIVE_MIGRATION)
+        try:     
+            request_spec = objects.RequestSpec.get_by_instance_uuid(
+                context, instance.uuid)
+        except exception.RequestSpecNotFound:
+            # Some old instances can still have no RequestSpec object attached
+            # to them, we need to support the old way
+            request_spec = None
+        # 3.调用 nova-conductor 的 api 接口
+        self.compute_task_api.live_migrate_instance(context, instance,
+                host_name, block_migration=block_migration,
+                disk_over_commit=disk_over_commit,
+                request_spec=request_spec)
+
+
+#### 接口3: nova/conductor/api.py:188:ComputeTaskAPI.live_migrate_instance (上文 self.compute_task_api.live_migrate_instance 调用的函数)
+    def live_migrate_instance(self, context, instance, host_name,
+                              block_migration, disk_over_commit,
+                              request_spec=None):
+        # 1.初始化scheduler_hint，为后续查找目标主机，添加过滤属性 {'host': host_name}
+        scheduler_hint = {'host': host_name}
+        # 2.调用 nova-conductor 的 rpc 接口
+        self.conductor_compute_rpcapi.migrate_server(
+            context, instance, scheduler_hint, True, False, None,
+            block_migration, disk_over_commit, None, request_spec=request_spec)
+
+
+#### 接口4: nova/conductor/rpcapi.py:283:ComputeTaskAPI.migrate_server (上文 self.conductor_compute_rpcapi.migrate_server 调用的函数)
+    def migrate_server(self, context, instance, scheduler_hint, live, rebuild, 
+                  flavor, block_migration, disk_over_commit,
+                  reservations=None, clean_shutdown=True, request_spec=None):
+        kw = {'instance': instance, 'scheduler_hint': scheduler_hint,
+              'live': live, 'rebuild': rebuild, 'flavor': flavor,
+              'block_migration': block_migration,
+              'disk_over_commit': disk_over_commit,
+              'reservations': reservations,
+              'clean_shutdown': clean_shutdown,
+              'request_spec': request_spec,
+              }        
+        version = '1.13' 
+        if not self.client.can_send_version(version):
+            del kw['request_spec']
+            version = '1.11' 
+        if not self.client.can_send_version(version):
+            del kw['clean_shutdown']
+            version = '1.10' 
+        if not self.client.can_send_version(version):
+            kw['flavor'] = objects_base.obj_to_primitive(flavor)
+            version = '1.6'
+        if not self.client.can_send_version(version):
+            kw['instance'] = jsonutils.to_primitive(
+                    objects_base.obj_to_primitive(instance))
+            version = '1.4'
+        cctxt = self.client.prepare(version=version)
+        # 调用 nova-conductor 的远程 rpc 接口 migrate_server
+        return cctxt.call(context, 'migrate_server', **kw)
+
+
+
+### nova-conductor的接口分析:
+#### 接口1: nova/conductor/manager.py:178:ComputeTaskManager.migrate_server (为nova-api最后调用的nova-conductor的rpc远程接口)
+    @messaging.expected_exceptions(
+        exception.NoValidHost,
+        exception.ComputeServiceUnavailable,
+        exception.InvalidHypervisorType,
+        exception.InvalidCPUInfo,
+        exception.UnableToMigrateToSelf,
+        exception.DestinationHypervisorTooOld,
+        exception.InvalidLocalStorage,
+        exception.InvalidSharedStorage,
+        exception.HypervisorUnavailable,
+        exception.InstanceInvalidState,
+        exception.MigrationPreCheckError,
+        exception.LiveMigrationWithOldNovaNotSafe,
+        exception.LiveMigrationWithOldNovaNotSupported,
+        exception.UnsupportedPolicyException)
+    def migrate_server(self, context, instance, scheduler_hint, live, rebuild, 
+            flavor, block_migration, disk_over_commit, reservations=None,
+            clean_shutdown=True, request_spec=None):
+        # 参数说明: context: 上下文环境
+        #           instance: 虚拟机实例对象
+        #           scheduler_hint: 过滤属性{'host': host_name}, scheduler会用到
+        #           live: 在线迁移
+        #           rebuild: 是否resize
+        #           flavor: 调整大小时使用,迁移时为None
+        #           block_migration: 块迁移
+        #           disk_over_commit: 块迁移时，计算磁盘空间时使用实际大小还是虚拟大小（=True表示使用实际大小，=False表示使用虚拟大小）
+        #           clean_shutdown: 在线迁移，不需要停机
+        if instance and not isinstance(instance, nova_object.NovaObject):
+            # NOTE(danms): Until v2 of the RPC API, we need to tolerate
+            # old-world instance objects here
+            attrs = ['metadata', 'system_metadata', 'info_cache',
+                     'security_groups']
+            instance = objects.Instance._from_db_object(
+                context, objects.Instance(), instance,
+                expected_attrs=attrs)
+        # NOTE: Remove this when we drop support for v1 of the RPC API
+        if flavor and not isinstance(flavor, objects.Flavor):
+            # Code downstream may expect extra_specs to be populated since it
+            # is receiving an object, so lookup the flavor to ensure this.
+            flavor = objects.Flavor.get_by_id(context, flavor['id'])
+        # 1.热迁移
+        if live and not rebuild and not flavor:
+            self._live_migrate(context, instance, scheduler_hint,
+                               block_migration, disk_over_commit, request_spec)
+        # 2.冷迁移 或 resize
+        elif not live and not rebuild and flavor:
+            instance_uuid = instance.uuid
+            with compute_utils.EventReporter(context, 'cold_migrate',
+                                             instance_uuid):
+                self._cold_migrate(context, instance, flavor,
+                                   scheduler_hint['filter_properties'],
+                                   reservations, clean_shutdown)
+        else:
+            raise NotImplementedError()
+
+
+#### 接口2: nova/conductor/manager.py:276:ComputeTaskManager._live_migrate (上文 self._live_migrate 调用函数)
+    def _live_migrate(self, context, instance, scheduler_hint,
+                      block_migration, disk_over_commit, request_spec):
+        # 1.获取dest主机,如果body传递host参数则dest不为空，否则为空
+        destination = scheduler_hint.get("host")
+
+        # 2.定义一个辅助函数（在热迁移异常时会用到）
+        # 更新实例状态，
+        # 更新`nova.instance_faults`记录异常堆栈
+        # 发送通知给 ceilometer
+        def _set_vm_state(context, instance, ex, vm_state=None,
+                          task_state=None):
+            request_spec = {'instance_properties': {
+                'uuid': instance.uuid, },
+            }
+            scheduler_utils.set_vm_state_and_notify(context,
+                instance.uuid,
+                'compute_task', 'migrate_server',
+                dict(vm_state=vm_state,
+                     task_state=task_state,
+                     expected_task_state=task_states.MIGRATING,),
+                ex, request_spec)
+
+        # 3.创建一个迁移对象Migration，包含：源端主机，目的主机，实例id，迁移类型，迁移状态，配置模板id
+        migration = objects.Migration(context=context.elevated())
+        migration.dest_compute = destination
+        migration.status = 'accepted'
+        migration.instance_uuid = instance.uuid
+        migration.source_compute = instance.host
+        migration.migration_type = 'live-migration'
+        if instance.obj_attr_is_set('flavor'):
+            migration.old_instance_type_id = instance.flavor.id
+            migration.new_instance_type_id = instance.flavor.id
+        else:    
+            migration.old_instance_type_id = instance.instance_type_id
+            migration.new_instance_type_id = instance.instance_type_id
+        migration.create()
+
+        # 4.生成迁移任务对象LiveMigrationTask
+        task = self._build_live_migrate_task(context, instance, destination,
+                                             block_migration, disk_over_commit,
+                                             migration, request_spec)
+        try:
+            # 5.启动迁移任务，TaskBase.execute -> LiveMigrationTask._execute
+            task.execute()
+        # 6.捕获异常：
+        #   找不到目标主机
+        #   目标主机上nova-compute服务不可用
+        #   无效的hypervisor类型
+        #   无效的cpu信息
+        #   目标主机不能是源主机
+        #   目标主机hypervisor版本太老
+        #   无效的本地存储
+        #   无效的共享存储
+        #   hypervisor不可用
+        #   实例无效状态
+        #   迁移预检查错误
+        #   nova版本太老
+        #   迁移调度错误
+        except (exception.NoValidHost,
+                exception.ComputeServiceUnavailable,
+                exception.InvalidHypervisorType,
+                exception.InvalidCPUInfo,
+                exception.UnableToMigrateToSelf,
+                exception.DestinationHypervisorTooOld,
+                exception.InvalidLocalStorage,
+                exception.InvalidSharedStorage,
+                exception.HypervisorUnavailable,
+                exception.InstanceInvalidState,
+                exception.MigrationPreCheckError,
+                exception.LiveMigrationWithOldNovaNotSafe,
+                exception.LiveMigrationWithOldNovaNotSupported,
+                exception.MigrationSchedulerRPCError) as ex:
+            with excutils.save_and_reraise_exception():
+                # TODO(johngarbutt) - eventually need instance actions here
+                _set_vm_state(context, instance, ex, instance.vm_state)
+                migration.status = 'error'
+                migration.save()
+        except Exception as ex:
+            LOG.error(_LE('Migration of instance %(instance_id)s to host'
+                          ' %(dest)s unexpectedly failed.'),
+                      {'instance_id': instance.uuid, 'dest': destination},
+                      exc_info=True)
+            _set_vm_state(context, instance, ex, vm_states.ERROR,
+                          instance.task_state)
+            migration.status = 'failed'
+            migration.save()
+            raise exception.MigrationError(reason=six.text_type(ex))
+
+
+#### 接口3: nova/conductor/tasks/live_migrate.py:55:LiveMigrationTask._execute (上文task.execute调用接口)
+    def _execute(self):
+        # 1.判断实例的状态是否为运行或者暂停状态，否则抛InstanceInvalidState异常
+        self._check_instance_is_active()
+        # 2.从数据表`nova.services`获取源端主机上`nova-compute`服务的信息:
+        #   如果出错 或 `nova-compute`服务未启动，则抛出ComputeServiceUnavailable异常
+        self._check_host_is_up(self.source)
+
+        if not self.destination:
+            # 3.如果没有指定目标主机，则循环通过`nova-scheduler`选择目标主机 选定一个主机后需要检查：
+            # 3.1.该主机上的hypervisor是否与源主机上的兼容，过程如下：
+            #      1).从`nova.compute_nodes`数据表获取源端和目的端节点信息，出错抛ComputeHostNotFound异常
+            #      2).比较源端和目的端节点上hypervisor类型，如果不同则抛InvalidHypervisorType异常
+            #      3).比较源端和目的端节点上hypervisor的版本，如果源端的比目的端的新，则抛DestinationHypervisorTooOld异常
+            # 3.2.检测选择的目标主机是否支持在线迁移，过程如下：
+            #      1). (源主机)发送同步`check_can_live_migrate_destination`消息到消息队列，消费者`nova-compute`会处理该消息:
+            #          从`nova.compute_nodes`数据表获取源端和目的端节点信息
+            #          判断实例所使用的vcpu类型与目标主机的cpu类型是否兼容，如果不兼容抛InvalidCPUInfo异常
+            #      2).(目的主机)发送同步`check_can_live_migrate_source`消息到消息队列，消费者`nova-compute`会处理该消息，以便判断实例的磁盘配置是否支持在线迁移，包括两种情况：
+            #          块迁移（block_migration=True），满足下述所有条件：
+            #              不能有共享磁盘，不符合抛InvalidLocalStorage异常
+            #              目标主机上有足够的磁盘空间，不足抛MigrationPreCheckError异常
+            #              当libvirt版本小于1.2.17时，不能有卷设备，否则抛MigrationPreCheckError异常
+            #          非块迁移（block_migration=False）,满足下述条件之一:
+            #              从卷启动并且没有本地磁盘，
+            #              从镜像启动并且使用的是共享磁盘
+            #              不符合上述条件，抛InvalidSharedStorage异常
+            #  上述动作如果超时，则抛MigrationPreCheckError异常
+            # 选择目标主机时，会排除源主机以及前一次选择的主机，如果超过最大重试次数（配置了migrate_max_retries > 0），还没有得到合适的目标主机，抛MaxRetriesExceeded异常,
+            # 如果所有的主机节点都试过了，还是没有找到合适的目标主机，抛NoInvalidHost异常
+            self.destination = self._find_destination()
+            # 设置迁移目的主机，更新`nova.migrations`数据表
+            self.migration.dest_compute = self.destination
+            self.migration.save()
+        else:
+            # 4.指定了目标主机，需要执行如下判断：
+            #     1)源端主机与目标主机相同，抛UnableToMigrateToSelf异常
+            #     2).目标主机上的`nova-compute`存在且已启动，不符合抛ComputeServiceUnavailable异常
+            #     3).从`nova.compute_nodes`数据表获取目标主机信息，并判断是否内存足够完成该次迁移，不符合抛MigrationPreCheckError异常
+            #     4).与调度器`nova-schduler`选择目标主机情况一样，判断目标主机上的hypervisor是否与源主机上的兼容，具体分析如上文
+            #     5).与调度器`nova-schduler`选择目标主机情况一样，判断目标主机是否支持在线迁移，具体分析如上文
+            self._check_requested_destination()
+
+        # 5.发送异步函数调用`live_migration`到消息队列，消费者`nova-compute`会处理该消息
+        # TODO(johngarbutt) need to move complexity out of compute manager
+        # TODO(johngarbutt) disk_over_commit?
+        return self.compute_rpcapi.live_migration(self.context,
+                host=self.source,
+                instance=self.instance,
+                dest=self.destination,
+                block_migration=self.block_migration,
+                migration=self.migration,
+                migrate_data=self.migrate_data)
+
+
+#### 接口4: nova/compute/rpcapi.py:637:ComputeAPI.live_migration (上文 self.compute_rpcapi.live_migration 调用的函数)
+    def live_migration(self, ctxt, instance, dest, block_migration, host,
+                       migration, migrate_data=None):
+        args = {'migration': migration}
+        version = '4.8'
+        if not self.client.can_send_version(version):
+            version = '4.2'
+            if migrate_data:
+                migrate_data = migrate_data.to_legacy_dict(
+                    pre_migration_result=True)
+        if not self.client.can_send_version(version):
+            version = '4.0'
+        cctxt = self.client.prepare(server=host, version=version)
+        # 调用 nova-compute 的远程 rpc 接口 live_migration
+        cctxt.cast(ctxt, 'live_migration', instance=instance,
+                   dest=dest, block_migration=block_migration,
+                   migrate_data=migrate_data, **args)
+
+
+
+### nova-compute的接口分析:
+#### 接口1: nova/compute/manager.py:5310:ComputeManager.live_migration
+    @wrap_exception()
+    @wrap_instance_event
+    @wrap_instance_fault
+    def live_migration(self, context, dest, instance, block_migration,
+                       migration, migrate_data):
+        """Executing live migration.
+
+        :param context: security context
+        :param dest: destination host
+        :param instance: a nova.objects.instance.Instance object
+        :param block_migration: if true, prepare for block migration
+        :param migration: an nova.objects.Migration object
+        :param migrate_data: implementation specific params
+
+        """
+        # 1.更新迁移状态为：queued
+        self._set_migration_status(migration, 'queued')
+
+        # 2.新建线程，调用_do_live_migration
+        def dispatch_live_migration(*args, **kwargs):
+            # 限制最大的并发访问数, 默认max_concurrent_live_migrations=1
+            # if max(CONF.max_concurrent_live_migrations, 0) != 0: 
+            #     self._live_migration_semaphore = eventlet.semaphore.Semaphore(
+            #         CONF.max_concurrent_live_migrations)
+            # else:    
+            #     self._live_migration_semaphore = compute_utils.UnlimitedSemaphore()
+            with self._live_migration_semaphore:
+                self._do_live_migration(*args, **kwargs)
+
+        # NOTE(danms): We spawn here to return the RPC worker thread back to
+        # the pool. Since what follows could take a really long time, we don't
+        # want to tie up RPC workers.
+        utils.spawn_n(dispatch_live_migration,
+                      context, dest, instance,
+                      block_migration, migration,
+                      migrate_data)
+
+
+#### 接口2:nova/compute/manager.py/ComputeManager._do_live_migration
+    def _do_live_migration(self, context, dest, instance, block_migration,
+                           migration, migrate_data):
+        # NOTE(danms): We should enhance the RT to account for migrations
+        # and use the status field to denote when the accounting has been
+        # done on source/destination. For now, this is just here for status
+        # reporting
+
+        # 1.修改迁移状态为: preparing
+        self._set_migration_status(migration, 'preparing')
+
+        got_migrate_data_object = isinstance(migrate_data,
+                                             migrate_data_obj.LiveMigrateData)
+        if not got_migrate_data_object:
+            migrate_data = \
+                migrate_data_obj.LiveMigrateData.detect_implementation(
+                    migrate_data)
+
+        try:
+            # 2.如果为block方式迁移，获取虚拟机的磁盘信息：
+            if ('block_migration' in migrate_data and
+                    migrate_data.block_migration):
+                # 从nova.block_device_mapping获取虚拟机的块设备信息
+                block_device_info = self._get_instance_block_device_info(
+                    context, instance)
+                # 从xml文件获取本地磁盘信息
+                disk = self.driver.get_instance_disk_info(
+                    instance, block_device_info=block_device_info)
+            else:
+                disk = None
+
+            # 3.进入迁移的prepare阶段
+            migrate_data = self.compute_rpcapi.pre_live_migration(
+                context, instance,
+                block_migration, disk, dest, migrate_data)
+        except Exception:
+            # 4.捕获异常，并且设置迁移状态为error，回滚迁移
+            with excutils.save_and_reraise_exception():
+                LOG.exception(_LE('Pre live migration failed at %s'),
+                              dest, instance=instance)
+                self._set_migration_status(migration, 'failed')
+                self._rollback_live_migration(context, instance, dest,
+                                              block_migration, migrate_data)
+
+        # 5.设置虚拟机状态为: running
+        self._set_migration_status(migration, 'running')
+
+        if migrate_data:
+            migrate_data.migration = migration
+        LOG.debug('live_migration data is %s', migrate_data)
+        try:
+            # 6.调用驱动进行热迁移
+            self.driver.live_migration(context, instance, dest,
+                                       self._post_live_migration,
+                                       self._rollback_live_migration,
+                                       block_migration, migrate_data)
+        except Exception:
+            # Executing live migration
+            # live_migration might raises exceptions, but
+            # nothing must be recovered in this version.
+            LOG.exception(_LE('Live migration failed.'), instance=instance)
+            with excutils.save_and_reraise_exception():
+                self._set_migration_status(migration, 'failed')
+
+
+
+#################################################
+# _do_live_migration的迁移过程主要分为三个阶段：#
+#   prepare 阶段                                #
+#   running 阶段                                #
+#   complete 阶段                               #
+#################################################
+
+#### prepare阶段主要函数分析
+##### 在_do_live_migration函数中调用migrate_data = self.compute_rpcapi.pre_live_migration发起 rpc 同步调用，目标主机nova-compute接受该消息，并且调用相应接口进行处理，处理过程如下:
+##### 接口1: nova/compute/manager.py:5194:ComputeManager.pre_live_migration
+    @wrap_exception()
+    @wrap_instance_event
+    @wrap_instance_fault
+    def pre_live_migration(self, context, instance, block_migration, disk,
+                           migrate_data):
+        """Preparations for live migration at dest host.
+
+        :param context: security context
+        :param instance: dict of instance data
+        :param block_migration: if true, prepare for block migration
+        :param migrate_data: if not None, it is a dict which holds data
+                             required for live migration without shared
+                             storage.
+
+        """
+        LOG.debug('pre_live_migration data is %s', migrate_data)
+        got_migrate_data_object = isinstance(migrate_data,
+                                             migrate_data_obj.LiveMigrateData)
+        if not got_migrate_data_object:
+            migrate_data = \
+                migrate_data_obj.LiveMigrateData.detect_implementation(
+                    migrate_data)
+        # 1.获取磁盘信息
+        block_device_info = self._get_instance_block_device_info(
+                            context, instance, refresh_conn_info=True)
+
+        # 2.获取网络信息
+        network_info = self.network_api.get_instance_nw_info(context, instance)
+        self._notify_about_instance_usage(
+                     context, instance, "live_migration.pre.start",
+                     network_info=network_info)
+
+        # 3.调用driver的pre_live_migration接口
+        migrate_data = self.driver.pre_live_migration(context,
+                                       instance,
+                                       block_device_info,
+                                       network_info,
+                                       disk,
+                                       migrate_data)
+        LOG.debug('driver pre_live_migration data is %s' % migrate_data)
+
+        # 4.在目标主机启动网络
+        # NOTE(tr3buchet): setup networks on destination host
+        self.network_api.setup_networks_on_host(context, instance,
+                                                         self.host)
+
+        # 5.设置防火墙过滤规则
+        # Creating filters to hypervisors and firewalls.
+        # An example is that nova-instance-instance-xxx,
+        # which is written to libvirt.xml(Check "virsh nwfilter-list")
+        # This nwfilter is necessary on the destination host.
+        # In addition, this method is creating filtering rule
+        # onto destination host.
+        self.driver.ensure_filtering_rules_for_instance(instance,
+                                            network_info)
+
+        self._notify_about_instance_usage(
+                     context, instance, "live_migration.pre.end",
+                     network_info=network_info)
+
+        if not got_migrate_data_object and migrate_data:
+            migrate_data = migrate_data.to_legacy_dict(
+                pre_migration_result=True)
+            migrate_data = migrate_data['pre_live_migration_result']
+        LOG.debug('pre_live_migration result data is %s', migrate_data)
+        return migrate_data
+
+
+##### 接口2: nova/virt/libvirt/driver.py:6572:LibvirtDriver.pre_live_migration (上文self.driver.pre_live_migration调用的函数)
+    def pre_live_migration(self, context, instance, block_device_info,
+                           network_info, disk_info, migrate_data=None):
+        """Preparation live migration."""
+        if disk_info is not None:
+            disk_info = jsonutils.loads(disk_info)
+
+        # Steps for volume backed instance live migration w/o shared storage.
+        is_shared_block_storage = True
+        is_shared_instance_path = True
+        is_block_migration = True
+        # 1.参数migrate_data的解析，分析出是否共享路径，共享磁盘，或者block_migrate方式迁移
+        if migrate_data:
+            if not isinstance(migrate_data, migrate_data_obj.LiveMigrateData):
+                obj = objects.LibvirtLiveMigrateData()
+                obj.from_legacy_dict(migrate_data)
+                migrate_data = obj
+            LOG.debug('migrate_data in pre_live_migration: %s', migrate_data,
+                      instance=instance)
+            is_shared_block_storage = migrate_data.is_shared_block_storage
+            is_shared_instance_path = migrate_data.is_shared_instance_path
+            is_block_migration = migrate_data.block_migration
+
+        if configdrive.required_by(instance):
+                # NOTE(sileht): configdrive is stored into the block storage
+                # kvm is a block device, live migration will work
+                # NOTE(sileht): the configdrive is stored into a shared path
+                # kvm don't need to migrate it, live migration will work
+                # NOTE(dims): Using config drive with iso format does not work
+                # because of a bug in libvirt with read only devices. However
+                # one can use vfat as config_drive_format which works fine.
+                # Please see bug/1246201 for details on the libvirt bug.
+            if (is_shared_block_storage or
+                is_shared_instance_path or
+                CONF.config_drive_format == 'vfat'): 
+                pass     
+            else:
+                raise exception.NoLiveMigrationForConfigDriveInLibVirt()
+
+        # 2.如果实例配置路径不是共享的,设置目的主机上实例的配置路径
+        if not is_shared_instance_path:
+            # 获取实例配置路径
+            instance_dir = libvirt_utils.get_instance_path_at_destination(
+                            instance, migrate_data)
+
+            # 如果实例路径已经存在抛出异常
+            if os.path.exists(instance_dir):
+                raise exception.DestinationDiskExists(path=instance_dir)
+
+            LOG.debug('Creating instance directory: %s', instance_dir,
+                      instance=instance)
+            # 创建实例配置路径
+            os.mkdir(instance_dir)
+
+            # Recreate the disk.info file and in doing so stop the
+            # imagebackend from recreating it incorrectly by inspecting the
+            # contents of each file when using the Raw backend.
+            if disk_info:
+                image_disk_info = {}
+                for info in disk_info:
+                    image_file = os.path.basename(info['path'])
+                    image_path = os.path.join(instance_dir, image_file)
+                    image_disk_info[image_path] = info['type']
+
+                LOG.debug('Creating disk.info with the contents: %s',
+                          image_disk_info, instance=instance)
+
+                # 创建虚拟机disk.info文件，其中存放虚拟机磁盘的信息，如：
+                #   {
+                #       "/var/lib/nova/instances/0e036c54-f3d5-4f1d-983f-d3825906e617/disk.config": "raw",
+                #       "/var/lib/nova/instances/0e036c54-f3d5-4f1d-983f-d3825906e617/disk": "qcow2"
+                #   }
+                image_disk_info_path = os.path.join(instance_dir,
+                                                    'disk.info')
+                libvirt_utils.write_to_file(image_disk_info_path,
+                                            jsonutils.dumps(image_disk_info))
+
+            if not is_shared_block_storage:
+                # Ensure images and backing files are present.
+                LOG.debug('Checking to make sure images and backing files are '
+                          'present before live migration.', instance=instance)
+                # 在配置路径下创建本地磁盘设备（系统磁盘文件，包括backfile）
+                self._create_images_and_backing(
+                    context, instance, instance_dir, disk_info,
+                    fallback_from_host=instance.host)
+
+            if not is_block_migration:
+                # NOTE(angdraug): when block storage is shared between source
+                # and destination and instance path isn't (e.g. volume backed
+                # or rbd backed instance), instance path on destination has to
+                # be prepared
+
+                # Touch the console.log file, required by libvirt.
+                console_file = self._get_console_log_path(instance)
+                LOG.debug('Touch instance console log: %s', console_file,
+                          instance=instance)
+                libvirt_utils.file_open(console_file, 'a').close()
+
+                # if image has kernel and ramdisk, just download
+                # following normal way.
+                self._fetch_instance_kernel_ramdisk(context, instance)
+
+        # 调用具体的卷驱动挂在卷，_connetc_volume方法用libvirt执行一些相关的挂在磁盘命令（例如，iscsi）挂载云硬盘到宿主机上，然后调用libvirt将该卷挂载到虚拟机上
+        # Establishing connection to volume server.
+        block_device_mapping = driver.block_device_info_get_mapping(
+            block_device_info)
+
+        if len(block_device_mapping):
+            LOG.debug('Connecting volumes before live migration.',
+                      instance=instance)
+
+        for bdm in block_device_mapping:
+            connection_info = bdm['connection_info']
+            disk_info = blockinfo.get_info_from_bdm(
+                instance, CONF.libvirt.virt_type,
+                instance.image_meta, bdm)
+            self._connect_volume(connection_info, disk_info)
+
+        # We call plug_vifs before the compute manager calls
+        # ensure_filtering_rules_for_instance, to ensure bridge is set up
+        # Retry operation is necessary because continuously request comes,
+        # concurrent request occurs to iptables, then it complains.
+        LOG.debug('Plugging VIFs before live migration.', instance=instance)
+        # plug_vifs 和 相关bridge 插入网络
+        max_retry = CONF.live_migration_retry_count
+        for cnt in range(max_retry):
+            try:
+                self.plug_vifs(instance, network_info)
+                break
+            except processutils.ProcessExecutionError:
+                if cnt == max_retry - 1:
+                    raise
+                else:
+                    LOG.warn(_LW('plug_vifs() failed %(cnt)d. Retry up to '
+                                 '%(max_retry)d.'),
+                             {'cnt': cnt,
+                              'max_retry': max_retry},
+                             instance=instance)
+                    greenthread.sleep(1)
+
+        # Store vncserver_listen and latest disk device info
+        if not migrate_data:
+            migrate_data = objects.LibvirtLiveMigrateData(bdms=[])
+        else:
+            migrate_data.bdms = []
+        migrate_data.graphics_listen_addr_vnc = CONF.vnc.vncserver_listen
+        migrate_data.graphics_listen_addr_spice = CONF.spice.server_listen
+        migrate_data.serial_listen_addr = \
+            CONF.serial_console.proxyclient_address
+        # Store live_migration_inbound_addr
+        migrate_data.target_connect_addr = \
+            CONF.libvirt.live_migration_inbound_addr
+
+        for vol in block_device_mapping:
+            connection_info = vol['connection_info']
+            if connection_info.get('serial'):
+                disk_info = blockinfo.get_info_from_bdm(
+                    instance, CONF.libvirt.virt_type,
+                    instance.image_meta, vol)
+
+                bdmi = objects.LibvirtLiveMigrateBDMInfo()
+                bdmi.serial = connection_info['serial']
+                bdmi.connection_info = connection_info
+                bdmi.bus = disk_info['bus']
+                bdmi.dev = disk_info['dev']
+                bdmi.type = disk_info['type']
+                bdmi.format = disk_info.get('format')
+                bdmi.boot_index = disk_info.get('boot_index')
+                migrate_data.bdms.append(bdmi)
+
+        return migrate_data
+
+
+
+
+#### running阶段主要函数分析
+##### 在_do_live_migration函数中调用self.driver.live_migration启动running阶段的工作，调用libvirt提供的接口完成迁移工作，并且在迁移过程中对迁移进行监视工作，具体流程分析如下：
+##### 接口1: nova/virt/libvirt/driver.py:LibvirtDriver.live_migration
+    def live_migration(self, context, instance, dest,
+                       post_method, recover_method, block_migration=False,
+                       migrate_data=None):
+        """Spawning live_migration operation for distributing high-load.
+
+        :param context: security context
+        :param instance:
+            nova.db.sqlalchemy.models.Instance object
+            instance object that is migrated.
+        :param dest: destination host
+        :param post_method:
+            post operation method.
+            expected nova.compute.manager._post_live_migration.
+        :param recover_method:
+            recovery method when any exception occurs.
+            expected nova.compute.manager._rollback_live_migration.
+        :param block_migration: if true, do block migration.
+        :param migrate_data: a LibvirtLiveMigrateData object
+
+        """
+
+        # 检测主机名是否有效可用
+        # 'dest' will be substituted into 'migration_uri' so ensure
+        # it does't contain any characters that could be used to
+        # exploit the URI accepted by libivrt
+        if not libvirt_utils.is_valid_hostname(dest):
+            raise exception.InvalidHostname(hostname=dest)
+
+        # 调用_live_migration接口
+        self._live_migration(context, instance, dest,
+                             post_method, recover_method, block_migration,
+                             migrate_data)
+
+
+##### 接口2: nova/virt/libvirt/driver.py:6433:LibvirtDriver._live_migration
+    def _live_migration(self, context, instance, dest, post_method,
+                        recover_method, block_migration,
+                        migrate_data):
+        """Do live migration.
+
+        :param context: security context
+        :param instance:
+            nova.db.sqlalchemy.models.Instance object
+            instance object that is migrated.
+        :param dest: destination host
+        :param post_method:
+            post operation method.
+            expected nova.compute.manager._post_live_migration.
+        :param recover_method:
+            recovery method when any exception occurs.
+            expected nova.compute.manager._rollback_live_migration.
+        :param block_migration: if true, do block migration.
+        :param migrate_data: a LibvirtLiveMigrateData object
+
+        This fires off a new thread to run the blocking migration
+        operation, and then this thread monitors the progress of
+        migration and controls its operation
+        """
+
+        # 获取guest对象
+        guest = self._host.get_guest(instance)
+
+        disk_paths = []
+        device_names = []
+        # 获取需要拷贝的disk_path(source dev),device_names(target dev)
+        if migrate_data.block_migration:
+            disk_paths, device_names = self._live_migration_copy_disk_paths(
+                context, instance, guest)
+
+        # 获取libvirt对象dom
+        # TODO(sahid): We are converting all calls from a
+        # virDomain object to use nova.virt.libvirt.Guest.
+        # We should be able to remove dom at the end.
+        dom = guest._domain
+
+        # 创建线程,执行块迁移
+        opthread = utils.spawn(self._live_migration_operation,
+                                     context, instance, dest,
+                                     block_migration,
+                                     migrate_data, dom,
+                                     device_names)
+
+        # 创建事件
+        finish_event = eventlet.event.Event()
+
+        # 线程执行完成后，执行thread_finished函数
+        def thread_finished(thread, event):
+            LOG.debug("Migration operation thread notification",
+                      instance=instance)
+            event.send()
+        # 关联finish_event事件与块迁移线程，监视线程,通过finish_event事件来了解迁移状态
+        opthread.link(thread_finished, finish_event)
+
+        # Let eventlet schedule the new thread right away
+        time.sleep(0)
+
+        try:
+            LOG.debug("Starting monitoring of live migration",
+                      instance=instance)
+            # 进行虚机迁移状态监视
+            self._live_migration_monitor(context, instance, guest, dest,
+                                         post_method, recover_method,
+                                         block_migration, migrate_data,
+                                         dom, finish_event, disk_paths)
+        except Exception as ex:
+            LOG.warn(_LW("Error monitoring migration: %(ex)s"),
+                     {"ex": ex}, instance=instance, exc_info=True)
+            raise
+        finally:
+            LOG.debug("Live migration monitoring is all done",
+                      instance=instance)
+
+
+##### 接口3:  nova/virt/libvirt/driver.py:5946:LibvirtDriver._live_migration_operation
+    def _live_migration_operation(self, context, instance, dest,
+                                  block_migration, migrate_data, dom,
+                                  device_names):
+        """Invoke the live migration operation
+
+        :param context: security context
+        :param instance:
+            nova.db.sqlalchemy.models.Instance object
+            instance object that is migrated.
+        :param dest: destination host
+        :param block_migration: if true, do block migration.
+        :param migrate_data: a LibvirtLiveMigrateData object
+        :param dom: the libvirt domain object
+        :param device_names: list of device names that are being migrated with
+            instance
+
+        This method is intended to be run in a background thread and will
+        block that thread until the migration is finished or failed.
+        """
+        # 获取guest对象
+        # TODO(sahid): Should pass a guest to this method.
+        guest = libvirt_guest.Guest(dom)
+
+        try:
+            # 获取迁移标志,如:
+            # live_migration_flag=VIR_MIGRATE_UNDEFINE_SOURCE, VIR_MIGRATE_PEER2PEER, VIR_MIGRATE_LIVE, VIR_MIGRATE_TUNNELLED
+            if migrate_data.block_migration:
+                migration_flags = self._block_migration_flags
+            else:
+                migration_flags = self._live_migration_flags
+
+            listen_addrs = {}
+            # 获取vnc,spiec等控制台addr
+            if 'graphics_listen_addr_vnc' in migrate_data:
+                listen_addrs['vnc'] = str(
+                    migrate_data.graphics_listen_addr_vnc)
+            if 'graphics_listen_addr_spice' in migrate_data:
+                listen_addrs['spice'] = str(
+                    migrate_data.graphics_listen_addr_spice)
+            serial_listen_addr = (migrate_data.serial_listen_addr if
+                'serial_listen_addr' in migrate_data else None)
+            if ('target_connect_addr' in migrate_data and
+                    migrate_data.target_connect_addr is not None):
+                dest = migrate_data.target_connect_addr
+
+            # 获取VIR_DOMAIN_XML_MIGRATABLE属性，标志是否允许修改迁移虚拟机xml
+            migratable_flag = getattr(libvirt, 'VIR_DOMAIN_XML_MIGRATABLE',
+                                      None)
+
+            # 如果不支持VIR_DOMAIN_XML_MIGRATABLE属性或者vnc地址为空且没有串口
+            if (migratable_flag is None or (
+                    not listen_addrs and not migrate_data.bdms)):
+                # TODO(alexs-h): These checks could be moved to the
+                # check_can_live_migrate_destination/source phase
+                # 检测配置的vnc或者spice监听地址是: ('0.0.0.0', '127.0.0.1', '::', '::1')
+                self._check_graphics_addresses_can_live_migrate(listen_addrs)
+                # 检测串口是否关闭
+                self._verify_serial_console_is_disabled()
+                # 调用libvirt提供的api进行迁移
+                dom.migrateToURI(self._live_migration_uri(dest),
+                                 migration_flags,
+                                 None,
+                                 CONF.libvirt.live_migration_bandwidth)
+            else:
+                # 先转储可迁移的xml配置,然后添加卷,vnc/serial信息组成新的可迁移配置
+                old_xml_str = guest.get_xml_desc(dump_migratable=True)
+                new_xml_str = self._update_xml(old_xml_str,
+                                               migrate_data.bdms,
+                                               listen_addrs,
+                                               serial_listen_addr)
+                try:
+                    # 根据版本调用不同接口
+                    if self._host.has_min_version(
+                            MIN_LIBVIRT_BLOCK_LM_WITH_VOLUMES_VERSION):
+                        params = {
+                            'bandwidth': CONF.libvirt.live_migration_bandwidth,
+                            'destination_xml': new_xml_str,
+                            'migrate_disks': device_names,
+                        }
+                        dom.migrateToURI3(
+                            self._live_migration_uri(dest),
+                            params,
+                            migration_flags)
+                    else:
+                        dom.migrateToURI2(
+                            self._live_migration_uri(dest),
+                            None,
+                            new_xml_str,
+                            migration_flags,
+                            None,
+                            CONF.libvirt.live_migration_bandwidth)
+                except libvirt.libvirtError as ex:
+                    # NOTE(mriedem): There is a bug in older versions of
+                    # libvirt where the VIR_DOMAIN_XML_MIGRATABLE flag causes
+                    # virDomainDefCheckABIStability to not compare the source
+                    # and target domain xml's correctly for the CPU model.
+                    # We try to handle that error here and attempt the legacy
+                    # migrateToURI path, which could fail if the console
+                    # addresses are not correct, but in that case we have the
+                    # _check_graphics_addresses_can_live_migrate check in place
+                    # to catch it.
+                    # TODO(mriedem): Remove this workaround when
+                    # Red Hat BZ #1141838 is closed.
+                    error_code = ex.get_error_code()
+                    if error_code == libvirt.VIR_ERR_CONFIG_UNSUPPORTED:
+                        LOG.warn(_LW('An error occurred trying to live '
+                                     'migrate. Falling back to legacy live '
+                                     'migrate flow. Error: %s'), ex,
+                                 instance=instance)
+                        self._check_graphics_addresses_can_live_migrate(
+                            listen_addrs)
+                        self._verify_serial_console_is_disabled()
+                        dom.migrateToURI(
+                            self._live_migration_uri(dest),
+                            migration_flags,
+                            None,
+                            CONF.libvirt.live_migration_bandwidth)
+                    else:
+                        raise
+        except Exception as e:
+            with excutils.save_and_reraise_exception():
+                LOG.error(_LE("Live Migration failure: %s"), e,
+                          instance=instance)
+
+        # If 'migrateToURI' fails we don't know what state the
+        # VM instances on each host are in. Possibilities include
+        #
+        #  1. src==running, dst==none
+        #
+        #     Migration failed & rolled back, or never started
+        #
+        #  2. src==running, dst==paused
+        #
+        #     Migration started but is still ongoing
+        #
+        #  3. src==paused,  dst==paused
+        #
+        #     Migration data transfer completed, but switchover
+        #     is still ongoing, or failed
+        #
+        #  4. src==paused,  dst==running
+        #
+        #     Migration data transfer completed, switchover
+        #     happened but cleanup on source failed
+        #
+        #  5. src==none,    dst==running
+        #
+        #     Migration fully succeeded.
+        #
+        # Libvirt will aim to complete any migration operation
+        # or roll it back. So even if the migrateToURI call has
+        # returned an error, if the migration was not finished
+        # libvirt should clean up.
+        #
+        # So we take the error raise here with a pinch of salt
+        # and rely on the domain job info status to figure out
+        # what really happened to the VM, which is a much more
+        # reliable indicator.
+        #
+        # In particular we need to try very hard to ensure that
+        # Nova does not "forget" about the guest. ie leaving it
+        # running on a different host to the one recorded in
+        # the database, as that would be a serious resource leak
+
+        LOG.debug("Migration operation thread has finished",
+                  instance=instance)
+
+
+##### 接口4: nova/virt/libvirt/driver.py:LibvirtDriver._live_migration_monitor (该接口为状态检测接口，在上文接口2中调用)
+    def _live_migration_monitor(self, context, instance, guest,
+                                dest, post_method,
+                                recover_method, block_migration,
+                                migrate_data, dom, finish_event,
+                                disk_paths):
+        # 计算迁移数据总大小: 内存大小 + 磁盘大小
+        data_gb = self._live_migration_data_gb(instance, disk_paths)
+        # 达到最大允许切换停机时间的步阶,传输速度越快,步阶越小,所需要的down机时间越小
+        downtime_steps = list(self._migration_downtime_steps(data_gb))
+        # 允许迁移任务执行的最长时间 
+        completion_timeout = int(
+            CONF.libvirt.live_migration_completion_timeout * data_gb)
+        # 进度更新超时时间
+        progress_timeout = CONF.libvirt.live_migration_progress_timeout
+        migration = migrate_data.migration
+
+        n = 0
+        start = time.time()
+        progress_time = start
+        progress_watermark = None
+        while True:
+            # 获取实例的作业信息（当前状态，剩余迁移空间等）
+            info = host.DomainJobInfo.for_domain(dom)
+
+            # 这个type表示三种状态:
+            #   1.迁移任务还 没有开始，这可以通过判断迁移线程是否还在运 行来分辨
+            #   2.迁移由于 失败 / 完成 而结束了，这可以通过判断实例是否还在 当前主机运行来分辨
+            if info.type == libvirt.VIR_DOMAIN_JOB_NONE:
+                # Annoyingly this could indicate many possible
+                # states, so we must fix the mess:
+                #
+                #   1. Migration has not yet begun
+                #   2. Migration has stopped due to failure
+                #   3. Migration has stopped due to completion
+                #
+                # We can detect option 1 by seeing if thread is still
+                # running. We can distinguish 2 vs 3 by seeing if the
+                # VM still exists & running on the current host
+                #
+                if not finish_event.ready():
+                    # 表示迁移任务还未开始
+                    LOG.debug("Operation thread is still running",
+                              instance=instance)
+                    # Leave type untouched
+                else:
+                    try:
+                        if guest.is_active():
+                            # 如果虚拟机当前正在运行，表示迁移任务失败
+                            LOG.debug("VM running on src, migration failed",
+                                      instance=instance)
+                            info.type = libvirt.VIR_DOMAIN_JOB_FAILED
+                        else:
+                            # 否则表示迁移任务已经完成
+                            LOG.debug("VM is shutoff, migration finished",
+                                      instance=instance)
+                            info.type = libvirt.VIR_DOMAIN_JOB_COMPLETED
+                    except libvirt.libvirtError as ex:
+                        LOG.debug("Error checking domain status %(ex)s",
+                                  ex, instance=instance)
+                        # 如果错误码不存在表示迁移完成
+                        if ex.get_error_code() == libvirt.VIR_ERR_NO_DOMAIN:
+                            LOG.debug("VM is missing, migration finished",
+                                      instance=instance)
+                            info.type = libvirt.VIR_DOMAIN_JOB_COMPLETED
+                        else:
+                            # 否则迁移失败
+                            LOG.info(_LI("Error %(ex)s, migration failed"),
+                                     instance=instance)
+                            info.type = libvirt.VIR_DOMAIN_JOB_FAILED
+
+                if info.type != libvirt.VIR_DOMAIN_JOB_NONE:
+                    LOG.debug("Fixed incorrect job type to be %d",
+                              info.type, instance=instance)
+
+            if info.type == libvirt.VIR_DOMAIN_JOB_NONE:
+                # Migration is not yet started
+                LOG.debug("Migration not running yet",
+                          instance=instance)
+            # 迁移正在进行       
+            elif info.type == libvirt.VIR_DOMAIN_JOB_UNBOUNDED:
+                # Migration is still running
+                #
+                # This is where we wire up calls to change live
+                # migration status. eg change max downtime, cancel
+                # the operation, change max bandwidth
+                now = time.time()
+                elapsed = now - start
+                abort = False
+
+                # 过一段时间progress_watermark的值应该大于data_remaining，说明进度更新了，则更新时间
+                if ((progress_watermark is None) or
+                    (progress_watermark > info.data_remaining)):
+                    progress_watermark = info.data_remaining
+                    progress_time = now
+
+                # 如果进度更新时间间隔大于最大超时时间，则终止迁移
+                if (progress_timeout != 0 and
+                    (now - progress_time) > progress_timeout):
+                    LOG.warn(_LW("Live migration stuck for %d sec"),
+                             (now - progress_time), instance=instance)
+                    abort = True
+
+                # 如果迁移时间超过了最大的允许迁移时间，则终止迁移
+                if (completion_timeout != 0 and
+                    elapsed > completion_timeout):
+                    LOG.warn(_LW("Live migration not completed after %d sec"),
+                             completion_timeout, instance=instance)
+                    abort = True
+
+                # 终止迁移任务
+                if abort:
+                    try:
+                        dom.abortJob()
+                    except libvirt.libvirtError as e:
+                        LOG.warn(_LW("Failed to abort migration %s"),
+                                 e, instance=instance)
+                        raise
+
+                # 当迁移时间，超过每一个停机时间步阶时，都需要增加停机时间
+                # See if we need to increase the max downtime. We
+                # ignore failures, since we'd rather continue trying
+                # to migrate
+                if (len(downtime_steps) > 0 and
+                    elapsed > downtime_steps[0][0]):
+                    downtime = downtime_steps.pop(0)
+                    LOG.info(_LI("Increasing downtime to %(downtime)d ms "
+                                 "after %(waittime)d sec elapsed time"),
+                             {"downtime": downtime[1],
+                              "waittime": downtime[0]},
+                             instance=instance)
+
+                    try:
+                        dom.migrateSetMaxDowntime(downtime[1])
+                    except libvirt.libvirtError as e:
+                        LOG.warn(
+                            _LW("Unable to increase max downtime to %(time)d"
+                                "ms: %(e)s"),
+                            {"time": downtime[1], "e": e}, instance=instance)
+
+                # 每5秒进行一次debug类型日志记录，并且更新迁移进度和迁移数据，每30秒记录一次info类型日志
+                # We loop every 500ms, so don't log on every
+                # iteration to avoid spamming logs for long
+                # running migrations. Just once every 5 secs
+                # is sufficient for developers to debug problems.
+                # We log once every 30 seconds at info to help
+                # admins see slow running migration operations
+                # when debug logs are off.
+                if (n % 10) == 0:
+                    # Note(Shaohe Feng) every 5 secs to update the migration
+                    # db, that keeps updates to the instance and migration
+                    # objects in sync.
+                    # 更新迁移数据
+                    migration.memory_total = info.memory_total
+                    migration.memory_processed = info.memory_processed
+                    migration.memory_remaining = info.memory_remaining
+                    migration.disk_total = info.disk_total
+                    migration.disk_processed = info.disk_processed
+                    migration.disk_remaining = info.disk_remaining
+                    migration.save()
+                    # Ignoring memory_processed, as due to repeated
+                    # dirtying of data, this can be way larger than
+                    # memory_total. Best to just look at what's
+                    # remaining to copy and ignore what's done already
+                    #
+                    # TODO(berrange) perhaps we could include disk
+                    # transfer stats in the progress too, but it
+                    # might make memory info more obscure as large
+                    # disk sizes might dwarf memory size
+                    # 更新迁移进度
+                    remaining = 100
+                    if info.memory_total != 0:
+                        remaining = round(info.memory_remaining *
+                                          100 / info.memory_total)
+                    instance.progress = 100 - remaining
+                    instance.save()
+
+                    # 5秒进行一次debug日志记录，30秒进行一次info日志记录
+                    lg = LOG.debug
+                    if (n % 60) == 0:
+                        lg = LOG.info
+
+                    lg(_LI("Migration running for %(secs)d secs, "
+                           "memory %(remaining)d%% remaining; "
+                           "(bytes processed=%(processed_memory)d, "
+                           "remaining=%(remaining_memory)d, "
+                           "total=%(total_memory)d)"),
+                       {"secs": n / 2, "remaining": remaining,
+                        "processed_memory": info.memory_processed,
+                        "remaining_memory": info.memory_remaining,
+                        "total_memory": info.memory_total}, instance=instance)
+                    if info.data_remaining > progress_watermark:
+                        lg(_LI("Data remaining %(remaining)d bytes, "
+                               "low watermark %(watermark)d bytes "
+                               "%(last)d seconds ago"),
+                           {"remaining": info.data_remaining,
+                            "watermark": progress_watermark,
+                            "last": (now - progress_time)}, instance=instance)
+
+                n = n + 1
+            elif info.type == libvirt.VIR_DOMAIN_JOB_COMPLETED:
+            # 迁移已经完成
+                # Migration is all done
+                LOG.info(_LI("Migration operation has completed"),
+                         instance=instance)
+                # 在_do_live_migration中传递过来的完成后处理函数：self._post_live_migration，在post阶段介绍
+                post_method(context, instance, dest, block_migration,
+                            migrate_data)
+                break
+            elif info.type == libvirt.VIR_DOMAIN_JOB_FAILED:
+            # 迁移失败
+                # Migration did not succeed
+                LOG.error(_LE("Migration operation has aborted"),
+                          instance=instance)
+                # 在_do_live_migration中传递过来的回滚函数：self._rollback_live_migration，在post阶段介绍
+                recover_method(context, instance, dest, block_migration,
+                               migrate_data)
+                break
+            elif info.type == libvirt.VIR_DOMAIN_JOB_CANCELLED:
+            # 迁移被取消
+                # Migration was stopped by admin
+                LOG.warn(_LW("Migration operation was cancelled"),
+                         instance=instance)
+                recover_method(context, instance, dest, block_migration,
+                               migrate_data, migration_status='cancelled')
+                break
+            else:
+                LOG.warn(_LW("Unexpected migration job type: %d"),
+                         info.type, instance=instance)
+
+            time.sleep(0.5)
+
+
+
+#### complete阶段主要函数分析
+##### 在此阶段主要是对迁移失败后的回滚操作，和迁移完成后的处理流程进行介绍，两个函数名称分别为
+#####   _rollback_live_migration，
+#####   _post_live_migration
+##### 都是在nova/compute/manager.py/ComputeManager中进行定义，然后作为参数传递给LibvirtDriver.live_migration，详情见上文
+
+##### 接口1: nova/compute/manager.py:5421:ComputeManager._post_live_migration (此函数为迁移完成后的源主机清理操作和目标主机的后续操作)
+    @wrap_exception()
+    @wrap_instance_fault
+    def _post_live_migration(self, ctxt, instance,
+                            dest, block_migration=False, migrate_data=None):
+        """Post operations for live migration.
+
+        This method is called from live_migration
+        and mainly updating database record.
+
+        :param ctxt: security context
+        :param instance: instance dict
+        :param dest: destination host
+        :param block_migration: if true, prepare for block migration
+        :param migrate_data: if not None, it is a dict which has data
+        required for live migration without shared storage
+
+        """
+        LOG.info(_LI('_post_live_migration() is started..'),
+                 instance=instance)
+
+        # 从`nova.block_device_mapping`数据表获取实例的块设备映射
+        bdms = objects.BlockDeviceMappingList.get_by_instance_uuid(
+                ctxt, instance.uuid)
+
+        # Cleanup source host post live-migration
+        # 将实例的块设备映射转化为驱动格式(字典格式)
+        # 如: {
+                'root_device_name'=u'/dev/vda',
+                'ephemerals'=[],
+                'block_device_mapping'=[],
+                'swap'= None
+              }
+        block_device_info = self._get_instance_block_device_info(
+                            ctxt, instance, bdms=bdms)
+        # 调用driver的清理函数，从块设备信息获取卷，并调用对应的卷驱动断开连接
+        self.driver.post_live_migration(ctxt, instance, block_device_info,
+                                        migrate_data)
+
+        # 从hypervisior中移除卷设备的连接
+        # Detaching volumes.
+        connector = self.driver.get_volume_connector(instance)
+        for bdm in bdms:
+            # NOTE(vish): We don't want to actually mark the volume
+            #             detached, or delete the bdm, just remove the
+            #             connection from this host.
+
+            # remove the volume connection without detaching from hypervisor
+            # because the instance is not running anymore on the current host
+            if bdm.is_volume:
+                self.volume_api.terminate_connection(ctxt, bdm.volume_id,
+                                                     connector)
+
+        # 释放不需要的vlan
+        # Releasing vlan.
+        # (not necessary in current implementation?)
+        network_info = self.network_api.get_instance_nw_info(ctxt, instance)
+
+        self._notify_about_instance_usage(ctxt, instance,
+                                          "live_migration._post.start",
+                                          network_info=network_info)
+        # 删除实例的网络及防火墙过滤规则（IptablesFirewallDriver）
+        # Releasing security group ingress rule.
+        LOG.debug('Calling driver.unfilter_instance from _post_live_migration',
+                  instance=instance)
+        self.driver.unfilter_instance(instance,
+                                      network_info)
+
+        migration = {'source_compute': self.host,
+                     'dest_compute': dest, }
+        self.network_api.migrate_instance_start(ctxt,
+                                                instance,
+                                                migration)
+
+        destroy_vifs = False
+        try:
+            # 移除源主机vifs
+            self.driver.post_live_migration_at_source(ctxt, instance,
+                                                      network_info)
+        except NotImplementedError as ex:
+            LOG.debug(ex, instance=instance)
+            # For all hypervisors other than libvirt, there is a possibility
+            # they are unplugging networks from source node in the cleanup
+            # method
+            destroy_vifs = True
+
+        # 远程调用rpc到目标主机完成后续处理，其中包括
+        #  1)更新网络和块设备信息数据库
+        #  2)定义虚拟机实例
+        #  3)启用网络设备
+        #  4)启动虚拟机等
+        # Define domain at destination host, without doing it,
+        # pause/suspend/terminate do not work.
+        self.compute_rpcapi.post_live_migration_at_destination(ctxt,
+                instance, block_migration, dest)
+
+        do_cleanup, destroy_disks = self._live_migration_cleanup_flags(
+                migrate_data)
+
+        if do_cleanup:
+            LOG.debug('Calling driver.cleanup from _post_live_migration',
+                      instance=instance)
+            # 清理操作：虚拟机关机，清除本地磁盘设备，删除实例文件，undefine实例等
+            self.driver.cleanup(ctxt, instance, network_info,
+                                destroy_disks=destroy_disks,
+                                migrate_data=migrate_data,
+                                destroy_vifs=destroy_vifs)
+
+        # 删除instance的pending事件
+        self.instance_events.clear_events_for_instance(instance)
+
+        # 更新主机资源的使用情况
+        # NOTE(timello): make sure we update available resources on source
+        # host even before next periodic task.
+        self.update_available_resource(ctxt)
+
+        # 更新`nova-scheduler`上主机的实例信息
+        self._update_scheduler_instance_info(ctxt, instance)
+        self._notify_about_instance_usage(ctxt, instance,
+                                          "live_migration._post.end",
+                                          network_info=network_info)
+        LOG.info(_LI('Migrating instance to %s finished successfully.'),
+                 dest, instance=instance)
+        LOG.info(_LI("You may see the error \"libvirt: QEMU error: "
+                     "Domain not found: no domain with matching name.\" "
+                     "This error can be safely ignored."),
+                 instance=instance)
+
+        # 通过`nova-consoleauth`服务删除`console token`
+        self._clean_instance_console_tokens(ctxt, instance)
+        if migrate_data and migrate_data.obj_attr_is_set('migration'):
+            # 更新迁移状态为complete
+            migrate_data.migration.status = 'completed'
+            migrate_data.migration.save()
+
+             
+##### 接口2: nova/compute/manager.py:5619:ComputeManager._rollback_live_migration (该接口主要功能实在目标主机上清除卷，清楚虚拟机实例等)
+    @wrap_exception()
+    @wrap_instance_fault
+    def _rollback_live_migration(self, context, instance,
+                                 dest, block_migration, migrate_data=None,
+                                 migration_status='error'):
+        """Recovers Instance/volume state from migrating -> running.
+
+        :param context: security context
+        :param instance: nova.objects.instance.Instance object
+        :param dest:
+            This method is called from live migration src host.
+            This param specifies destination host.
+        :param block_migration: if true, prepare for block migration
+        :param migrate_data:
+            if not none, contains implementation specific data.
+        :param migration_status:
+            Contains the status we want to set for the migration object
+
+        """
+        # 设置实例的任务状态
+        instance.task_state = None
+        instance.progress = 0
+        instance.save(expected_task_state=[task_states.MIGRATING])
+
+        if isinstance(migrate_data, dict):
+            migration = migrate_data.pop('migration', None)
+            migrate_data = \
+                migrate_data_obj.LiveMigrateData.detect_implementation(
+                    migrate_data)
+        elif (isinstance(migrate_data, migrate_data_obj.LiveMigrateData) and
+              migrate_data.obj_attr_is_set('migration')):
+            migration = migrate_data.migration
+        else:
+            migration = None
+
+        # NOTE(tr3buchet): setup networks on source host (really it's re-setup)
+        self.network_api.setup_networks_on_host(context, instance, self.host)
+
+        # 通过远程rpc调用，在目标主机上卸载卷并断开连接
+        bdms = objects.BlockDeviceMappingList.get_by_instance_uuid(
+                context, instance.uuid)
+        for bdm in bdms:
+            if bdm.is_volume:
+                self.compute_rpcapi.remove_volume_connection(
+                        context, bdm.volume_id, instance, dest)
+
+        self._notify_about_instance_usage(context, instance,
+                                          "live_migration._rollback.start")
+
+        # 设置清理标志:
+        #   1.如果是块迁移或者非共享的实例配置路径, do_cleanup=True, 表示需要执行目录清理
+        #   2.如果是非共享的块设备, destroy_disks=True, 表示需要执行磁盘清理
+        do_cleanup, destroy_disks = self._live_migration_cleanup_flags(
+                migrate_data)
+
+        # 通过远程调用rpc接口，在目标主机上做清理操作:
+        #   1.卸载网络设备vifs
+        #   2.关闭并销毁instance
+        #   3.清理磁盘
+        #   4.销毁instance文件
+        if do_cleanup:
+            self.compute_rpcapi.rollback_live_migration_at_destination(
+                    context, instance, dest, destroy_disks=destroy_disks,
+                    migrate_data=migrate_data)
+
+        self._notify_about_instance_usage(context, instance,
+                                          "live_migration._rollback.end")
+
+        # 更新迁移状态为error
+        self._set_migration_status(migration, migration_status)
+
