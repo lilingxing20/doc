@@ -229,9 +229,12 @@ end
 
 libvirt_src->nova_compute_src: done
 deactivate libvirt_src
+deactivate nova_compute_src
+
+
 
 # post_method
-note over nova_compute_src: Post Live Migration Start
+nova_compute_src->+nova_compute_src: Post Live Migration Start
 note over nova_compute_src: ComputeManger::_post_live_migration()
 note over nova_compute_src: start post live migration
 nova_compute_src->+libvirt_src: post_live_migration
@@ -284,12 +287,12 @@ note over nova_compute_src: notify about instance usage: live_migration._post.en
 note over nova_compute_src: clean instance console tokens
 nova_compute_src->database: migration.status = completed
 database->nova_compute_src: done
-note over nova_compute_src: Post Live Migration End
-deactivate nova_compute_src
+nova_compute_src->-nova_compute_src: Post Live Migration End
+
 
 
 # recover_method
-note over nova_compute_src: Recover Start
+nova_compute_src->+nova_compute_src: Recover Start
 note over nova_compute_src: ComputeManger::_rollback_live_migration()
 activate nova_compute_src
 nova_compute_src->database: instance.progress = 0, instance.task_state = None
@@ -359,4 +362,4 @@ end
 
 note over nova_compute_src: notify about instance usage: live_migration._rollback.start
 note over nova_compute_src: set migration status: error
-note over nova_compute_src: Recover End
+nova_compute_src->-nova_compute_src: Recover End
