@@ -124,7 +124,7 @@ nova_compute_src->database: migration.status = 'queued'
 database->nova_compute_src: done
 
 note over nova_compute_src: ComputeManager::_do_live_migration()
-nova_compute_src->database: migration.status = 'queued'
+nova_compute_src->database: migration.status = 'preparing'
 database->nova_compute_src: done
 
 opt block_migration
@@ -132,52 +132,58 @@ opt block_migration
     note over nova_compute_src: get instance disk info
 end
 
-nova_compute_src->+nova_compute_dest: pre_live_migration
-note over nova_compute_dest: ComputeManger::pre_live_migration()
-note over nova_compute_dest: get instance block device info
-nova_compute_dest->database: refresh_conn_info=True
-database->nova_compute_dest: done
-note over nova_compute_dest: get instance network info from network api
-note over nova_compute_dest: notify about instance usage: live_migration.pre.start
+opt try
+    nova_compute_src->+nova_compute_dest: pre_live_migration
+    note over nova_compute_dest: ComputeManger::pre_live_migration()
+    note over nova_compute_dest: get instance block device info
+    nova_compute_dest->database: refresh_conn_info=True
+    database->nova_compute_dest: done
+    note over nova_compute_dest: get instance network info from network api
+    note over nova_compute_dest: notify about instance usage: live_migration.pre.start
 
-nova_compute_dest->+libvirt_dest: pre_live_migration
-note over libvirt_dest: LibvirtDriver::pre_live_migration
-note over libvirt_dest: get meta from instance
-note over libvirt_dest: assert share block storage or share instance path or config driver format is vfat
+    nova_compute_dest->+libvirt_dest: pre_live_migration
+    note over libvirt_dest: LibvirtDriver::pre_live_migration
+    note over libvirt_dest: get meta from instance
+    note over libvirt_dest: assert share block storage or share instance path or config driver format is vfat
 
-opt is not shared instance path
-    note over libvirt_dest: get instance path
-    note over libvirt_dest: mkdir instance path
-    opt has disk.info
-        note over libvirt_dest: write disk info to dest host
+    opt is not shared instance path
+        note over libvirt_dest: get instance path
+        note over libvirt_dest: mkdir instance path
+        opt has disk.info
+            note over libvirt_dest: write disk info to dest host
+        end
+        opt is not shared block storage
+            note over libvirt_dest: create images and backing
+        end
     end
-    opt is not shared block storage
-        note over libvirt_dest: create images and backing
-    end 
+
+    opt not block migration && not shared instance path
+        note over libvirt_dest: touch console.log file
+        note over libvirt_dest: fetch kernel and ramdisk if required
+    end
+
+    note over libvirt_dest: Connecting volumes before live migration
+    note over libvirt_dest: Plugging VIFs before live migration
+    note over libvirt_dest: Store vncserver_listen and latest disk device info
+    libvirt_dest->nova_compute_dest: vncserver_listen and latest disk device info
+    deactivate libvirt_dest
+
+    note over nova_compute_dest: setup networks on destination host
+
+    nova_compute_dest->+libvirt_dest: ensure_filtering_rules_for_instance()
+    note over libvirt_dest: setup basic filters
+    note over libvirt_dest: prepare instance filter
+    note over libvirt_dest: wait for instance filter exists
+    libvirt_dest->nova_compute_dest: done
+    deactivate libvirt_dest
+
+    note over nova_compute_dest: notify about instance usage: live_migration.pre.end
+    deactivate nova_compute_dest
+else
+    nova_compute_src->database: migration.status = 'error'
+    database->nova_compute_src: done
+    note over nova_compute_src: recover_method
 end
-
-opt not block migration && not shared instance path
-    note over libvirt_dest: touch console.log file
-    note over libvirt_dest: fetch kernel and ramdisk if required
-end
-
-note over libvirt_dest: Connecting volumes before live migration
-note over libvirt_dest: Plugging VIFs before live migration
-note over libvirt_dest: Store vncserver_listen and latest disk device info
-libvirt_dest->nova_compute_dest: vncserver_listen and latest disk device info
-deactivate libvirt_dest
-
-note over nova_compute_dest: setup networks on destination host
-
-nova_compute_dest->+libvirt_dest: ensure_filtering_rules_for_instance()
-note over libvirt_dest: setup basic filters
-note over libvirt_dest: prepare instance filter
-note over libvirt_dest: wait for instance filter exists
-libvirt_dest->nova_compute_dest: done
-deactivate libvirt_dest
-
-note over nova_compute_dest: notify about instance usage: live_migration.pre.end
-deactivate nova_compute_dest
 
 nova_compute_src->database: migration.status = 'running'
 database->nova_compute_src: done
@@ -225,6 +231,7 @@ libvirt_src->nova_compute_src: done
 deactivate libvirt_src
 
 # post_method
+note over nova_compute_src: Post Live Migration Start
 note over nova_compute_src: ComputeManger::_post_live_migration()
 note over nova_compute_src: start post live migration
 nova_compute_src->+libvirt_src: post_live_migration
@@ -277,11 +284,14 @@ note over nova_compute_src: notify about instance usage: live_migration._post.en
 note over nova_compute_src: clean instance console tokens
 nova_compute_src->database: migration.status = completed
 database->nova_compute_src: done
+note over nova_compute_src: Post Live Migration End
 deactivate nova_compute_src
 
 
 # recover_method
+note over nova_compute_src: Recover Start
 note over nova_compute_src: ComputeManger::_rollback_live_migration()
+activate nova_compute_src
 nova_compute_src->database: instance.progress = 0, instance.task_state = None
 database->nova_compute_src: done
 note over nova_compute_src: setup networks on source host
@@ -347,8 +357,6 @@ opt do_cleanup
     deactivate nova_compute_dest
 end
 
-    
 note over nova_compute_src: notify about instance usage: live_migration._rollback.start
 note over nova_compute_src: set migration status: error
-
-
+note over nova_compute_src: Recover End
