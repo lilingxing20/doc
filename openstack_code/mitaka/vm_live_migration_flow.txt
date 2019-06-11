@@ -1463,3 +1463,57 @@
         # 更新迁移状态为error
         self._set_migration_status(migration, migration_status)
 
+
+
+###################################################
+
+src: _do_live_migration
+try:
+-> dest: pre_live_migration
+excep:
+-> src: _rollback_live_migration -> compute_rpcapi.remove_volume_connection
+
+
+dest: pre_live_migration
+-> block_device_info = self._get_instance_block_device_info(context, instance, refresh_conn_info=True)
+bdms = objects.BlockDeviceMappingList.get_by_instance_uuid
+
+## dest: nova/compute/manager.py:1832
+    def _get_instance_block_device_info(self, context, instance,
+                                         refresh_conn_info=False,                                             
+                                         bdms=None):
+        """Transform block devices to the driver block_device format."""
+
+        # bdms为None，从数据库block_device_mapping查询信息
+        if not bdms:
+            bdms = objects.BlockDeviceMappingList.get_by_instance_uuid(                                      
+                    context, instance.uuid)                                                                  
+        block_device_info = driver.get_block_device_info(instance, bdms)                                     
+
+        # refresh_conn_info为真值
+        if not refresh_conn_info:       
+            # if the block_device_mapping has no value in connection_info                                    
+            # (returned as None), don't include in the mapping                                               
+            block_device_info['block_device_mapping'] = [                                                    
+                bdm for bdm in driver.block_device_info_get_mapping(
+                                    block_device_info)                                                       
+                if bdm.get('connection_info')]
+        else:
+            # 从新获取环境信息，
+            driver_block_device.refresh_conn_infos(
+                # 此函数返回列表 block_device_mapping
+                driver.block_device_info_get_mapping(block_device_info),
+                context, instance, self.volume_api, self.driver)                                             
+            
+        self._block_device_info_to_legacy(block_device_info)
+                                    
+        return block_device_info
+
+
+## nova/virt/block_device.py:328
+    @update_db
+    def refresh_connection_info(self, context, instance,
+                                volume_api, virt_driver):
+        # NOTE (ndipanov): A no-op if there is no connection info already
+        if not self['connection_info']:
+            return
