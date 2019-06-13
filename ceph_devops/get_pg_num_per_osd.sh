@@ -55,10 +55,10 @@
 function get_pg_num_per_osd_v1 {
 awk '
  BEGIN { IGNORECASE=1 }
- /^pg_stat/ { col=1; while($col!="up") {col++}; col++ }
- /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;
- up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
- for(i in osds) {array[osds[i],pool]++; osdlist[osds[i]];}
+ /^pg_stat/ { col=1; while($col!="up") {col++};}
+ /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool_id=substr($0, RSTART, RLENGTH); poollist[pool_id]=0;
+ up=$(col+1); i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
+ for(i in osds) {array[osds[i],pool_id]++; osdlist[osds[i]];}
 }
 END {
  printf("\n");
@@ -100,10 +100,10 @@ END {
 function get_pg_num_per_osd_v2 {
 awk '
  BEGIN { IGNORECASE=1 }
- /^pg_stat/ { col=1; while($col!="up") {col++}; col++ }
- /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;
- up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
- for(i in osds) {array[osds[i],pool]++; osdlist[osds[i]];}
+ /^pg_stat/ { col=1; while($col!="up") {col++}; }
+ /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool_id=substr($0, RSTART, RLENGTH); poollist[pool_id]=0;
+ up=$(col+1); i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
+ for(i in osds) {array[osds[i],pool_id]++; osdlist[osds[i]];}
 }
 END {
  printf("\n");
@@ -150,10 +150,10 @@ for (i in poollist) printf("--------"); printf("----------------\n");
 function get_pg_num_per_osd_v3 {
 awk '
  BEGIN { IGNORECASE=1 }
- /^pg_stat/ { col=1; while($col!="up") {col++}; col++ }
- /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool=substr($0, RSTART, RLENGTH); poollist[pool]=0;
- up=$col; i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
- for(i in osds) {array[osds[i],pool]++; osdlist[osds[i]];}
+ /^pg_stat/ { col=1; while($col!="up") {col++};}
+ /^[0-9a-f]+\.[0-9a-f]+/ { match($0,/^[0-9a-f]+/); pool_id=substr($0, RSTART, RLENGTH); poollist[pool_id]=0;
+ up=$(col+1); i=0; RSTART=0; RLENGTH=0; delete osds; while(match(up,/[0-9]+/)>0) { osds[++i]=substr(up,RSTART,RLENGTH); up = substr(up, RSTART+RLENGTH) }
+ for(i in osds) {array[osds[i],pool_id]++; osdlist[osds[i]];}
 }
 END {
  printf("\n");
