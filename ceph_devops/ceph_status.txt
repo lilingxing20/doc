@@ -1,0 +1,70 @@
+
+[root@node244 ~]# ceph osd pool set rbd pg_num 256
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+set pool 0 pg_num to 256
+[root@node244 ~]# ceph -s
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            128 pgs stuck inactive
+            128 pgs stuck unclean
+            pool rbd pg_num 256 > pgp_num 128
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e49: 18 osds: 18 up, 18 in
+      pgmap v289: 256 pgs, 1 pools, 6277 kB data, 6277 objects
+            252 GB used, 1546 GB / 1799 GB avail
+                 128 active+clean
+                 128 creating
+[root@node244 ~]# ceph -s
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            14 pgs peering
+            29 pgs stuck inactive
+            31 pgs stuck unclean
+            pool rbd pg_num 256 > pgp_num 128
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e49: 18 osds: 18 up, 18 in
+      pgmap v291: 256 pgs, 1 pools, 6277 kB data, 6277 objects
+            252 GB used, 1546 GB / 1799 GB avail
+                 169 active+clean
+                  70 activating
+                  14 peering
+                   3 active
+[root@node244 ~]# ceph -s
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            pool rbd pg_num 256 > pgp_num 128
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e49: 18 osds: 18 up, 18 in
+      pgmap v293: 256 pgs, 1 pools, 6277 kB data, 6277 objects
+            253 GB used, 1546 GB / 1799 GB avail
+                 256 active+clean
+[root@node244 ~]# 
+[root@node244 ~]# ceph pg dump pgs | grep ^[0-9]\.|awk '{print $1,$2,$15,$17}' > /root/pgmap1.txt
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+dumped pgs in format plain
+[root@node244 ~]# 
+[root@node244 ~]# ceph osd pool set rbd pgp_num 256
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+set pool 0 pgp_num to 256
+[root@node244 ~]# ceph -s
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e51: 18 osds: 18 up, 18 in
+      pgmap v295: 256 pgs, 1 pools, 6277 kB data, 6277 objects
+            253 GB used, 1546 GB / 1799 GB avail
+                 256 active+clean
+[root@node244 ~]# 
+[root@node244 ~]# ceph pg dump pgs | grep ^[0-9]\.|awk '{print $1,$2,$15,$17}' > /root/pgmap2.txt
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+dumped pgs in format plain
+[root@node244 ~]#
+

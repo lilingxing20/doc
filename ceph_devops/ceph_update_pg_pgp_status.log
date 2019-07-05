@@ -1,0 +1,653 @@
+[root@node244 src]# ceph osd pool set rbd pg_num 512
+
+Thu Jun 13 17:03:50 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e52: 18 osds: 18 up, 18 in
+      pgmap v346: 256 pgs, 1 pools, 6277 kB data, 6277 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 256 active+clean
+
+Thu Jun 13 17:03:52 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            10 pgs peering
+            267 pgs stuck inactive
+            267 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v349: 512 pgs, 1 pools, 6151 kB data, 6147 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 256 creating
+                 245 active+clean
+                  10 peering
+                   1 inactive
+
+Thu Jun 13 17:03:53 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            10 pgs peering
+            267 pgs stuck inactive
+            267 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v349: 512 pgs, 1 pools, 6151 kB data, 6147 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 256 creating
+                 245 active+clean
+                  10 peering
+                   1 inactive
+
+Thu Jun 13 17:03:55 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            10 pgs peering
+            267 pgs stuck inactive
+            267 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v349: 512 pgs, 1 pools, 6151 kB data, 6147 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 256 creating
+                 245 active+clean
+                  10 peering
+                   1 inactive
+
+Thu Jun 13 17:03:57 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            49 pgs peering
+            395 pgs stuck inactive
+            395 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v350: 512 pgs, 1 pools, 4767 kB data, 4733 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 244 creating
+                 117 active+clean
+                 101 activating
+                  49 peering
+                   1 inactive
+
+Thu Jun 13 17:03:58 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            85 pgs peering
+            498 pgs stuck inactive
+            498 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v351: 512 pgs, 1 pools, 3560 kB data, 3504 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 237 creating
+                 176 activating
+                  85 peering
+                  14 active+clean
+
+Thu Jun 13 17:04:00 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            92 pgs peering
+            512 pgs stuck inactive
+            512 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v352: 512 pgs, 1 pools, 3384 kB data, 3326 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 237 creating
+                 183 activating
+                  92 peering
+
+Thu Jun 13 17:04:01 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            102 pgs peering
+            512 pgs stuck inactive
+            512 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v353: 512 pgs, 1 pools, 3550 kB data, 3496 objects
+            271 GB used, 1527 GB / 1799 GB avail
+                 223 creating
+                 187 activating
+                 102 peering
+recovery io 29641 B/s, 29 objects/s
+
+Thu Jun 13 17:04:03 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            82 pgs peering
+            512 pgs stuck inactive
+            512 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v355: 512 pgs, 1 pools, 3949 kB data, 3908 objects
+            272 GB used, 1527 GB / 1799 GB avail
+                 241 activating
+                 189 creating
+                  82 peering
+recovery io 399 kB/s, 402 objects/s
+  client io 186 kB/s wr, 186 op/s
+
+Thu Jun 13 17:04:05 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            75 pgs peering
+            512 pgs stuck inactive
+            512 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v356: 512 pgs, 1 pools, 3949 kB data, 3908 objects
+            272 GB used, 1527 GB / 1799 GB avail
+                 248 activating
+                 189 creating
+                  75 peering
+
+Thu Jun 13 17:04:07 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            93 pgs peering
+            452 pgs stuck inactive
+            453 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v357: 512 pgs, 1 pools, 4754 kB data, 4726 objects
+            272 GB used, 1527 GB / 1799 GB avail
+                 236 activating
+                 123 creating
+                  93 peering
+                  59 active+clean
+                   1 active
+recovery io 481 kB/s, 484 objects/s
+  client io 257 kB/s wr, 257 op/s
+
+Thu Jun 13 17:04:08 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            79 pgs peering
+            276 pgs stuck inactive
+            282 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v358: 512 pgs, 1 pools, 6022 kB data, 6019 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 230 active+clean
+                 176 activating
+                  79 peering
+                  21 creating
+                   6 active
+recovery io 1364 kB/s, 1371 objects/s
+  client io 679 kB/s wr, 679 op/s
+
+Thu Jun 13 17:04:10 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            79 pgs peering
+            248 pgs stuck inactive
+            254 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v359: 512 pgs, 1 pools, 6198 kB data, 6197 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 258 active+clean
+                 162 activating
+                  79 peering
+                   7 creating
+                   6 active
+recovery io 983 kB/s, 987 objects/s
+  client io 478 kB/s wr, 478 op/s
+
+Thu Jun 13 17:04:11 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            79 pgs peering
+            248 pgs stuck inactive
+            254 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v359: 512 pgs, 1 pools, 6198 kB data, 6197 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 258 active+clean
+                 162 activating
+                  79 peering
+                   7 creating
+                   6 active
+recovery io 983 kB/s, 987 objects/s
+  client io 478 kB/s wr, 478 op/s
+
+Thu Jun 13 17:04:12 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            14 pgs peering
+            63 pgs stuck inactive
+            68 pgs stuck unclean
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v360: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 444 active+clean
+                  49 activating
+                  14 peering
+                   5 active
+recovery io 113 kB/s, 114 objects/s
+  client io 65251 B/s wr, 63 op/s
+
+Thu Jun 13 17:04:14 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v361: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+recovery io 48936 B/s, 48 objects/s
+  client io 27045 B/s wr, 26 op/s
+
+Thu Jun 13 17:04:15 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v361: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+recovery io 48936 B/s, 48 objects/s
+  client io 27045 B/s wr, 26 op/s
+
+
+
+
+[root@node244 src]# ceph osd pool set rbd pgp_num 512
+
+Thu Jun 13 17:04:34 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            pool rbd pg_num 512 > pgp_num 256
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e53: 18 osds: 18 up, 18 in
+      pgmap v361: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+recovery io 48936 B/s, 48 objects/s
+  client io 27045 B/s wr, 26 op/s
+
+Thu Jun 13 17:04:35 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e54: 18 osds: 18 up, 18 in
+      pgmap v362: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+
+Thu Jun 13 17:04:37 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v363: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+
+Thu Jun 13 17:04:38 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v363: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+
+Thu Jun 13 17:04:40 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v363: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+
+Thu Jun 13 17:04:41 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            149 pgs degraded
+            31 pgs recovering
+            103 pgs stuck unclean
+            recovery 7512/18831 objects degraded (39.892%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v364: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            7512/18831 objects degraded (39.892%)
+                 363 active+clean
+                 118 active+degraded
+                  31 active+recovering+degraded
+
+Thu Jun 13 17:04:43 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            217 pgs degraded
+            55 pgs recovering
+            143 pgs stuck unclean
+            recovery 10948/18831 objects degraded (58.138%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v365: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            10948/18831 objects degraded (58.138%)
+                 295 active+clean
+                 162 active+degraded
+                  55 active+recovering+degraded
+
+Thu Jun 13 17:04:44 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            217 pgs degraded
+            55 pgs recovering
+            143 pgs stuck unclean
+            recovery 10948/18831 objects degraded (58.138%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v365: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            10948/18831 objects degraded (58.138%)
+                 295 active+clean
+                 162 active+degraded
+                  55 active+recovering+degraded
+
+Thu Jun 13 17:04:46 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            213 pgs degraded
+            56 pgs recovering
+            139 pgs stuck unclean
+            recovery 10672/18831 objects degraded (56.673%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v366: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            10672/18831 objects degraded (56.673%)
+                 299 active+clean
+                 157 active+degraded
+                  56 active+recovering+degraded
+
+Thu Jun 13 17:04:48 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            157 pgs degraded
+            62 pgs recovering
+            104 pgs stuck unclean
+            recovery 7567/18831 objects degraded (40.184%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v367: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            7567/18831 objects degraded (40.184%)
+                 355 active+clean
+                  95 active+degraded
+                  62 active+recovering+degraded
+recovery io 410 kB/s, 410 objects/s
+
+Thu Jun 13 17:04:49 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            157 pgs degraded
+            62 pgs recovering
+            104 pgs stuck unclean
+            recovery 7567/18831 objects degraded (40.184%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v367: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            7567/18831 objects degraded (40.184%)
+                 355 active+clean
+                  95 active+degraded
+                  62 active+recovering+degraded
+recovery io 410 kB/s, 410 objects/s
+
+Thu Jun 13 17:04:51 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            157 pgs degraded
+            62 pgs recovering
+            104 pgs stuck unclean
+            recovery 7567/18831 objects degraded (40.184%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v367: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            7567/18831 objects degraded (40.184%)
+                 355 active+clean
+                  95 active+degraded
+                  62 active+recovering+degraded
+recovery io 410 kB/s, 410 objects/s
+
+Thu Jun 13 17:04:53 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            82 pgs degraded
+            56 pgs recovering
+            58 pgs stuck unclean
+            recovery 3786/18831 objects degraded (20.105%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v370: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            3786/18831 objects degraded (20.105%)
+                 430 active+clean
+                  56 active+recovering+degraded
+                  26 active+degraded
+recovery io 545 kB/s, 545 objects/s
+
+Thu Jun 13 17:04:55 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            82 pgs degraded
+            56 pgs recovering
+            58 pgs stuck unclean
+            recovery 3786/18831 objects degraded (20.105%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v370: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            3786/18831 objects degraded (20.105%)
+                 430 active+clean
+                  56 active+recovering+degraded
+                  26 active+degraded
+recovery io 545 kB/s, 545 objects/s
+
+Thu Jun 13 17:04:56 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            57 pgs degraded
+            47 pgs recovering
+            42 pgs stuck unclean
+            recovery 2489/18831 objects degraded (13.218%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v371: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            2489/18831 objects degraded (13.218%)
+                 455 active+clean
+                  47 active+recovering+degraded
+                  10 active+degraded
+recovery io 475 kB/s, 475 objects/s
+
+Thu Jun 13 17:04:58 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            19 pgs degraded
+            19 pgs recovering
+            14 pgs stuck unclean
+            recovery 776/18831 objects degraded (4.121%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v372: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            776/18831 objects degraded (4.121%)
+                 493 active+clean
+                  19 active+recovering+degraded
+recovery io 414 kB/s, 414 objects/s
+
+Thu Jun 13 17:04:59 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            19 pgs degraded
+            19 pgs recovering
+            14 pgs stuck unclean
+            recovery 776/18831 objects degraded (4.121%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v372: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            776/18831 objects degraded (4.121%)
+                 493 active+clean
+                  19 active+recovering+degraded
+recovery io 414 kB/s, 414 objects/s
+
+Thu Jun 13 17:05:01 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            19 pgs degraded
+            19 pgs recovering
+            14 pgs stuck unclean
+            recovery 776/18831 objects degraded (4.121%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v372: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            776/18831 objects degraded (4.121%)
+                 493 active+clean
+                  19 active+recovering+degraded
+recovery io 414 kB/s, 414 objects/s
+
+Thu Jun 13 17:05:02 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_WARN
+            2 pgs degraded
+            2 pgs recovering
+            recovery 74/18831 objects degraded (0.393%)
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v373: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+            74/18831 objects degraded (0.393%)
+                 510 active+clean
+                   2 active+recovering+degraded
+recovery io 212 kB/s, 212 objects/s
+
+Thu Jun 13 17:05:03 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v374: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+recovery io 64716 B/s, 63 objects/s
+
+Thu Jun 13 17:05:05 CST 2019
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+    cluster a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+     health HEALTH_OK
+     monmap e1: 3 mons at {a=192.168.1.244:6789/0,b=192.168.1.244:6790/0,c=192.168.1.244:6791/0}
+            election epoch 6, quorum 0,1,2 a,b,c
+     osdmap e55: 18 osds: 18 up, 18 in
+      pgmap v374: 512 pgs, 1 pools, 6277 kB data, 6277 objects
+            272 GB used, 1526 GB / 1799 GB avail
+                 512 active+clean
+recovery io 64716 B/s, 63 objects/s
+
+

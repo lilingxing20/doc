@@ -1,0 +1,58 @@
+[root@node244 ceph]# cd src/
+[root@node244 src]# MON=3 OSD=18 ./vstart.sh -n mon osd -d
+** going verbose **
+hostname node244
+ip 192.168.1.244
+ip 192.168.1.244
+port 
+creating /vdb/ceph/src/keyring
+./monmaptool --create --clobber --add a 192.168.1.244:6789 --add b 192.168.1.244:6790 --add c 192.168.1.244:6791 --print /tmp/ceph_monmap.3202
+./monmaptool: monmap file /tmp/ceph_monmap.3202
+./monmaptool: generated fsid 2718d527-ef8d-4dc0-828e-379c802fb445
+epoch 0
+fsid 2718d527-ef8d-4dc0-828e-379c802fb445
+last_changed 2019-06-13 16:01:50.566630
+created 2019-06-13 16:01:50.566630
+0: 192.168.1.244:6789/0 mon.a
+1: 192.168.1.244:6790/0 mon.b
+2: 192.168.1.244:6791/0 mon.c
+./monmaptool: writing epoch 0 to /tmp/ceph_monmap.3202 (3 monitors)
+rm -rf /vdb/ceph/src/dev/mon.a
+mkdir -p /vdb/ceph/src/dev/mon.a
+./ceph-mon --mkfs -c /vdb/ceph/src/ceph.conf -i a --monmap=/tmp/ceph_monmap.3202 --keyring=/vdb/ceph/src/keyring
+./ceph-mon: set fsid to a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+./ceph-mon: created monfs at /vdb/ceph/src/dev/mon.a for mon.a
+rm -rf /vdb/ceph/src/dev/mon.b
+mkdir -p /vdb/ceph/src/dev/mon.b
+./ceph-mon --mkfs -c /vdb/ceph/src/ceph.conf -i b --monmap=/tmp/ceph_monmap.3202 --keyring=/vdb/ceph/src/keyring
+./ceph-mon: set fsid to a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+./ceph-mon: created monfs at /vdb/ceph/src/dev/mon.b for mon.b
+rm -rf /vdb/ceph/src/dev/mon.c
+mkdir -p /vdb/ceph/src/dev/mon.c
+./ceph-mon --mkfs -c /vdb/ceph/src/ceph.conf -i c --monmap=/tmp/ceph_monmap.3202 --keyring=/vdb/ceph/src/keyring
+./ceph-mon: set fsid to a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+./ceph-mon: created monfs at /vdb/ceph/src/dev/mon.c for mon.c
+./ceph-mon -i a -c /vdb/ceph/src/ceph.conf
+./ceph-mon -i b -c /vdb/ceph/src/ceph.conf
+./ceph-mon -i c -c /vdb/ceph/src/ceph.conf
+ERROR: cannot access subvolume /vdb/ceph/src/dev/osd0/*: No such file or directory
+add osd0 46673e53-a04a-40a2-a25f-0cdbb685dced
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+0
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+add item id 0 name 'osd.0' weight 1 at location {host=node244,root=default} to crush map
+2019-06-13 16:02:02.655278 7f6a7d23a840 -1 journal FileJournal::_open: disabling aio for non-block journal.  Use journal_force_aio to force use of aio anyway
+2019-06-13 16:02:02.674628 7f6a7d23a840 -1 journal FileJournal::_open: disabling aio for non-block journal.  Use journal_force_aio to force use of aio anyway
+2019-06-13 16:02:02.675592 7f6a7d23a840 -1 filestore(/vdb/ceph/src/dev/osd0) could not find -1/23c2fcde/osd_superblock/0 in index: (2) No such file or directory
+2019-06-13 16:02:02.690292 7f6a7d23a840 -1 created object store /vdb/ceph/src/dev/osd0 journal /vdb/ceph/src/dev/osd0.journal for osd.0 fsid a9773a40-ecbe-49cb-bc7a-3fa998a4ed94
+2019-06-13 16:02:02.690362 7f6a7d23a840 -1 auth: error reading file: /vdb/ceph/src/dev/osd0/keyring: can't open /vdb/ceph/src/dev/osd0/keyring: (2) No such file or directory
+2019-06-13 16:02:02.690542 7f6a7d23a840 -1 created new key in keyring /vdb/ceph/src/dev/osd0/keyring
+adding osd0 key to auth repository
+*** DEVELOPER MODE: setting PATH, PYTHONPATH and LD_LIBRARY_PATH ***
+added key for osd.0
+start osd0
+./ceph-osd -i 0 -c /vdb/ceph/src/ceph.conf
+starting osd.0 at :/0 osd_data /vdb/ceph/src/dev/osd0 /vdb/ceph/src/dev/osd0.journal
+
+
+
