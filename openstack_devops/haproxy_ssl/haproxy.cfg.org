@@ -1,0 +1,161 @@
+# This file managed by Puppet
+global
+  daemon  
+  group  haproxy
+  log  /dev/log local0
+  maxconn  20480
+  pidfile  /var/run/haproxy.pid
+  ssl-default-bind-ciphers  !SSLv2:kEECDH:kRSA:kEDH:kPSK:+3DES:!aNULL:!eNULL:!MD5:!EXP:!RC4:!SEED:!IDEA:!DES
+  ssl-default-bind-options  no-sslv3
+  user  haproxy
+
+defaults
+  log  global
+  maxconn  4096
+  mode  tcp
+  retries  3
+  timeout  http-request 10s
+  timeout  queue 1m
+  timeout  connect 10s
+  timeout  client 1m
+  timeout  server 1m
+  timeout  check 10s
+
+listen cinder
+  bind 172.30.126.30:8776 transparent
+  mode http
+  http-request set-header X-Forwarded-Proto https if { ssl_fc }
+  http-request set-header X-Forwarded-Proto http if !{ ssl_fc }
+  server controller01 172.30.126.26:8776 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8776 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8776 check fall 5 inter 2000 rise 2
+
+listen glance_api
+  bind 172.30.126.30:9292 transparent
+  server controller01 172.30.126.26:9292 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:9292 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:9292 check fall 5 inter 2000 rise 2
+
+listen glance_registry
+  bind 172.30.126.30:9191 transparent
+  server controller01 172.30.126.26:9191 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:9191 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:9191 check fall 5 inter 2000 rise 2
+
+listen haproxy.stats
+  bind 172.30.126.30:1993 transparent
+  mode http
+  stats enable
+  stats uri /
+
+listen heat_api
+  bind 172.30.126.30:8004 transparent
+  mode http
+  http-request set-header X-Forwarded-Proto https if { ssl_fc }
+  http-request set-header X-Forwarded-Proto http if !{ ssl_fc }
+  server controller01 172.30.126.26:8004 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8004 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8004 check fall 5 inter 2000 rise 2
+
+listen heat_cfn
+  bind 172.30.126.30:8000 transparent
+  server controller01 172.30.126.26:8000 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8000 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8000 check fall 5 inter 2000 rise 2
+
+listen heat_cloudwatch
+  bind 172.30.126.30:8003 transparent
+  server controller01 172.30.126.26:8003 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8003 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8003 check fall 5 inter 2000 rise 2
+
+listen horizon
+  bind 172.30.126.30:80 transparent
+  mode http
+  cookie SERVERID insert indirect nocache
+  server controller01 172.30.126.26:80 check cookie controller01 fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:80 check cookie controller01 fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:80 check cookie controller01 fall 5 inter 2000 rise 2
+
+listen ironic
+  bind 172.30.126.30:6385 transparent
+  server controller01 172.30.127.26:6385 check fall 5 inter 2000 rise 2
+  server controller02 172.30.127.27:6385 check fall 5 inter 2000 rise 2
+  server controller03 172.30.127.28:6385 check fall 5 inter 2000 rise 2
+
+listen keystone_admin
+  bind 172.30.126.30:35357 transparent
+  mode http
+  http-request set-header X-Forwarded-Proto https if { ssl_fc }
+  http-request set-header X-Forwarded-Proto http if !{ ssl_fc }
+  server controller01 172.30.126.26:35357 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:35357 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:35357 check fall 5 inter 2000 rise 2
+
+listen keystone_public
+  bind 172.30.126.30:5000 transparent
+  mode http
+  http-request set-header X-Forwarded-Proto https if { ssl_fc }
+  http-request set-header X-Forwarded-Proto http if !{ ssl_fc }
+  server controller01 172.30.126.26:5000 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:5000 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:5000 check fall 5 inter 2000 rise 2
+
+listen manila
+  bind 172.30.126.30:8786 transparent
+  server controller01 172.30.126.26:8786 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8786 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8786 check fall 5 inter 2000 rise 2
+
+listen mysql
+  bind 172.30.126.30:3306 transparent
+  option tcpka
+  option httpchk
+  stick on dst
+  stick-table type ip size 1000
+  timeout client 90m
+  timeout server 90m
+  server controller01 172.30.126.26:3306 backup check fall 5 inter 2000 on-marked-down shutdown-sessions port 9200 rise 2
+  server controller02 172.30.126.27:3306 backup check fall 5 inter 2000 on-marked-down shutdown-sessions port 9200 rise 2
+  server controller03 172.30.126.28:3306 backup check fall 5 inter 2000 on-marked-down shutdown-sessions port 9200 rise 2
+
+listen neutron
+  bind 172.30.126.30:9696 transparent
+  server controller01 172.30.126.26:9696 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:9696 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:9696 check fall 5 inter 2000 rise 2
+
+listen nova_metadata
+  bind 172.30.126.30:8775 transparent
+  server controller01 172.30.126.26:8775 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8775 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8775 check fall 5 inter 2000 rise 2
+
+listen nova_novncproxy
+  bind 172.30.126.30:6080 transparent
+  balance source
+  timeout tunnel 1h
+  server controller01 172.30.126.26:6080 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:6080 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:6080 check fall 5 inter 2000 rise 2
+
+listen nova_osapi
+  bind 172.30.126.30:8774 transparent
+  mode http
+  http-request set-header X-Forwarded-Proto https if { ssl_fc }
+  http-request set-header X-Forwarded-Proto http if !{ ssl_fc }
+  server controller01 172.30.126.26:8774 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8774 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8774 check fall 5 inter 2000 rise 2
+
+listen storage_api
+  bind 172.30.126.30:9876 transparent
+  server controller01 172.30.126.26:9876 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:9876 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:9876 check fall 5 inter 2000 rise 2
+
+listen swift_proxy_server
+  bind 172.30.126.30:8080 transparent
+  server controller01 172.30.126.26:8080 check fall 5 inter 2000 rise 2
+  server controller02 172.30.126.27:8080 check fall 5 inter 2000 rise 2
+  server controller03 172.30.126.28:8080 check fall 5 inter 2000 rise 2
