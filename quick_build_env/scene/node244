@@ -1,0 +1,5 @@
+
+NODE_ARRAY=(
+'vm_name	hostname	bm-mgmt-ip;control-ip,gateway,dns1;tenant-ip;storage-ip'
+'xx-node244	node244		192.168.1.244;172.30.126.244,172.30.126.254,114.114.114.114;192.168.100.244;10.10.10.244'
+)
