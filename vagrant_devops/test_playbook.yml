@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: false
+  become: True
+  any_errors_fatal: true
+  post_tasks:
+    - name: test hostname
+      command: hostname
