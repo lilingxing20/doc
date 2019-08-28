@@ -1,0 +1,62 @@
+title cinder create volume
+participant client
+participant cinder_api
+participant cinder_scheduler
+participant database
+participant cinder-volume
+
+
+client->cinder_api: create
+activate client
+activate cinder_api
+
+# cinder/api/v2/volumes.py
+note over cinder_api: VolumeController:cinder()
+note over cinder_api: assert_valid_body
+note over cinder_api: get context
+note over cinder_api: get body
+note over cinder_api: validate_name_and_description
+note over cinder_api: make kwargs
+note over cinder_api: self.volume_api.create
+note over cinder_api: self._view_builder.detail
+
+# cinder/volume/api.py
+note over cinder_api: API.create()
+note over cinder_api: check_policy(context, 'create')
+note over cinder_api: size > 0
+
+alt: consistencygroup
+note over cinder_api: volume_type must be provided when creating a volume in a consistency group.
+end
+
+alt: volume_type
+    note over cinder_api: get extra_specs
+end
+
+alt: source_volume
+    note over cinder_api: either match source volume, or omit type argument
+else: volume_backend_name is different
+    note over cinder_api: exception.InvalidInput(reason=msg)
+end
+
+alt: snapshot
+    note over cinder_api: recommend omitting the type argument
+else: volume_backend_name is different
+    note over cinder_api: exception.InvalidInput(reason=msg)
+end
+
+note over cinder_api: availability_zones
+note over cinder_api: sched_rpcapi
+note over cinder_api: volume_rpcapi
+note over cinder_api: create_volume.get_flow
+
+alt flow_utils.DynamicLogListener(flow_engine, logger=LOG)
+    note over cinder_api: flow_engine.run()
+    note over cinder_api: flow_engine.storage.fetch('volume')
+    note over cinder_api: Volume created successfully.
+end
+
+
+
+
+
