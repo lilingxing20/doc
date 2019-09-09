@@ -1,0 +1,207 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+VAGRANTFILE_API_VERSION = '2'
+
+config_file=File.expand_path(File.join(File.dirname(__FILE__), 'vagrant_variables.yml'))
+settings=YAML.load_file(config_file)
+
+LABEL_PREFIX    = settings['label_prefix'] ? settings['label_prefix'] + "-" : ""
+MULTINODE       = settings['multinode']
+NMONS           = settings['mon_vms']
+NOSDS           = settings['osd_vms']
+CONTROL_SUBNET  = settings['control_subnet']
+PUBLIC_SUBNET   = settings['public_subnet']
+CLUSTER_SUBNET  = settings['cluster_subnet']
+BOX             = ENV['CEPH_ANSIBLE_VAGRANT_BOX'] || settings['vagrant_box']
+BOX_URL         = settings['vagrant_box_url']
+SYNC_DIR        = settings['vagrant_sync_dir']
+MEMORY          = settings['memory']
+ETH             = settings['eth']
+USER            = settings['ssh_username']
+DEBUG           = settings['debug']
+
+ASSIGN_STATIC_IP = true
+DISABLE_SYNCED_FOLDER = true
+
+vagrant_dir = File.expand_path(File.dirname(__FILE__))
+
+NODE_SETTINGS ||= {
+  aio: {
+    cpus: 8,
+    memory: 16384
+  },
+  operator: {
+    cpus: 1,
+    memory: 2048
+  },
+  control: {
+    cpus: 2,
+    memory: 4096
+  },
+  compute: {
+    cpus: 2,
+    memory: 4096
+  },
+  mon: {
+    cpus: 2,
+    memory: 4096
+  },
+  osd: {
+    cpus: 2,
+    memory: 4096
+  }
+}
+
+# Configure a new SSH key and config so the deployer is able to connect with
+# the other cluster nodes.
+unless File.file?(File.join(vagrant_dir, 'vagrantkey'))
+  system("ssh-keygen -f #{File.join(vagrant_dir, 'vagrantkey')} -N '' -C this-is-vagrant")
+end
+
+def get_setting(node, setting)
+  NODE_SETTINGS[node][setting]
+rescue
+  raise VagrantConfigMissing,
+    "Missing configuration for NODE_SETTINGS[#{node}][#{setting}]"
+end
+
+ansible_provision = proc do |ansible|
+
+  ansible.playbook = settings['playbook']
+  ansible.skip_tags = settings['skip_tags']
+
+  ansible.groups = {
+    'mons'             => (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" },
+    'osds'             => (0..NOSDS - 1).map { |j| "#{LABEL_PREFIX}osd#{j}" },
+  }
+  ansible.groups['mgrs'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['mdss'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['rgws'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['restapis'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['nfss'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['rbd_mirrors'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['clients'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+  ansible.groups['iscsigws'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
+
+  if DEBUG then                                                                                                                                                    
+    ansible.verbose = '-vvvv'
+  end
+  ansible.limit = 'all'
+end
+
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = BOX
+  config.vm.box_url = BOX_URL
+  config.ssh.insert_key = false # workaround for https://github.com/mitchellh/vagrant/issues/5048
+  config.ssh.private_key_path = settings['ssh_private_key_path']
+  config.ssh.username = USER
+  
+  username = "vagrant"
+  user_home = "/home/#{username}"
+  #user_home = "/home"
+  ceph_ansible_path = "#{user_home}/ceph-ansible"
+
+  # When using libvirt, avoid errors like:
+  # "host doesn't support requested feature: CPUID.01H:EDX.ds [bit 21]"
+  config.vm.provider :libvirt do |lv|
+    lv.cpu_mode = 'host-passthrough'
+    lv.volume_cache = 'unsafe'
+    lv.graphics_type = 'none'
+  end
+
+  # Faster bootup. Disables mounting the sync folder for libvirt and virtualbox
+  if DISABLE_SYNCED_FOLDER
+    config.vm.provider :libvirt do |v,override|
+      override.vm.synced_folder '.', SYNC_DIR, disabled: true
+    end
+  end
+
+  my_privatekey = File.read(File.join(vagrant_dir, "vagrantkey"))
+  my_publickey = File.read(File.join(vagrant_dir, "vagrantkey.pub"))
+
+  config.vm.provision :shell, inline: <<-EOS
+    mkdir -p /root/.ssh
+    echo '#{my_privatekey}' > /root/.ssh/id_rsa
+    chmod 600 /root/.ssh/id_rsa
+    echo '#{my_publickey}' > /root/.ssh/authorized_keys
+    chmod 600 /root/.ssh/authorized_keys
+    echo '#{my_publickey}' > /root/.ssh/id_rsa.pub
+    chmod 644 /root/.ssh/id_rsa.pub
+    mkdir -p #{user_home}/.ssh
+    echo '#{my_privatekey}' >> #{user_home}/.ssh/id_rsa
+    chmod 600 #{user_home}/.ssh/*
+    echo 'Host *' > #{user_home}/.ssh/config
+    echo StrictHostKeyChecking no >> #{user_home}/.ssh/config
+    chown -R #{username} #{user_home}/.ssh
+    sed -i '/^PasswordAuthentication/s/no/yes/' /etc/ssh/sshd_config
+    systemctl restart sshd
+  EOS
+
+  config.vm.define "operator", primary: true do |admin|
+    admin.vm.hostname = "operator.local"
+    
+    if ASSIGN_STATIC_IP
+      admin.vm.network :private_network,
+        ip: "#{CONTROL_SUBNET}.5"
+      admin.vm.network :private_network,
+        ip: "#{PUBLIC_SUBNET}.5"
+      admin.vm.network :private_network,
+        ip: "#{CLUSTER_SUBNET}.5"
+    end
+
+    # Libvirt
+    admin.vm.provider :libvirt do |lv|
+      lv.memory = MULTINODE ? get_setting(:operator, :memory) : get_setting(:aio, :memory)
+      lv.cpus = MULTINODE ? get_setting(:operator, :cpus) : get_setting(:aio, :cpus)
+      lv.random_hostname = true
+    end
+  end
+  if MULTINODE
+    (0..NMONS - 1).each do |i|
+      config.vm.define "#{LABEL_PREFIX}mon#{i}" do |mon|
+        mon.vm.hostname = "#{LABEL_PREFIX}mon#{i}"
+        if ASSIGN_STATIC_IP
+          mon.vm.network :private_network,
+            ip: "#{PUBLIC_SUBNET}.1#{i}"
+        end
+  
+        # Libvirt
+        mon.vm.provider :libvirt do |lv|
+          lv.memory = get_setting(:mon, :memory)
+          lv.cpus = get_setting(:mon, :cpus)
+          lv.random_hostname = true
+        end
+      end
+    end
+  
+    (0..NOSDS - 1).each do |i|
+      config.vm.define "#{LABEL_PREFIX}osd#{i}" do |osd|
+        osd.vm.hostname = "#{LABEL_PREFIX}osd#{i}"
+        if ASSIGN_STATIC_IP
+          osd.vm.network :private_network,
+            ip: "#{PUBLIC_SUBNET}.2#{i}"
+          osd.vm.network :private_network,
+            ip: "#{CLUSTER_SUBNET}.2#{i}"
+        end
+  
+        # Libvirt
+        driverletters = ('a'..'z').to_a
+        osd.vm.provider :libvirt do |lv|
+          # always make /dev/sd{a/b/c} so that CI can ensure that
+          # virtualbox and libvirt will have the same devices to use for OSDs
+          (0..2).each do |d|
+            lv.storage :file, :device => "hd#{driverletters[d]}", :size => '50G', :bus => "ide"
+          end
+          lv.memory = get_setting(:osd, :memory)
+          lv.cpus = get_setting(:osd, :cpus)
+          lv.random_hostname = true
+        end
+        # Run the provisioner after the last machine comes up
+        # osd.vm.provision 'ansible', &ansible_provision if i == (NOSDS - 1)
+      end
+    end
+  end
+end
