@@ -1,0 +1,2175 @@
+# 题目的格式如下，题目和题目之间用“==”隔开，每个题目的“题干”，“选项”，“答案”，“解释”用“*”号隔开
+# Untitled Exam
+# Number: 000-000
+# Passing Score: 800
+# Time Limit: 120 min
+# File Version: 1.0
+# Exam A
+QUESTION 1
+1.Which two options can change the thin provisioned disk to thick provisioned? (Choose two.)
+*
+A. Use vMotion to migrate the VM to another ESXi host without moving the disks.
+B. Use Storage vMotion of the running VM to the same datastore and select Thick Provision
+C. Power off the VM, locate the VMDK disk in the Datastore browser, right-click that and select Inflate.
+D. Use Storage vMotion of the running VM to another datastore and select Thick Provision
+*
+Correct Answer: CD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 2
+What is the maximum supported RAM per virtual machine (VM) in vSphere 6.5?
+*
+A. 6128 GB
+B. 2048 GB
+C. 8192 GB
+D. 4096 GB
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 3
+3.A VMware vSphere 6.x Administrator is implementing a new eight-node cluster for
+business critical applications. Each server will be configured with two 10 GbE network
+adapters and will utilize iSCSI for storage on one subnet. Which feature is required to
+implement this solution?
+*
+A. Storage DRS
+B. LACP
+C. Network I/O Control
+D. VMkernel Port Binding
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 4
+4.What is the VMware recommended way to distribute storage I/O loads across multiple
+paths to minimize downtime and remove potential bottlenecks?
+*
+A. Enable Storage I/O Control.
+B. Configure storage replication.
+C. Configure multipathing.
+D. Enable storage DRS and configure datastore clusters
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 5
+A Primary Fault Tolerant VM is performing poorly despite its ESXi host having adequate
+resources and CPUs are idle. Other hosts in the cluster are much more heavily utilized.
+What is the cause?
+*
+A. The Secondary VM is assigned to a different portgroup than the Primary.
+B. The Secondary VM is running more applications than the Primary
+C. The Secondary VM is running on an ESXi host that is overcommitted.
+D. The vMotion network has not been configured for Jumbo Frames.
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 6
+Which virtual SCSI controller would be recommended when deploying a Windows Server
+2012 R2 VM that will host a database server which is expected to generate high I/O?
+*
+A. LSI Logic
+B. PVSCSI
+C. LSI Logic SAS
+D. BusLogic
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 7
+7.When a vSphere Administrator powers on a VM with the following configuration, what will
+be the resulting swap file size?
+*
+A. 4 GB
+B. 2 GB
+C. 3 GB
+D. 1 GB
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 8
+Which are two requirements for vMotion without shared storage? (Choose two.)
+*
+A. The source host must have access to the destination storage.
+B. The hosts must be licensed with vSphere Enterprise Plus.
+C. The destination host must have access to any RDM LUNs
+D. The source and destination hosts must have identical CPUs
+E. Hosts must be running vSphere 5.1 or later.
+*
+Correct Answer: CE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 9
+9.Which three actions are available in Troubleshooting Mode in the ESXi Direct Console
+User Interface (DCUI)? (Choose three.)
+*
+A. Enable ESXi Shell
+B. Modify DCUI idle timeout
+C. Modify Password
+D. Restart Management Network
+E. Modify SSH timeout.
+*
+Correct Answer: ABE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 10
+10.VMware vRealize Log Insight can be configured to send notification events to which endpoint?
+*
+A. vRealize Infrastructure Navigator
+B. vRealize Configuration Manager
+C. vRealize Operations Manager
+D. vCenter Server
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 11
+11.By default, how many login attempts will an ESXi host allow before locking out the account?
+*
+A. 7
+B. 8
+C. 10
+D. 5
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 12
+12.Which virtual switch load balancing method should be used when teaming network interfaces with
+EtherChannel?
+*
+A. Route based on originating virtual port.
+B. Route based on IP hash.
+C. Route based on physical NIC load.
+D. Route based on source MAC hash.
+E. Use explicit failover order.
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 13
+Which actions take place when DRS Automation is set to Partially Automated?
+*
+A. Initial placement: Recommended host(s) is displayed. Migration: Recommendation is executed
+automatically
+B. Initial placement: Automatic. Migration: Recommendation is displayed.
+C. Initial placement: Recommended host(s) is displayed. Migration: Recommendation is displayed
+D. Initial placement: Automatic. Migration: Recommendation is executed automatically
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 14
+14.What is true about a virtual machine with (orphaned) appended to the display name?
+*
+A. The virtual machine has been cloned and removed from vCenter Server’s inventory.
+B. The template that the virtual machine was created from no longer exists.
+C. The virtual machine creator no longer wants the virtual machine and has marked it for deletion
+D. The virtual machine exists in the vCenter Server database, but the ESXi hosts no longer recognize it.
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 15
+A vSphere Administrator notices that the newly deployed ESXi hosts cannot stay in a connected state in
+vCenter Server for more than 60 seconds at a time. The Administrator knows that the hardware is in good
+health and that the ESXi hypervisors are properly configured. What is the source of the problem?
+*
+A. The hosts are not a part of a vSphere Distributed Switch
+B. Firewall rules that have too many ports open.
+C. Firewall rules preventing hosts from sending heartbeats to vCenter Server.
+D. The hosts do not have persistent logging configured.
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 16
+16.When managing search queries in vRealize Log Insight, what three actions can be performed? (Choose
+three.)
+*
+A. Share the Current Query
+B. Load a Query
+C. Take a Snapshot of a Query
+D. Pause the Current Query
+E. Duplicate a Query
+*
+Correct Answer: ABC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 17
+17.A vSphere Administrator notices that sometimes they receive poor network throughput for multiple port
+groups that reside on a vSwitch with multiple physical uplinks (vmnics). The configuration on the ESXi host is
+identical to other hosts that are working properly in the same cluster.What should be done next?---疑问
+*
+A. Restart Management agents in ESXi Using Direct Console User Interface (DCUI).
+B. Add additional port groups to the vSwitch.
+C. Alter the failover order of the vmnics until a bad vmnic is found.--------------------------
+D. Add additional resources to the virtual machines that are powered on.-------old
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 18
+18.Which three IP addresses may be pinged by the Test Management Network feature in the ESXi hosts
+DCUI? (Choose three.)
+*
+A. NTP server
+B. Secondary DNS server
+C. DHCP server
+D. Default gateway
+E. Primary DNS server
+*
+Correct Answer: BDE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 19
+19.Which two statements are correct when licensing an ESXi 6.x host? (Choose two.)
+*
+A. ESXi licenses can be assigned utilizing the ESXi host client.
+B. Bulk licensing requires vSphere PowerCLI
+C. Bulk licensing requires vSphere Auto Deploy to be enabled
+D. ESXi licenses can only be applied to ESXi hosts connected to a vCenter Server.
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 20
+20.Which three factors should an Administrator take into account when determining the required VDP appliance
+size and number of appliances? (Choose three.)
+*
+A. retention periods (daily, weekly, monthly, yearly)
+B. VMs guest OS family and version
+C. typical change rate
+D. Number and type (database, file system) of VMs
+*
+Correct Answer: ACD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 21
+21.What two new features are introduced with virtual machine compatibility version 13? (Choose two.)
+*
+A. IDE hot plug support
+B. VMXNET 4
+C. Virtual Memory maximum 6128 GB
+D. Virtual NVMe
+*
+Correct Answer: CD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 22
+22.A VMware vSphere 6.x Administrator is creating an Alarm Action. What are three configurable actions?
+(Choose three.)
+*
+A. Shutdown Guest
+B. Restart Guest
+C. Send a notification email
+D. Migrate VM
+E. Run a command
+*
+Correct Answer: CDE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 23
+23.What three steps are necessary to configure Virtual Volumes (vVOLs) on an ESXi hosts? (Choose three.)----
+重点
+*
+A. Create and manage Protocol Endpoints.
+B. Create a virtual datastore.
+C. Create a LUN.
+D. Register Storage Providers
+E. Format the volume with VMFS6.
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 24
+24.What is required to create a vSphere Distributed Switch? (Choose two.)
+*
+A. A minimum of two physical uplinks is required.
+B. vSphere Enterprise Plus licensing is required.
+C. The host is added to a vCenter Server.
+D. Login to the ESXi Host with the Root account
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 25
+A vSphere Administrator has been tasked with configuring Jumbo Frames and the current environment is based
+on vSphere Standard Switch. Which three steps are required?（Choose three）
+*
+A. Verify the physical switches in the environment have been properly configured.
+B. Configure the Switch MTU.
+C. Configure the Port Group MTU.
+D. Migrate to a Distributed vSwitch.
+E. Configure the Distributed vSwitch MTU
+*
+Correct Answer: ABC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 26
+26.Which three functions are provided by Storage DRS? (Choose three.)
+*
+A. space load balancing among datastores within a datastore cluster
+B. VM disk sizing recommendations for virtual machines in datastores within a datastore cluster
+C. I/O load balancing among datastores within a datastore cluster
+D. snapshot consolidation recommendations among datastores within a datastore cluster
+E. initial placement recommendations for virtual disks based on space and I/O workload
+*
+Correct Answer: ACE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 27
+27.Which two databases are supported for the vCenter Server Appliance 6.x? (Choose two.)
+*
+A. PostgreSQL
+B. Oracle
+C. DB2
+D. Microsoft SQL Server
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 28
+28.What are two requirements for Guest Operating System Customizations? (Choose two.)
+*
+A. The ESXi host that the virtual machine is running on must be version 5.5 or later.
+B. Microsoft Sysrep tools must be installed on the Windows VM to be cloned.
+C. VMware Tools must be installed on the virtual machine or template.
+D. The guest operating system being customized must be installed on a disk attached as SCSI node 0:0 in the
+virtual machine configuration.
+*
+Correct Answer: CD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 29
+29.What are two requirements needed to enable a 4 vCPU virtual machine with Fault Tolerance? (Choose two.)
+*
+A. vSphere Enterprise Plus license
+B. 10 GbE uplink for FT logging network
+C. vSphere Standard license
+D. 1 GbE uplink for FT logging network
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 30
+Which option was added to the load balancing calculations of DRS in vSphere 6.5? ----疑问
+*
+A. Network
+B. Memory
+C. Storage
+D. CPU
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 31
+31.Which two options does VM Monitoring use to determine if a virtual machine should be reset? (Choose two.)
+*
+A. Network activity from the virtual machine
+B. I/O activity from the virtual machine
+C. CPU activity from the virtual machine
+D. Heartbeats from VMware Tools
+*
+Correct Answer: BD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 32
+32.After reconfiguring VUM in the vCenter Server Appliance, a vSphere Administrator must restart the Update
+Manager service. Which VMware recommended action will let the Administrator accomplish this task?
+*
+A. On the vSphere Web Client Home page, click System Configuration, then Nodes. Select vCenter Server
+and, from the Actions menu, select Reboot.
+B. On the vSphere Web Client Home page, click System Configuration, then Services. Select VMware
+vSphere Update Manager service, and from the Actions menu select Restart.
+C. On the vSphere Web Client Home page, click Update Manager. Select the Update Manager server and use
+the Actions menu to restart it
+D. Log in to the vCenter Server Appliance Management UI and reboot the VCSA.
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 33
+33.When trying to export the vApp to the OVF, the option is grayed out. What solution allows for the export of a
+vApp?
+*
+A. PowerOff the vApp.
+B. The vApp is marked as Non-Exportable.
+C. Logout of the vSphere Client and use the vSphere WebClient.
+D. Change the portgroup where the VMs are connected to.
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 34
+34.Which file format supports the exchange of virtual appliances across products and platforms?
+*
+A. FAT32
+B. OVF
+C. VMDK
+D. NTFS
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 35
+35.Which two resource types can be limited on the vApp level? (Choose two.)
+*
+A. CPU
+B. Storage
+C. Memory
+D. Network
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 36
+36.A VMware vSphere 6.x Administrator is tasked with expanding a current vRealize Log Insight Deployment.
+What two steps will accomplish this task? (Choose two.)
+*
+A. Run the startup wizard and select Join Existing Deployment.
+B. Login to the vRealize Log Insight Management UI and select Add New Node.
+C. Deploy another vRealize Log Insight server from the OVF.
+D. Deploy and install vRealize Log Insight on a new Linux virtual machine.
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 37
+37.What is the maximum supported number of Virtual SCSI adapters per VM in vSphere 6.5?
+*
+A. 8
+B. 4
+C. 2
+D. 6
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 38
+38.A vSphere Administrator has been tasked with ensuring that 500 virtual desktops are unable to
+communicate with one another, but can communicate with required services. Which two solutions does
+VMware recommend? (Choose two.)
+*
+A. VMware NSX Distributed Firewall
+B. Private VLAN
+C. vSphere Host Firewall
+D. Port Filtering
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 39
+39.Which is the VDP appliance available storage configuration maximum?-----疑问
+*
+A. 2 TB
+B. 62 TB
+C. 8 TB
+D. 4 TB
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 40
+40.What tool is utilized for detailed performance monitoring of the vCenter Server Appliance?
+*
+A. vim-cmd
+B. esxtop
+C. Perfmon
+D. vimtop
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 41
+41.Which three virtual hardware configurations will allow snapshots? (Choose three.)
+*
+A. Physical Mode RDMs
+B. bus sharing
+C. Full memory reservation
+D. Virtual Mode RDMs
+E. 16+ vCPU
+*
+Correct Answer: CDE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 42
+42.Which two choices are valid ways to patch an ESXi host? (Choose two.)
+*
+A. utilizing the esxcli Command Line Interface
+B. vSphere Update Manager
+C. vRealize Operations Manager
+D. configuring a Host Profile
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 43
+43.Which Distributed Switch Load Balancing option requires configuration of the physical Ethernet switch to
+operate properly?
+*
+A. Route based on originating virtual port
+B. Use explicit failover
+C. Route based on IP hash
+D. Route based on physical NIC load
+E. Route based on source MAC hash
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 44
+44.A Long-Distance vMotion migration cannot complete. Which three situations could cause this? (Choose
+three.)
+*
+A. The license currently in use for the two hosts in vSphere Enterprise Edition
+B. The round-trip time between the hosts is greater than 150 milliseconds.
+C. The virtual machine is configured to use Virtual NVMe disks.
+D. The vMotion traffic to the destination host is on the default TCP/IP stack.
+E. The license currently in use for the two hosts is vSphere Enterprise Plus Edition.
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 45
+45.An Administrator would like to take advantage of the new Automatic UNMAP feature in VMFS6. All of the
+existing datastores are connected via iSCSI and formatted with VMFS5. In order to minimize disruption and
+maintain some of the existing VMFS5 volumes, which two steps can be taken to leverage the UNMAP feature
+in VMFS6? (Choose two.)
+*
+A. Use Storage vMotion to migrate your workloads to the new VMFS6 datastore.
+B. Create a new VMFS6 datastore
+C. Use Storage DRS to put the VMFS5 datastore into maintenance mode.
+D. Perform an inline upgrade on each of your VMFS5 volumes.
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 46
+46.Which two options are requirements to perform a migration between vCenter Server instances? (Choose
+two.)
+*
+A. The vCenter Server servers must be time-synchronized.
+B. The ESXi hosts must be version 5.5 or later.
+C. The vCenter Servers must be version 6.0 or later.
+D. The vCenter Server must be in the same single Sign-On domain.
+E. The ESXi hosts must have vSphere Standard, Advanced, or Enterprise Plus licensing.
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 47
+47.What will happen to the VM when a vSphere Administration returns to a snapshot that was created without
+memory on the running VM?
+*
+A. VM will be rebooted
+B. VM will be running in the state that it was at the time the snapshot creation
+C. VM will be powered on
+D. VM will be powered off
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 48
+48.What three steps must be taken when removing a host from a vSAN-enabled cluster? (Choose three.)----疑
+问
+*
+A. Remove disks from diskgroups, remove disk groups.
+B. Create at least one vSphere Standard Switch.
+C. Remove VMKernel port with vSAN traffic checkbox checked.----old
+D. Remove the host from vSAN cluster.
+E. Place the host into maintenance mode with Full Migration option selected.
+*
+Correct Answer: ADE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 49
+49.Which two options can be leveraged to configure a remote syslog server for an ESXi 6.x host? (Choose
+two.)
+*
+A. vRealize Configuration Manager
+B. vRealize Automation
+C. Host Profiles
+D. vSphere Web Client
+*
+Correct Answer: CD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 50
+50.Which statement is a requirement for Storage vMotion?
+*
+A. The source and destination VMDKs must be of the same provisioning type.
+B. The virtual machine cannot contain any raw device mappings (RDMs).
+C. Virtual disks must not be larger than 2TB.
+D. The host on which the virtual machine is running must have access to the source and target datastores.
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 51
+51.A virtual machine loses network connectivity after vMotion. Which two troubleshooting tasks can be
+performed? (Choose two.)
+*
+A. Verify virtual switch option Notify Switches is set to Yes.
+B. Ensure that Enhanced vMotion Compatibility has been configured.
+C. Change the teaming policy to active/standby mode.
+D. Ensure that the virtual machine is in the proper VLAN ID.
+*
+Correct Answer: AD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 52
+52.What three steps are necessary to enable Jumbo Frames for use with an iSCSI storage array? (Choose
+three.)
+*
+A. Configure the MTU on the physical switch
+B. Configure the MTU on the virtual switch.
+C. Configure the MTU on the VTEP.
+D. Configure the MTU on the LAG group
+E. Configure the MTU on the VMKernel port.
+*
+Correct Answer: ABE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 53
+53.Which two options can be used for vCenter Server 6.x database availability? (Choose two.)
+*
+A. NSX load balancer
+B. Microsoft SQL Server 2012/2014 AlwaysOn Availability Groups (AG)
+C. vCenter Server Watchdog
+D. vCenter Server Heartbeat
+E. Microsoft Windows Server Failover Clustering
+*
+Correct Answer: BE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 54
+54.Which two methods can a vSphere Administrator use to automatically synchronize time on an ESXi host?
+(Choose two.)
+*
+A. Log in to the VMware Host Client, navigate to Host > Manage > Time & date and click Edit settings.
+B. Select the host in the vSphere Web Client, navigate to Configure > System > Time Configuration and click
+the Edit button
+C. Use the esxcli hardware clock get command in the ESXi Shell.
+D. The vicfg-ntp command
+E. Configure the VMware Tools time synchronization.
+*
+Correct Answer: BD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 55
+55.Which two network failure detection options are available when using a vSphere Standard Switch? (Choose
+two.)
+*
+A. Fixed with preferred path
+B. Dynamic
+C. Link status with Beacon probing
+D. Link status only
+*
+Correct Answer: CD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 56
+56.A VM has the following configuration: 2 vCPU4 GB RAM HDD1 10 GB HDD2 20 GB A vSphere
+Administrator creates a snapshot of a powered off VM. What is the maximum size of all of the snapshots that
+can be consumed on the datastore?
+*
+A. 30 GB
+B. 100% of the datastore minus 512 bytes
+C. 34 GB
+D. 50% of the datastore
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 57
+57.A vSphere Administrator recently introduced a new shared storage solution for the ESXi hosts. Despite good
+device specifications, this new storage solution is not performing well. What are two VMware-recommended
+troubleshooting steps for fixing this? (Choose two.)
+*
+A. Restart the vCenter Server.
+B. Check the VMware Hardware Compatibility List.
+C. Verify that vCenter Server is running the latest patched version
+D. Verify that the drivers and firmware are at the recommended versions.
+E. Restart the Platform Services Controller.
+*
+Correct Answer: BD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 58
+58.A vSphere Administrator recently upgraded to vSphere .6.5 and wants to assign more than 4 TB of RAM to
+the virtual machine. What must happen first?
+*
+A. Make sure that the user account has administrative privileges at a global level.
+B. Upgrade the Virtual Machine compatibility to version 13.
+C. Obtain an ESXi server with an Intel Skylake CPU
+D. Make sure that there are no snapshots present on the virtual machine.
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 59
+59.Some of the VMs in a vSphere DRS cluster are not migrated as expected.Which three factors can affect
+DRS behavior? (Choose three.)----疑问
+*
+A. The currently configured TPS settings for the VMs.
+B. VM Overrides.
+C. DRS Aggression Levels (Migration Threshold).
+D. CPU, Memory, and Network Utilization.
+E. The currently configured Enhanced vMotion Compatibility level for the cluster
+*
+Correct Answer: BCD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 60
+60.Which two options are available when migrating a powered off VM and relocating the attached disks?
+(Choose two.)
+*
+A. Thick Provision Eager Zeroed
+B. Raw Device Mapping Physical Compatibility
+C. Same format as source
+D. Raw Device Mapping Virtual Compatibility
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 61
+61.What two options are available when configuring a virtual flash resource on a virtual machine? (Choose
+two.)
+*
+A. Block Size
+B. Limit
+C. SCSI Controller
+D. Reservation
+*
+Correct Answer: AD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 62
+62.The Triggered Alarm on the VM shows Virtual Machine Consolidation needed status. How would an
+administrator recover from this event?
+*
+A. This must be done from the command line.
+B. The only possible method is to clone the VM
+C. In the vSphere WebClient, open Snapshot Manager of the VM and then use the Delete all button.
+D. In the vSphere WebClient select VM, right-click → Snapshots → Consolidate.
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 63
+64.Which three features can be configured during the initial creation of a cluster? (Choose three.)
+*
+A. Proactive HA
+B. EVC
+C. DRS
+D. vSAN
+*
+Correct Answer: BCD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 64
+65.A vSphere Administrator notices that they cannot login to vCenter Server with the vSphere Web Client,
+although the server is responding to pings. What is the next step in troubleshooting the login problem?
+*
+A. /etc/init.d/hostd restart
+B. . connect-viserver-server
+C. . vim-cmd vmsvc/getallvms
+D. service-control –status vmware-vpxd
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 65
+66.Which two choices would make a Virtual Machine compatible when enabling Fault Tolerance? (Choose
+two.)
+*
+A. e1000e virtual network adapter
+B. 2 TB + VMDK
+C. A Virtual CPUs (vCPU)
+D. NIC passthrough
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 66
+67.Which of the following are valid iSCSI adapter types for vSphere? (Choose three.)
+*
+A. Software
+B. Independent Hardware
+C. Converged Network Adapter
+D. Dependent Hardware
+E. iSCSI HBA
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 67
+68.A vSphere Administrator notices that a virtual machine is performing poorly, and upon investigation has
+observed the following:
+The quest operating system does not appear to be utilizing the resources that have been assigned to it. The
+ESXi host has many other VMs present and utilization is high.What is the first step in troubleshooting this
+problem?
+*
+A. Shut down the virtual machine and double the amount of vCPU and RAM assigned.
+B. Shut down the virtual machine and set the number of vCPU as high as possible.
+C. Migrate the virtual machine to an ESXi host with more resources available
+D. Configure the virtual machine with CPU and Memory limits.
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 68
+69.What three shares are available when configuring a Resource Pool? (Choose three.)
+*
+A. Custom
+B. Low
+C. Maximum
+D. Normal
+E. None
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 69
+70.A VMware vSphere 6.x Administrator sees the following output in esxtop:
+What does the %RDY column represent?
+*
+A. CPU Cycle Wait Percentage
+B. CPU Utilization
+C. CPU Ready
+D. Idle CPU Percentage
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 70
+81.What is required to create a vsphere distributed switch?(choose two)
+*
+A. a minimum of two physical uplinks is required
+B. vsphere enterprise Plus licensing is required
+C. the host is added to a vcenter server
+D. login to the esxi host with the root account
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 71
+图片转换----
+89.What are two possible Startup Actions available to VMs within a vApp? (Choose two.) ----疑问
+*
+A. Power On
+B. Guest Shutdown
+C. None
+D. Power Off
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 72
+96.A Long-Distance vMotion migration cannot complete. Which three situations could cause this? (Choose
+three.)
+*
+A. The round-trip time between the hosts is greater than 150 milliseconds
+B. The license currently in use for the two hosts is vSphere Enterprise Plus Edition
+C. The license currently in use for the two hosts is vSphere Enterprise Edition
+D. The virtual machine is configured to use Virtual NVMe disks.
+E. The vMotion traffic to the destination host is on the default TCP/IP stack.
+*
+Correct Answer: ACE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 73
+111. A vSphere Administrator observes that no devices are showing up under an iSCSI Storage Adapter
+Which three are valid troubleshooting methods?(Choose three)
+*
+A. Use the nc -z target ip 3260 command to verify that the eSXi host can reach the isCSI TCP port(default
+3260)on the storage array
+B. Log in to the ESXi Shell, run the vmkping target_ip command to verify that the vMkernel interface on the
+host can ping the iSCSI targets
+C. Verify that the CHAP authentication settings are correct
+D. If Jumbo Frames are required, verify that packet fragmentation is allowed
+E. Verify that the MTU size is lower than 9, 000 bytes.
+*
+Correct Answer: ABC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 74
+114. What two virtual hardware devices can be added to a powered on VM?(Choose two)
+*
+A. Serial Port
+B. Virtual disk connected using IDE controller
+C. Virtual disk connected using SCSI controller
+D. Network adapter
+*
+Correct Answer: CD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 75
+115. What are two uses of the vRealize Log Insight Agents for Windows and Linux?(Choose two)------疑问
+*
+A. monitor the state of syslog/eventmgr services
+B. collect events from flat text files
+C. control the state of the syslog/eventmgr services
+D. monitor directories with the filesystem
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 76
+116. What two files are created when the Taken snapshot operation is executed?(Choose two)
+*
+A. nvram
+B. -delta.vmdk
+C. lck
+D. vmsn
+*
+Correct Answer: BD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 77
+117. A vSphere Administrator wants to enable Storage I/0 Control. There is a mix of VMFS and NFS
+datastores. All of the vMFs datastores have hardware acceleration enabled The Administrator attempts to
+create a new datastore cluster, but is unable to add all of the datastores to the cluster
+What is the problem?
+*
+A. NFS datastores can not participate in a datastore cluster
+B. NFS and VMFS datastores cannot be mixed in a datastore cluster
+C. One of the hosts is currently in maintenance mode
+D. Datastores with hardware acceleration enabled can not participate in a datastore cluster.
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 78
+118.What is the maximum number of possible Virtual NICs per VM in vSphere 6.5?
+*
+A. 20
+B. 16
+C. 4
+D. 10
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 79
+119.When specifying a trigger action for an Alarm Definition, what two alarm state changes are available to be
+triggered on? (Choose two)
+*
+A. From acritical to normal
+B. From critical to warning
+C. From normal to warning
+D. From normal to critical
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 80
+122.A vSphere Administrator wants to migrate a virtual machine from a host with an AMD Opteron CPU to a
+Inter Xeon CPU. Which method should be used?
+*
+A. Cold Migration
+B. Hot Migration
+C. Storage vMotion
+D. vMotion
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 81
+123.What are three prerequisites for enabling UEFI secure boot?(Chosse three)
+*
+A. EFI firmware
+B. VM is placed on a VMFS6 datastore
+C. Operating system that supports UEFI secure boot
+D. Virtual hardware version 13 or later
+E. VM has a VMXNET 3 network adapter
+*
+Correct Answer: ACD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 82
+124.Which two files create a virtual disk?(Cchoose two)
+*
+A. -flat.vmdk
+B. vmdk
+C. vmsd
+D. nvram
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 83
+125.What is the maximum supported number of vCPU per VM in VMware vSphere 6.5?
+*
+A. 128
+B. 32
+C. 256
+D. 64
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 84
+127.Which option is true during a virtual machine cold migration?
+*
+A. The datastore of the virtual machine cannot be changed
+B. Migrating a 64 bit virtual machine to a 32c bit host generates a warning
+C. Data is transferred over the vMotion VMKernel interface
+D. Migrating a virtual machine from an Intel-based host to a AMD-based host generates an error
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 85
+128.One of your virtual machines(VM) has performance issues and sometimes is unresponsive. Which VM file
+must be checked in order to find the root cause?
+*
+A. Ds.log
+B. Vmware.log
+C. Vpxd.log
+D. Vminst.log
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 86
+129.An ESXi host has limited network connectivity. What three troubleshooting steps can a vSphere
+Administrator take?(Choose three)
+*
+A. Verify that the speed and duplex of the network links are consistent.
+B. Verify that portfast(or equivalent) is enabled on all of the physical switch ports that the ESXi host is
+connected do
+C. Verify that all NICs are configured to support the promiscuous mode
+D. Use ESXCLI to verify that the virtual switch NIC teaming is properly set.
+E. Verify that all NICs connected to the same ToR switch are part of the same LAG
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 87
+130.Which two statements are Datastore Cluster requirements?(Choose two)
+*
+A. NFS and VMFS datastores cannot be combined in the same datastore cluster.
+B. Datastores shared across multiple data centers cannot be included in a datastore cluster.
+C. Datastore cluster can only contain VMFS datastores.
+D. Datastore cluster must contain three or more datastores
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 88
+131.What does DAVG/cmd represent?
+*
+A. Average guest operating system latency per command in milliseconds
+B. Average device latency per command in milliseconds
+C. Average queue latency per command in milliseconds
+D. Average ESXi VMkernel latency per command in milliseconds
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 89
+132.VM Component Protection(VMCP) can provide automated recovery for which two virtual machine failures?
+(Choose two)
+*
+A. Driver failures
+B. All paths down
+C. Permanent device loss
+D. Firmware failures
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 90
+133.Which two options are requirements to perform a migration between vCenter Server instances?(Choose
+two)
+*
+A. The vCenter Server servers must be time-syncronized
+B. The ESXi host must have vSphere Standard, Advanced, or Enterprise Plus licensing
+C. The vCenter Server must be version 6.0 or later
+D. ESXi hosts must be version 5.5 or later The vCenter Server must be in the same single Sign-On domain
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 91
+134.Which three options are available when applying a Customization Specification to an existing virtual
+machine?(Choose three)
+*
+A. Create a specification
+B. create a specification form an existing specification
+C. Select an existing specification
+D. Modify a specification
+E. Import a specification
+*
+Correct Answer: ABC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 92
+135.ESXi 6.x can be installed upon which three supported hardware configurations?(Choose three)
+*
+A. Local disk connected through Serial ATA
+B. Intel NX/XD enabled for the CPU in the system BIOS
+C. Intel NX/XD disabled for the CPU in the system BIOS
+D. 2GB of physical RAM
+E. 1GbE network adapter
+*
+Correct Answer: ABE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 93
+136.What are two valid states for compliance status in VM storage policy?(Choose two)
+*
+A. Invalid
+B. Out of date
+C. compliant
+D. orphaned
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 94
+137.Which password meets the default password requirements in ESXi 6.x? --------疑问
+*
+A. Xqa_hin3
+B. xTaMEhb!
+C. Xqavntthi3
+D. xQA!3h
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 95
+139.A vCenter Server displays this error for a single host:
+Virtual machine creation may fail because agent is unable to retrieve VM creation options
+from the host .
+Which action will allow a vSphere Administrator to resolve the issue?
+*
+A. Log in to the vSphere Web Client, select the ESXi host and manually place it into Quarantine Mode
+B. Log in to the vCenter Server Appliance Management UI and reboot the VCSA.
+C. Log in to the vSphere Web Client, select the cluster that the ESXi host belongs to and turn off DRS
+D. Log in to the host DCUI, press F2 and navigate to Troubleshooting Options> Restart management Agents.
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 96
+140.After enabling iSCSI port binding on ESXi hosts, a vSphere Adminstrator can no longer
+reach an iSCSI array target from the configured software iSCSI initiators. Which can be the
+root cause for failure?
+*
+A. AllVMkernel ports used for iSCSI connectivity reside in the same vSwitch
+B. All VMkenel ports used for iSCSI connectivity reside in the same broadcast domain and
+ip subnet
+C. Array Target iSCSI ports reside in the same broadcast domain and ip subnet as the
+VMkernel ports
+D. LACP or other link aggregation was used on the ESXi hosts uplinks to connect to the
+physical switches
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 97
+141.What are two valid iSCSI discovery methods?(Choose two)
+*
+A. .Static discovery
+B. Dynamic discovery
+C.
+D.
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 98
+142.Which is a valid requirement for deploying the vCenter Server Appliance 6.x to a DRS
+cluster?
+*
+A. All ESXi hosts in the cluster must not be in maintenance mode
+B. One ESXi host in the cluster must not be in maintenance mode or lockdown mode
+C. At least one host in the cluster must be in maintenance mode or lockdown mode
+D. One ESXi host in the cluster must not be in lockdown mode
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 99
+143.Which two statements are true when configuring a virtual flash resource(vFlash)?
+(Choose two)
+*
+A. vFlash resources are managed at the ESXi host level
+B. vSphere DRS does not support vFlash resources
+C. Virtual Machines cannot reside on the virtual flash resource
+D. Only Shared Storage can be configured as a virtual flash resource
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 100
+144.A vSphere Administrator attempts to remove a host from a vSphere distributed switch,
+and fails. There is a notification that resources are still in use. What are two possible
+causes?(Choose two)
+*
+A. The ESXi host has virtual machine with over 256 GB RAM assigned
+B. There are virtual machine network adapters connected to the distributed switch
+C. The administrator does not have sufficient rights to remove the host from the distributed
+switch
+D. There are VMkernel adapter on the distributed switch that are in use
+*
+Correct Answer: BD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 101
+145.When adding a new VLAN to an existing virtual distributed switch, which three steps are
+necessary?(Choose three)
+*
+A. Specify the VLAN ID and VLAN type
+B. Right chick the vDS and select Distributed Port Group, then select New Distributed Port
+Group
+C. Provide a name for the Distributed Port Group
+D. Right click on the datacenter, select Distributed Switch, select New Distributed Switch
+E. Specify the number of physical uplinks from the vDS to the VLAN
+*
+Correct Answer: ABC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 102
+147.Virtual machines do not power on after completing the clone or deploy from template
+workflow in the vSphere Web Client. What two solutions will fix this problem?(Choose two)
+*
+A. Increase the virtual machine memory reservation
+B. Increase the amount of memory assigned to the virtual machine
+C. Increase the EVC compatibility mode setting
+D. Increase the datastore size where the virtual machine swap file exists
+*
+Correct Answer: AD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 103
+148.A vSphere Administrator just finished installing new software on the windows vCenter
+Server and notices that vCenter Server no longer start properly. What two tasks should be
+done next?(Choose two)
+*
+A. Reinstall vCenter Server
+B. Check for network port confllcts
+C. Contact the server hardware manufacturer
+D. Check the vCenter Server logs
+*
+Correct Answer: BD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 104
+150.A vSphere Administrator notices that one of the virtual machines has been configured
+for VMDirectPath I/O, and a physical NIC has assigned to the VM. What feature is not
+available to this VM? -------疑问
+*
+A. Virtual machine compatibility version upgrades
+B. VMware tools upgrades
+C. Storage DRS
+D. vMotion
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 105
+151.A vSphere Administrator has stated that currently Private VLAN is utilized to prevent
+cross-talk on the dedicated backup network. What two actions are required to implement
+Private VLAN in VMware vSphere?(Choose two)
+*
+A. Upgrade to VMware vSphere enterprise plus
+B. Configure private VLAN at the dvSwitch level
+C. Enable promiscuous mode
+D. Configure private VLAN at the dvPort Group
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 106
+152.A VMware vSphere 6.x Administrator has been tasked with enabling the integrated load
+balancer for the new vRealize log insight cluster. What three options are required before the
+integrated load balancer can be used?(Choose three)
+*
+A. The vRealize log insight master and worker nodes must have the same certificates
+B. The time on the vRealize log insight virtual appliance must be synchronized with an NTP
+server
+C. All vRealize log insight nodes are configured as the same size
+D. Verify that all vRealize log insight nodes and the specified integrated load balancer ip
+address are on the same network
+E. The vRealize log insight master and work nodes must have CA signed certificates
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 107
+153.A vSphere Administrator is required to enable IGMP snooping on a Distributed Switch.
+Which method of configuration is correct? ----疑问
+*
+A. In the vSphere web client , navigate to the distributed switch
+B. On the configure tab, expand Settings and slect properties
+C. Click edit
+D. Click general
+E. Click advanced
+F. Choose an option for muliticast filtering mode
+*
+Correct Answer: ABEF
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 108
+154.The Triggered Alarm on the VM shows Virtual Machine Consolidation needed status.
+How would an administrator recover from this event?
+*
+A. This must be done from the command line
+B. The only possible method is to clone the VM.
+C. In the vSphere Web Client, open Snapshot Manager of the VM and then use the Delete
+all button
+D. In the vSphere Web Client select VM, right-click > Snapshots > Consolidate
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 109
+New:What are the correct steps to migrate the storage of a virtual machine?
+*
+A. Right-click the virtual machine and select Migrate
+Select change storage only
+Select the format for the virtual machine’s disks
+Select the datastore to migrate to
+Select the destination network for all VM network adapters
+Click Finish
+B. Right-click the virtual machine and select Migrate
+Select change compute resource only
+Select the destination host
+Select the destination network for all VM network adapters
+Click Finish
+C. Right-click the virtual machine and select Migrate
+Select change both compute resources and storage
+Select the destination host
+Select the format for the virtual machine’s disks
+Select the datastore to migrate to
+Select the destination network for all VM network adapters
+Click Finish
+D. Right-click the virtual machine and select Migrate
+Select Migrate virtual machine to a specific datacenter
+Select the destination datacenter
+Select the format for the virtual machine’s disks
+Select the datastore to migrate to
+Select the destination network for all VM network adapters
+Click Finish
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 110
+73.What are the two minimum configurations of a disk group in a vSAN host? (two)
+*
+A. 1 SSD drive for the caching tier and 1 or more HDDS for the capacity tier
+B. 2 or more SSD drives for the caching tier and 2 or more SSDs for the capacity tier
+C. 2 or more SSD drives for the caching tier and 2 or more HDDS for the capacity tier
+D. 1 SSD driver for the caching tier and 1 or more SSDs for the capacity tier
+*
+Correct Answer: AD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 111
+74.What two utilities provide a vmware vsphere 6.x administrator a detailed look at how
+ESXi uses recourse in real time (two)
+*
+A. Esxtop
+B. Esxcli
+C. Resxtop
+D. Vim-cmd
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 112
+75.What two options can be monitored when creating a new alerm Definition? (two)
+*
+A. Specific conditions or state
+B. Specific actions of a user
+C. Specific event occurring on the object
+D. Other alarms defined for the object
+*
+Correct Answer: AC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+http://techgenix.com/5-things-need-know-about-vmware-vsphere-alarms/
+==
+QUESTION 113
+72.What three types of host bus adapters are supported for connecting to shared storage
+on an esxi hosts? （three）
+*
+A. Software iSCSI
+B. Hardware HBA
+C. Software FCoE
+D. Software SATA
+*
+Correct Answer: ABC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 114
+76.A vsphere6.x administrator needs to deploy an environment that will be static and have 5
+esxi hosts and 50 virtual machines .which is the minimum deployment option that would
+meet this need?
+*
+A. large
+B. tiny
+C. medium
+D. small
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+Tiny
+Deploys an appliance with 2 CPUs
+and 10 GB of memory.
+Suitable for environments with up
+to 10 hosts or 100 virtual
+machines.
+n Small
+Deploys an appliance with 4 CPUs
+and 16 GB of memory.
+Suitable for environments with up
+to 100 hosts or 1,000 virtual
+machines.
+n Medium
+Deploys an appliance with 8 CPUs
+and 24 GB of memory.
+Suitable for environments with up
+to 400 hosts or 4,000 virtual
+machines.
+Large
+Deploys an appliance with 16
+CPUs and 32 GB of memory.
+Suitable for environments with up
+to 1,000 hosts or 10,000 virtual
+machines.
+n X-Large
+Deploys an appliance with 24
+CPUs and 48 GB of memory.
+Suitable for environments with up
+to 2,000 hosts or 35,000 virtual
+machines
+==
+QUESTION 115
+77.A vmware administrator has been tasked with deploying a vsan robo configuration to a
+remote site
+Which are two vmware requirements specific to a vsan robo deployment(two)
+*
+A. a witness appliance must be deployed at the primary site
+B. a witness appliance must be deployed at a separate location
+C. vsan robo clusters are limited to two physical hosts
+D. vsan robo edition licensing must be used
+E. vsan robo clusters must have at least two physical hosts
+*
+Correct Answer: BE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+vSAN can be implemented with as few as two physical vSphere hosts at each office. A
+witness host – a virtual machine running ESXi – is the required third node in the vSAN
+cluster. Witness hosts are typically deployed to a vSphere environment at a central main
+data center. The diagram below shows what the highlevel architecture might look like for an
+organization with one main data center and three remote offices.
+https://www.vmware.com/files/pdf/products/vsan/vmware-vsan-robo-solution-overview.pdf
+==
+QUESTION 116
+What are two valid methods to deploy an OVF template which consists of two or more VMs?
+(Choose two.)
+*
+A. deploy on a vSphere DRS enabled cluster
+B. deploy on the standalone host connected to vCenter Server
+C. deploy on a vSphere HA enabled cluster
+D. deploy on the VMware vSphere Hypervisor
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+VMware DRS (Distributed Resource Scheduler) is a utility that balances computing workloads with available
+resources in a virtualized environment.
+==
+QUESTION 117
+83.While configuring a vsphere HA cluster backed by a Jumbo Frames-enabled physical
+network,the task completes on the HA master , but fails on all HA slaves. What could cause
+this failure?
+*
+A. The vsphere HA cluster has more than 32 slave hosts
+B. Using Jumbo Frames on the management network is not supported
+C. Maximum supported MTU size for the physical transport network is 1600 bytes
+D. A physical network misconfigration prevent hosts communicating using Jumbo Frames
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 118
+84.which two locations are supported for an esxi install?(choose two)
+*
+A. FTP Server
+B. NFS Server
+C. SCP Server
+D. CIFS Server
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 119
+Which two options are valid to create vApp in the vSphere Environment? (Choose two.)
+*
+A. Login using vSphere WebClient to the vCenter Server, right click on the Cluster and
+select Create new vApp
+B. Login using vSphere WebClient to the vCenter Server, right click on the standalone ESXi
+host and select Create new vApp
+C. Login using vSphere C# Client to the ESXi host, right click on the host and select Create
+new vApp
+D. Login using vSphere Host Client to the ESXi host, right click on the host and select
+Create new vApp
+*
+Correct Answer: AD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 120
+86.A VMware vSphere 6.x administrator has been asked to reset the Health Status Sensors
+for a host.
+What steps are required to perform this task?
+*
+A. Select a host in the vSphere Web Client navigator. Click the Monitor tab, and click Tasks.
+Click Reset sensors.
+B. Select a host in the vSphere Web Client navigator. Click the Manage tab, and click
+Settings. Click Hardware.
+C. Select a host in the vSphere Web Client navigator. Click the Monitor tab, and click
+Hardware Status. Click Reset sensors
+D. Select a host in the vSphere Web Client navigator. Click the Manage tab, and click Alarm
+Definitions. Reset all host hardware alarms
+*
+Correct Answer: C
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 121
+87.In the vSphere Web Client, what are the records of user actions or system actions that
+occur on objects in vCenter Server or on a host?
+*
+A. Alarms
+B. Alarm Actions
+C. System Logs
+D. Events
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 122
+88.A VMware vSphere Administator is tasked with enabling Fault Tolerance (FT) on a VM
+but is unable to.
+What is the reason that FT cannot be enabled?
+*
+A. The VM is configured to use Jumbo Frames
+B. The VM has 4 vCPU.
+C. The VM is running an operating system that is more than 4 years old.
+D. The VM has a VMDK that is greater than 2TB
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+FT only runs on a virtual machine with a single vCPU. You might encounter these errors when attempting to
+turn on FT on a multiple vCPU virtual machine
+https://kb.vmware.com/s/article/1033634
+==
+QUESTION 123
+90.What is the maximum number of Virtual SCSI targets in vSphere 6.5?
+*
+A. 60
+B. 50
+C. 70
+D. 100
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+https://www.virten.net/vmware/vmware-vsphere-esx-and-vcenter-configuration-maximums/
+==
+QUESTION 124
+91.Which method allows a backup configuration to be restored to an ESXi 6.x host?
+*
+A. ESXi Interactive installation
+B. Update Manager baseline
+C. esxcli software vib update
+D. vicfg-cfgbackup
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+https://pubs.vmware.com/vsphere-51/index.jsp?topic=%2Fcom.vmware.vcli.ref.doc%2Fvicfg-cfgbackup.html
+vicfg-cfgbackup - back up and restore ESXi host configurations
+==
+QUESTION 125
+100.A VMware Administrator has received an alert from vCenter with vMCA configured that
+states Expiring Shortly.
+What course of action does VMware recommend?
+*
+A. 1. Browse to the host in the vSphere Web Client inventory
+2. Select Configure
+3. Under System, click Certificate
+4. Click Refresh CA Certificates
+B. 1. Browse to the host in the vSphere Web Client inventory
+2. Select Configure
+3. Under System, click Certificate
+4. Click Renew
+C. Disable the VMCA, create a new Certificate Signing Request, and request certificates
+from your CA.
+D. 1. Select the vCenter Server that manages the hosts and click Configure.
+2. Click Advanced Settings, and click Edit.
+3. In the Filter box, enter certmgmt to display only certificate management keys.
+4. Change the value of vpxd.certmgmt.mode to custom and click OK.
+5. Restart the vCenter Server service
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+VMware Certificate Authority (VMCA)
+==
+QUESTION 126
+101. A vSphere Administrator has been asked to enable the use of a network traffic
+analyzer on a VMware virtual switch.
+Which security policy must be changed in order to analyze all traffic on the virtual switch?
+*
+A. Promiscuous mode
+B. Port mirroring
+C. MAC address changes
+D. Forged transmits
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 127
+102. A VMware vSphere 6.x Administrator is creating a new role for an operations user,
+which two permissions are required for the new role to create or edit alarms?(Choose two)
+*
+A. Aarm. Modify alarm
+B. Alarm Set alarm status
+C. Alarm. Disable alarm action
+D. Alarms. Create alarm
+*
+Correct Answer: AD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 128
+103.Which function key command will allow a vSphere Administrator to access ESXi shell?
+*
+A. Alt + F11
+B. Alt + F12
+C. Alt + F2
+D. Alt + F1
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 129
+104.A junior vSphere Administrator complains that their Windows Server 2008 and
+Windows Server 2012 VMs will not boot. The console displays a Blue Screen of Death
+(BSoD) after the junior Administrator finished the install.
+What is the cause?
+*
+A. There are virtual machines with Linux operating systems already running on the host
+B. The virtual machines was configured with a Buslogic controller instead of LSI Logic.
+C. The virtual machines does not have VMware Tools installed
+D. The ESXi host has fewer than three days of "Evaluation Mode"left and needs a license
+*
+Correct Answer: B
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 130
+105.When viewing the Advanced Performance Charts in the vSphere Web Client, what two
+option determine the amount of historical data available in the chart?(Choose two)
+*
+A. inventory object
+B. collection interval
+C. statistics level
+D. number of metric groups
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+The amount of historical data displayed in a chart depends on the collection interval and
+statistics level set for vCenter Server.
+https://pubs.vmware.com/vsphere-51/index.jsp?topic=%
+2Fcom.vmware.vsphere.vcenterhost.doc%2FGUID-4D4B3DF2-D033-4782-A030-
+3C3600DE5A7F.html
+==
+QUESTION 131
+106. Which statement is true when adding a VM to a resource pool?
+*
+A. The VM share value (%Shares) adjusts to the Resource Pool
+B. The VM limit changes
+C. The VM share value (%Shares) remains unchanged
+D. The VM reservation changes
+*
+Correct Answer: A
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+If the virtual machine’s shares are high, medium, or low, %Shares adjusts to reflect the total number of shares
+in use in the new resource pool.
+==
+QUESTION 132
+107. What is the maximum drive count within one vSAN node?
+*
+A. 4 disk groups with 1 caching drive and 7 capacity drives each
+B. 5 disk groups with 1 caching drive and 5 capacity drives each
+C. 4 disk groups with 1 caching drive and 5 capacity drives each
+D. 5 disk groups with 1 caching drive and 7 capacity drives each
+*
+Correct Answer: D
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 133
+*** A vSphere Administrator cannot mount an NFS datastore. Which three actions can be
+performed to troubleshoot the issue?( Choose three)
+*
+A. Run the nc -z array-IP 2049 command in the ESXi Shell to see whether the ESXi host
+can reach the NFS server nfsd TCP/UDP port(default 2049) on the storage array.
+B. Ensure that the ESXi host can vmkping the NFS server address
+C. Verify that the CHAP authentication settings are correct.
+D. Ensure that the access on the NFs server is set to Anonymous user, Root Access
+(no_root_squash), and Read/write
+E. Run eaxcli storage nfs list and ensure that the NFS filesystem is ext4 or reiserFS
+*
+Correct Answer: ABD
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 134
+109. A junior vSphere Administrator takes a snapshot before logging into a VM to preserve
+the current state in case of a problem
+Assuming this process is repeated every day for over 30 days what two results will happen?
+( choose two.)
+*
+A. The administrator has successfully cloned the VM 30 times
+B. The virtual machine can end up consuming more space on the datastore than assigned.
+C. The virtual machine’s performance will decrease
+D. The administrator will have backups for the entire month
+*
+Correct Answer: BC
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 135
+110. Which three limits can restrict the maximum number of simultaneous migrations that
+can occur in a vSphere environment?(choose three.)
+*
+A. CPU limits
+B. Datastore limits
+C. Host limits
+D. RAM limits
+E. Network limits
+*
+Correct Answer: BCE
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+==
+QUESTION 136
+112. Which two are required when performing an interactive installation of ESXi?(Choose
+two)
+*
+A. Keyboard layout
+B. Installation location
+C. DNS Server
+D. NTP Server
+*
+Correct Answer: AB
+*
+Section: (none)
+Explanation
+Explanation/Reference:
+https://pubs.vmware.com/vsphere-51/index.jsp?topic=%2Fcom.vmware.vsphere.solutions.doc%2FGUID-
+6396639F-4ED2-403D-A12C-36DEDB64CADB.html
