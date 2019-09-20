@@ -12,6 +12,7 @@ NMONS           = settings['mon_vms']
 NOSDS           = settings['osd_vms']
 NCTLS           = settings['ctl_vms']
 NCOMS           = settings['com_vms']
+PXE_SUBNET      = settings['pxe_subnet']
 CONTROL_SUBNET  = settings['control_subnet']
 TENANT_SUBNET   = settings['tenant_subnet']
 STORAGE_SUBNET  = settings['public_subnet']
@@ -20,17 +21,34 @@ CLUSTER_SUBNET  = settings['cluster_subnet']
 BOX             = ENV['CEPH_ANSIBLE_VAGRANT_BOX'] || settings['vagrant_box']
 BOX_URL         = settings['vagrant_box_url']
 SYNC_DIR        = settings['vagrant_sync_dir']
-MEMORY          = settings['memory']
+NODE_SETTINGS   = settings['node_settings']
 ETH             = settings['eth']
 USER            = settings['ssh_username']
 DEBUG           = settings['debug']
 
-ASSIGN_STATIC_IP = !(BOX == 'openstack' or BOX == 'linode')
+ASSIGN_STATIC_IP      = true
 DISABLE_SYNCED_FOLDER = true
 
+vagrant_dir = File.expand_path(File.dirname(__FILE__))
 
+# Function
+def get_node_setting(node, setting)
+  NODE_SETTINGS[node][setting]
+rescue
+  raise VagrantConfigMissing,
+    "Missing configuration for NODE_SETTINGS[#{node}][#{setting}]"
+end
+
+
+# Configure a new SSH key and config so the deployer is able to connect with
+# the other cluster nodes.
+unless File.file?(File.join(vagrant_dir, 'vagrantkey'))
+  system("ssh-keygen -f #{File.join(vagrant_dir, 'vagrantkey')} -N '' -C this-is-vagrant")
+end
+
+
+# Ansible ploybook
 ansible_provision = proc do |ansible|
-
   ansible.playbook = settings['playbook']
   ansible.skip_tags = settings['skip_tags']
 
@@ -47,19 +65,25 @@ ansible_provision = proc do |ansible|
   ansible.groups['clients'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
   ansible.groups['iscsigws'] = (0..NMONS - 1).map { |j| "#{LABEL_PREFIX}mon#{j}" }
 
-  if DEBUG then                                                                                                                                                    
+  if DEBUG then
     ansible.verbose = '-vvvv'
   end
   ansible.limit = 'all'
 end
 
 
+# Vagrant configure
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = BOX
   config.vm.box_url = BOX_URL
   config.ssh.insert_key = false # workaround for https://github.com/mitchellh/vagrant/issues/5048
   config.ssh.private_key_path = settings['ssh_private_key_path']
   config.ssh.username = USER
+  
+  username = "vagrant"
+  user_home = "/home/#{username}"
+  #user_home = "/home"
+  ceph_ansible_path = "#{user_home}/ceph-ansible"
 
   # When using libvirt, avoid errors like:
   # "host doesn't support requested feature: CPUID.01H:EDX.ds [bit 21]"
@@ -76,6 +100,58 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
+  my_privatekey = File.read(File.join(vagrant_dir, "vagrantkey"))
+  my_publickey = File.read(File.join(vagrant_dir, "vagrantkey.pub"))
+
+  config.vm.provision :shell, inline: <<-EOS
+    mkdir -p /root/.ssh
+    echo '#{my_privatekey}' > /root/.ssh/id_rsa
+    chmod 600 /root/.ssh/id_rsa
+    echo '#{my_publickey}' > /root/.ssh/authorized_keys
+    chmod 600 /root/.ssh/authorized_keys
+    echo '#{my_publickey}' > /root/.ssh/id_rsa.pub
+    chmod 644 /root/.ssh/id_rsa.pub
+    mkdir -p #{user_home}/.ssh
+    echo '#{my_privatekey}' >> #{user_home}/.ssh/id_rsa
+    chmod 600 #{user_home}/.ssh/*
+    echo 'Host *' > #{user_home}/.ssh/config
+    echo StrictHostKeyChecking no >> #{user_home}/.ssh/config
+    chown -R #{username} #{user_home}/.ssh
+    ## enable root login by password
+    sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
+    sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+    systemctl restart sshd.service
+    ## disable selinux
+    sed -i '/^SELINUX=/cSELINUX=disabled' /etc/selinux/config
+    setenforce 0
+    ## config repo
+    # curl http://172.30.120.146/repo.files/mitaka.x86.repo > /etc/yum.repos.d/mitaka.x86.repo
+    ## remove 127.0.0.1 <hostname> from /etc/hosts
+    sed -i "/$(hostname)/d" /etc/hosts
+  EOS
+
+  config.vm.define "operator", primary: true do |admin|
+    admin.vm.hostname = "operator.local"
+    
+    if ASSIGN_STATIC_IP
+      admin.vm.network :private_network,
+        ip: "#{PXE_SUBNET}.5"
+      admin.vm.network :private_network,
+        ip: "#{CONTROL_SUBNET}.5"
+      admin.vm.network :private_network,
+        ip: "#{TENANT_SUBNET}.5"
+      admin.vm.network :private_network,
+        ip: "#{STORAGE_SUBNET}.5"
+    end
+
+    # Libvirt
+    admin.vm.provider :libvirt do |lv|
+      lv.memory = get_node_setting(:operator, :memory)
+      lv.cpus = get_node_setting(:operator, :cpus)
+      lv.random_hostname = true
+    end
+  end
+
   (0..NMONS - 1).each do |i|
     config.vm.define "#{LABEL_PREFIX}mon#{i}" do |mon|
       mon.vm.hostname = "#{LABEL_PREFIX}mon#{i}"
@@ -83,15 +159,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         mon.vm.network :private_network,
           ip: "#{PUBLIC_SUBNET}.1#{i}"
       end
-
+  
       # Libvirt
       mon.vm.provider :libvirt do |lv|
-        lv.memory = MEMORY
+        lv.memory = get_node_setting(:mon, :memory)
+        lv.cpus = get_node_setting(:mon, :cpus)
         lv.random_hostname = true
       end
     end
   end
-
+  
   (0..NOSDS - 1).each do |i|
     config.vm.define "#{LABEL_PREFIX}osd#{i}" do |osd|
       osd.vm.hostname = "#{LABEL_PREFIX}osd#{i}"
@@ -101,7 +178,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         osd.vm.network :private_network,
           ip: "#{CLUSTER_SUBNET}.2#{i}"
       end
-
+  
       # Libvirt
       driverletters = ('a'..'z').to_a
       osd.vm.provider :libvirt do |lv|
@@ -110,7 +187,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         (0..2).each do |d|
           lv.storage :file, :device => "hd#{driverletters[d]}", :size => '50G', :bus => "ide"
         end
-        lv.memory = MEMORY
+        lv.memory = get_node_setting(:osd, :memory)
+        lv.cpus = get_node_setting(:osd, :cpus)
         lv.random_hostname = true
       end
     end
@@ -127,10 +205,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ctl.vm.network :private_network,
           ip: "#{STORAGE_SUBNET}.3#{i}"
       end
-
+  
       # Libvirt
       ctl.vm.provider :libvirt do |lv|
-        lv.memory = MEMORY
+        lv.memory = get_node_setting(:control, :memory)
+        lv.cpus = get_node_setting(:control, :cpus)
         lv.random_hostname = true
       end
     end
@@ -147,15 +226,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         com.vm.network :private_network,
           ip: "#{STORAGE_SUBNET}.4#{i}"
       end
-
+  
       # Libvirt
       com.vm.provider :libvirt do |lv|
-        lv.memory = MEMORY
+        lv.memory = get_node_setting(:compute, :memory)
+        lv.cpus = get_node_setting(:compute, :cpus)
         lv.random_hostname = true
       end
-
       # Run the provisioner after the last machine comes up
-      #com.vm.provision 'ansible', &ansible_provision if i == (NCOMS - 1)
+      com.vm.provision 'ansible', &ansible_provision if i == (NCOMS - 1)
     end
   end
 

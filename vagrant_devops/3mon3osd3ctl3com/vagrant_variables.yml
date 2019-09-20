@@ -1,5 +1,4 @@
 ---
-
 # DEFINE THE NUMBER OF VMS TO RUN
 mon_vms: 3
 osd_vms: 3
@@ -8,41 +7,56 @@ com_vms: 3
 
 
 # SUBNETS TO USE FOR THE VMS
+pxe_subnet: 192.168.40
 control_subnet: 192.168.41
 tenant_subnet: 192.168.44
 public_subnet: 192.168.42
 cluster_subnet: 192.168.43
 
 # MEMORY
-memory: 2048
+node_settings:
+  :operator:
+    :cpus: 1
+    :memory: 2048
+  :aio:
+    :cpus: 8
+    :memory: 16384
+  :control:
+    :cpus: 2
+    :memory: 4096
+  :compute:
+    :cpus: 2
+    :memory: 4096
+  :mon:
+    :cpus: 2
+    :memory: 4096
+  :osd:
+    :cpus: 2
+    :memory: 4096
 
 # Ethernet interface name
 # use eth1 for libvirt and ubuntu precise, enp0s8 for CentOS and ubuntu xenial
 eth: 'eth1'
 
-# Disks
-# For Xenial use disks: [ '/dev/sdb', '/dev/sdc' ]
-# For CentOS7 use disks: [ '/dev/sda', '/dev/sdb' ]
-disks: [ '/dev/sdb', '/dev/sdc' ]
-
-# VAGRANT BOX
-vagrant_box: centos1810
-
 # The sync directory changes based on vagrant box
 # Set to /home/vagrant/sync for Centos/7, /home/{ user }/vagrant for openstack and defaults to /vagrant
 vagrant_sync_dir: /home/vagrant/sync
+
+# VAGRANT BOX
+vagrant_box: centos-7.6.1810
 # VAGRANT URL
 # This is a URL to download an image from an alternate location.  vagrant_box
 # above should be set to the filename of the image.
 # Fedora virtualbox: https://download.fedoraproject.org/pub/fedora/linux/releases/22/Cloud/x86_64/Images/Fedora-Cloud-Base-Vagrant-22-20150521.x86_64.vagrant-virtualbox.box
 # Fedora libvirt: https://download.fedoraproject.org/pub/fedora/linux/releases/22/Cloud/x86_64/Images/Fedora-Cloud-Base-Vagrant-22-20150521.x86_64.vagrant-libvirt.box
 # vagrant_box_url: https://download.fedoraproject.org/pub/fedora/linux/releases/22/Cloud/x86_64/Images/Fedora-Cloud-Base-Vagrant-22-20150521.x86_64.vagrant-virtualbox.box
+vagrant_box_url: http://172.16.134.34/vagrant_box/centos-7.6.1810.box
 
 os_tuning_params:
   - { name: fs.file-max, value: 26234859 }
 
+# ansible playbook
+playbook: test_playbook.yml
+skip_tags:
 # Debug mode, runs Ansible with -vvvv
 debug: false
-
-# playbook
-playbook: test_playbook.yml
