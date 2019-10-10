@@ -34,7 +34,7 @@ examination_str = "".join(examination_questions)
 
 # 构建试题内容列表
 question_list = examination_str.split("==")
-total_num = len(question_list)
+total_num = len(question_list)-1
 print("total_num: %d" % total_num)
 
 # 生成题号
@@ -57,12 +57,12 @@ for _id in question_id_list:
 # 开始考试 
 for idx in range(total_num):
     # 顺序
-    #r = idx+1
+    r = idx+1
 
     # 随机
-    r = random.randrange(0, total_num)
-    r += 1
-    print("random: %d" % r)
+    #r = random.randrange(0, total_num)
+    #r += 1
+    #print("random: %d" % r)
 
     #if r-1 not in [13, 14, 15, 18, 21, 23, 25, 26, 28, 30, 69, 94, 71, 78, 80, 81, 82, 84, 85, 86, 87, 36, 40, 44, 45, 46, 51, 49, 89, 90, 92, 93, 53, 54, 57, 58, 61, 63, 66, 67, 68]:
     #if r not in [46, 50, 54, 83, 86]:
