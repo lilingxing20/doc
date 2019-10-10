@@ -35,6 +35,7 @@ examination_str = "".join(examination_questions)
 # 构建试题内容列表
 question_list = examination_str.split("==")
 total_num = len(question_list)
+print("total_num: %d" % total_num)
 
 # 生成题号
 for i in range(total_num):
@@ -54,48 +55,61 @@ for _id in question_id_list:
  
 
 # 开始考试 
-while True:
-    r = random.randrange(0, total_num)
-    if temp_int == total_num:
-        print("你的分数是: %d." % score)
-        print("你一共测试了 %d 道题，答对 %d, 答错 %d" % (temp_int, correct, fail))
-        exit()
- 
-    else:
-        if r in have_done:
-            continue
-        else:
-            g = "good"
-            f = "failed"
-            temp_int = temp_int + 1
-            have_done.append(r)
-            print("\n这是第 %d 道题." % temp_int)
-            print(exam_dict[r]["题目"])
-            print(exam_dict[r]["选项"])
-            temp_option = input("你的选择:")
-            option = temp_option.upper()
-            s = set()
-            b = set()
-            for i in option:
-                s.add(i)
-            for c in exam_dict[r]["答案"].split(":")[-1].strip():
-                if c == ',':
-                    continue
-                b.add(c)
-            if s == b:
-                gg = g.center(100,"=")
-                print(gg)
-                correct = correct + 1
-                print("你一共测试了 %d 道题，答对 %d, 答错 %d" % (temp_int, correct, fail))
-                score = score + 10
- 
-            else:
-                ff = f.center(100,"=")
-                print(ff)
-                fail = fail + 1
-                time.sleep(3)
-                print(b)
-                print(exam_dict[r]["解析"])
-                print("你一共测试了 %d 道题，答对 %d, 答错 %d" % (temp_int, correct, fail))
-                time.sleep(5)
+for idx in range(total_num):
+    # 顺序
+    #r = idx+1
 
+    # 随机
+    r = random.randrange(0, total_num)
+    r += 1
+    print("random: %d" % r)
+
+    #if r-1 not in [13, 14, 15, 18, 21, 23, 25, 26, 28, 30, 69, 94, 71, 78, 80, 81, 82, 84, 85, 86, 87, 36, 40, 44, 45, 46, 51, 49, 89, 90, 92, 93, 53, 54, 57, 58, 61, 63, 66, 67, 68]:
+    #if r not in [46, 50, 54, 83, 86]:
+    #    continue
+ 
+    if r in have_done:
+        continue
+    else:
+        g = "good"
+        f = "failed"
+        temp_int = temp_int + 1
+        have_done.append(r)
+        print("\n这是第 %d 道题." % temp_int)
+        print(exam_dict[r]["题目"])
+        print(exam_dict[r]["选项"])
+        temp_option = input("你的选择:")
+        option = temp_option.upper()
+        if 'Q' in option:
+            break
+        s = set()
+        b = set()
+        for i in option:
+            s.add(i)
+        for c in exam_dict[r]["答案"].split(":")[-1].strip():
+            if c == ',':
+                continue
+            b.add(c)
+        if s == b:
+            gg = g.center(100,"=")
+            print(gg)
+            correct = correct + 1
+            print("你一共测试了 %d 道题，答对 %d, 答错 %d" % (temp_int, correct, fail))
+            score = score + 10
+ 
+        else:
+            ff = f.center(100,"=")
+            print(ff)
+            fail = fail + 1
+            time.sleep(3)
+            print(b)
+            print(exam_dict[r]["解析"])
+            print("你一共测试了 %d 道题，答对 %d, 答错 %d" % (temp_int, correct, fail))
+            time.sleep(5)
+
+q = "end of examination"
+qq = q.center(100,"=")
+print("\n%s" % qq)
+print("你的分数是: %d." % score)
+print("你一共测试了 %d 道题，答对 %d, 答错 %d\n" % (temp_int, correct, fail))
+exit()
