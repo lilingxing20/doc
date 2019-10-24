@@ -162,6 +162,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
       # Libvirt
       mon.vm.provider :libvirt do |lv|
+        lv.storage :file, :device => "hda", :size => '50G', :bus => "ide"
         lv.memory = get_node_setting(:mon, :memory)
         lv.cpus = get_node_setting(:mon, :cpus)
         lv.random_hostname = true
@@ -199,6 +200,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ctl.vm.hostname = "#{LABEL_PREFIX}ctl#{i}"
       if ASSIGN_STATIC_IP
         ctl.vm.network :private_network,
+          ip: "#{PXE_SUBNET}.3#{i}"
+        ctl.vm.network :private_network,
           ip: "#{CONTROL_SUBNET}.3#{i}"
         ctl.vm.network :private_network,
           ip: "#{TENANT_SUBNET}.3#{i}"
@@ -208,6 +211,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
       # Libvirt
       ctl.vm.provider :libvirt do |lv|
+        lv.storage :file, :device => "hda", :size => '50G', :bus => "ide"
         lv.memory = get_node_setting(:control, :memory)
         lv.cpus = get_node_setting(:control, :cpus)
         lv.random_hostname = true
@@ -220,6 +224,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       com.vm.hostname = "#{LABEL_PREFIX}com#{i}"
       if ASSIGN_STATIC_IP
         com.vm.network :private_network,
+          ip: "#{PXE_SUBNET}.4#{i}"
+        com.vm.network :private_network,
           ip: "#{CONTROL_SUBNET}.4#{i}"
         com.vm.network :private_network,
           ip: "#{TENANT_SUBNET}.4#{i}"
@@ -229,6 +235,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
       # Libvirt
       com.vm.provider :libvirt do |lv|
+        lv.storage :file, :device => "hda", :size => '50G', :bus => "ide"
         lv.memory = get_node_setting(:compute, :memory)
         lv.cpus = get_node_setting(:compute, :cpus)
         lv.random_hostname = true
