@@ -25,13 +25,13 @@ node_settings:
     :cpus: 2
     :memory: 4096
   :compute:
-    :cpus: 2
-    :memory: 4096
+    :cpus: 4
+    :memory: 8192
   :mon:
-    :cpus: 2
+    :cpus: 1
     :memory: 4096
   :osd:
-    :cpus: 2
+    :cpus: 1
     :memory: 4096
 
 # Ethernet interface name
