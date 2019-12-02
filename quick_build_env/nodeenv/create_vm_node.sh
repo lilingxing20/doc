@@ -19,12 +19,15 @@ fi
 NODE_NUM=$((${#NODE_ARRAY[@]}-1))
 
 # VM Template Image
-REPO_FILE="${SCRIPTS_DIR}/repo/openstack-ocata-ceph-jewel-7.4-x86_64.repo"
-BASE_IMAGE="${SCRIPTS_DIR}/image/centos74.qcow2"
+REPO_FILE="${SCRIPTS_DIR}/repo/openstack-queens-ceph-luminous-7.6-x86_64.repo"
+#REPO_FILE="${SCRIPTS_DIR}/repo/openstack-ocata-ceph-jewel-7.6-x86_64.repo"
+#BASE_IMAGE="/home/kvm_env/image/centos72.qcow2"
+BASE_IMAGE="/home/kvm_env/image/centos74.qcow2"
 
 ENV_NAME=$(basename $1)
 TMP_DIR="${SCRIPTS_DIR}/run/${ENV_NAME}"
-VM_BOOT_DIR="${TMP_DIR}/vmdisk"
+#VM_BOOT_DIR="${TMP_DIR}/vmdisk"
+VM_BOOT_DIR="/home/kvm_env/vmdisk"
 ETC_HOSTS_FILE="${TMP_DIR}/hosts"
 
 
