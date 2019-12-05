@@ -1,0 +1,19 @@
+[global]
+direct=1 
+startdelay=60
+runtime= 600
+numjobs=1 
+ioengine=libaio
+iodepth= 64 
+size=100G
+time_based
+filename=/dev/vdb
+group_reporting 
+
+;*************************************************
+[randread_4K]
+wait_for_previous 
+rw=randread
+bs=4K
+name=randread_4K_test
+description=randread_4K_test_description

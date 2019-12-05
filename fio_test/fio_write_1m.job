@@ -1,0 +1,21 @@
+[global]
+direct=1 
+startdelay=60
+runtime= 600
+numjobs=1 
+ioengine=libaio
+iodepth= 64 
+size=100G
+time_based
+filename=/dev/vdb
+group_reporting 
+
+;*************************************************
+
+[write_1M]
+wait_for_previous 
+rw=write 
+bs=1M 
+name=write_1M_test
+description=write_1M_test_description
+

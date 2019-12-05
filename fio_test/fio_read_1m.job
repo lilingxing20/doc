@@ -1,0 +1,20 @@
+[global]
+direct=1 
+startdelay=10
+runtime= 600
+numjobs=1 
+ioengine=libaio
+iodepth= 64 
+size=100G
+time_based
+filename=/dev/vdb
+group_reporting 
+
+;*************************************************
+
+[read_1M]
+wait_for_previous 
+rw=read 
+bs=1M 
+name=read_1M_test
+description=read_1M_test_description
