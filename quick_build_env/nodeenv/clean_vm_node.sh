@@ -14,7 +14,8 @@ source $1
 NODE_NUM=$((${#NODE_ARRAY[@]}-1))
 
 ENV_NAME=$(basename $1)
-VM_BOOT_DIR="${SCRIPTS_DIR}/run/${ENV_NAME}/vmdisk"
+# VM_BOOT_DIR="${SCRIPTS_DIR}/run/${ENV_NAME}/vmdisk"
+VM_BOOT_DIR="/home/kvm_env/vmdisk"
 ETC_HOSTS_FILE="${SCRIPTS_DIR}/run/${ENV_NAME}/hosts"
 TMP_DIR="${SCRIPTS_DIR}/run/${ENV_NAME}"
 
@@ -25,7 +26,7 @@ echo ${NODE_ARRAY[$idx]} | while read  vm_name host_name vm_nets; do
     virsh undefine $vm_name
     vm_boot_disk=$VM_BOOT_DIR/${vm_name}.qcow2
     test -f $vm_boot_disk && rm -fv $vm_boot_disk
-    ls /image/pool/ |grep $vm_name |while read vol; do virsh vol-delete --pool volpool $vol; done
+    ls /home/kvm_env/image/pool/ |grep $vm_name |while read vol; do virsh vol-delete --pool volpool $vol; done
 done
 done
 
