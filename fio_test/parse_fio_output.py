@@ -70,7 +70,7 @@ for l in real:
         randread_iops += float(l['read']['iops'])
         randread_clat_list.append(float(l['read']['clat_ns']['mean']))
 
-if "randwrite_4K_test" in jobname_list:
+if "randread_4K_test" in jobname_list:
     print "randread 4K test"
     print "randread_bw:",randread_bw/1024,"randread_iops",randread_iops,"randread_clat_max",max(randread_clat_list)/1000000,"randread_clat_min",min(randread_clat_list)/1000000
 
