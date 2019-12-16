@@ -1,0 +1,8 @@
+#!/bin/bash
+
+
+POOL_NAME="default"
+IMAGE_PREFIX='T_IMG_'
+INSTANCE_PREFIX='T_VM_'
+VOLUME_PREFIX='T_VOL_'
+
