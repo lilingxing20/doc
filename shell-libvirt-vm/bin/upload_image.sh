@@ -9,7 +9,7 @@ SCRIPTS_DIR=$(cd $(dirname "$0") && pwd)
 
 image_file=""
 template_name=""
-pool_name="default"
+pool_name="${POOL_NAME}"
 
 while getopts "hvi:n:" arg
 do

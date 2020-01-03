@@ -177,9 +177,46 @@ instance_start()
         echo "INFO:$LINENO: The instance ($instance_name) is starting."
     else
         if [[ "$(echo $ret | grep -c 'already active')" != "0" ]]; then
-            echo "WARING:$LINENO: The instance ($instance_name) is already active."
+            echo "WARING:$LINENO: Instance ($instance_name) already active."
         else
             echo "ERROR:$LINENO: $ret"
+            exit 1
+        fi
+    fi
+}
+
+
+## instance destroy
+instance_destroy()
+{
+    instance_name=$1
+    ret=$(virsh destroy "$instance_name" 2>&1)
+    if [[ "$?" == "0" ]]; then
+        echo "INFO:$LINENO: $ret"
+    else
+        if [[ "$(echo $ret | grep -c 'not running')" != "0" ]]; then
+            echo "WARING:$LINENO: Instance ($instance_name) not running."
+        else
+            echo "ERROR:$LINENO: $ret"
+            exit 1
+        fi
+    fi
+}
+
+
+## instance undefine
+instance_undefine()
+{
+    instance_name=$1
+    ret=$(virsh undefine "$instance_name" 2>&1)
+    if [[ "$?" == "0" ]]; then
+        echo "INFO:$LINENO: $ret"
+    else
+        if [[ "$(echo $ret | grep -c 'Domain not found')" != "0" ]]; then
+            echo "WARING:$LINENO: Instance ($instance_name) not found."
+        else
+            echo "ERROR:$LINENO: $ret"
+            exit 1
         fi
     fi
 }
@@ -190,6 +227,19 @@ get_instance_info()
 {
     instance_name=$1
     virsh dominfo "$instance_name"
+}
+
+
+## get instance info
+get_instance_disk()
+{
+    instance_name=$1
+    ret=$(virsh domblklist "$instance_name" 2>&1)
+    if [[ "$?" == "0" ]]; then
+        echo "$ret" | sed 1,2d | awk '{print $2}'
+    else
+        echo ""
+    fi
 }
 
 

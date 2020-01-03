@@ -51,10 +51,18 @@ cat > $instance_xml_file << eof
       <target dev='vda' bus='virtio'/>
       <alias name='virtio-disk0'/>
     </disk>
+eof
+
+for net_name in $(echo $network_names | awk -F';' '{print $1}'| awk -F',' '{for(i=1;i<=NF;i++) print $i}'); do
+cat >> $instance_xml_file << eof
     <interface type='network'>
       <source network='${net_name}'/>
       <model type='virtio'/>
     </interface>
+eof
+done
+
+cat >> $instance_xml_file << eof
     <serial type='pty'>
       <source path='/dev/pts/6'/>
       <target type='isa-serial' port='0'>
