@@ -1,0 +1,44 @@
+
+分析：首先nova-compute向cinder-api发起POST请求，一分钟后失去连接，尝试连接，再一分钟内没有获取到响应请求的信息，连接断开，报错504。
+========== compute.log
+2019-03-17 11:25:43.791 21374 DEBUG keystoneauth.session [req-bd8c7a13-53db-437a-90cf-623ecbce5a3b ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] REQ: curl -g -i -X POST http://172.16.134.45:8776/v2/7075171260684ad58c2609f7cc60d718/volumes/09b8b372-53a1-4b3d-9f84-d055e834f649/action -H "User-Agent: python-cinderclient" -H "Content-Type: application/json" -H "Accept: application/json" -H "X-Auth-Token: {SHA1}b50c4fc64eeb24a64ae9d0974001da3618c4041b" -d '{"os-initialize_connection": {"connector": {"initiator": "iqn.1994-05.com.redhat:72b65e83985", "ip": "172.16.134.45", "platform": "x86_64", "host": "controller01", "os_type": "linux2", "multipath": false}}}' _http_log_request /usr/lib/python2.7/site-packages/keystoneauth1/session.py:248
+2019-03-17 11:26:43.794 21374 INFO keystoneauth.session [req-bd8c7a13-53db-437a-90cf-623ecbce5a3b ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Failure: Unable to establish connection to http://172.16.134.45:8776/v2/7075171260684ad58c2609f7cc60d718/volumes/09b8b372-53a1-4b3d-9f84-d055e834f649/action. Retrying in 0.5s.
+2019-03-17 11:27:44.302 21374 DEBUG keystoneauth.session [req-bd8c7a13-53db-437a-90cf-623ecbce5a3b ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] RESP: [504] Connection: close Content-Type: text/html Cache-Control: no-cache 
+RESP BODY: <html><body><h1>504 Gateway Time-out</h1>
+The server didn't respond in time.
+</body></html>
+
+ _http_log_response /usr/lib/python2.7/site-packages/keystoneauth1/session.py:277
+2019-03-17 11:27:44.303 21374 ERROR nova.volume.cinder [req-bd8c7a13-53db-437a-90cf-623ecbce5a3b ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Initialize connection failed for volume 09b8b372-53a1-4b3d-9f84-d055e834f649 on host controller01. Error: Gateway Time-out (HTTP 504) Code: 504. Attempting to terminate connection.
+
+
+
+分析：首先cinder-api收到nova-compute发起的POST请求，然后rpc调用volume进行initialize（时间花费101s），最后在返回POST请求时，由于haproxy服务连接超时时间1分钟，此时连接已经断开，造成Connection reset by peer。
+默认环境时，在intitialize connection函数中sleep（30），在第三个卷挂载时，initialize时间花费101s，说明同步锁机制造成的顺序执行。
+========== cinder-api.log
+2019-03-17 11:25:43.794 21459 INFO cinder.api.openstack.wsgi [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] POST http://172.16.134.45:8776/v2/7075171260684ad58c2609f7cc60d718/volumes/09b8b372-53a1-4b3d-9f84-d055e834f649/action
+2019-03-17 11:25:43.795 21459 DEBUG cinder.api.openstack.wsgi [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Action body: {"os-initialize_connection": {"connector": {"initiator": "iqn.1994-05.com.redhat:72b65e83985", "ip": "172.16.134.45", "platform": "x86_64", "host": "controller01", "os_type": "linux2", "multipath": false}}} get_method /usr/lib/python2.7/site-packages/cinder/api/openstack/wsgi.py:1209
+2019-03-17 11:25:43.795 21459 DEBUG cinder.api.openstack.wsgi [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Action: 'action', calling method: <bound method VolumeActionsController._initialize_connection of <cinder.api.contrib.volume_actions.VolumeActionsController object at 0x67e4d10>>, body: {"os-initialize_connection": {"connector": {"initiator": "iqn.1994-05.com.redhat:72b65e83985", "ip": "172.16.134.45", "platform": "x86_64", "host": "controller01", "os_type": "linux2", "multipath": false}}} _process_stack /usr/lib/python2.7/site-packages/cinder/api/openstack/wsgi.py:1089
+2019-03-17 11:25:43.822 21459 INFO cinder.volume.api [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Volume info retrieved successfully.
+2019-03-17 11:25:43.823 21459 INFO cinder.volume.api [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] -------------- rpc call start ...
+2019-03-17 11:25:43.823 21459 DEBUG oslo_messaging._drivers.amqpdriver [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] CALL msg_id: 88bc9d17025c434e8bfc968525fb3571 exchange 'openstack' topic 'cinder-volume' _send /usr/lib/python2.7/site-packages/oslo_messaging/_drivers/amqpdriver.py:454
+2019-03-17 11:27:02.215 21459 INFO cinder.volume.api [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] -------------- rpc call end ...
+2019-03-17 11:27:02.217 21459 INFO cinder.volume.api [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Initialize volume connection completed successfully.
+2019-03-17 11:27:02.218 21459 INFO cinder.api.openstack.wsgi [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] http://172.16.134.45:8776/v2/7075171260684ad58c2609f7cc60d718/volumes/09b8b372-53a1-4b3d-9f84-d055e834f649/action returned with HTTP 200
+2019-03-17 11:27:02.272 21459 INFO eventlet.wsgi.server [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Traceback (most recent call last):
+2019-03-17 11:27:02.217 21459 INFO cinder.volume.api [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Initialize volume connection completed successfully.
+2019-03-17 11:27:02.218 21459 INFO cinder.api.openstack.wsgi [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] http://172.16.134.45:8776/v2/7075171260684ad58c2609f7cc60d718/volumes/09b8b372-53a1-4b3d-9f84-d055e834f649/action returned with HTTP 200
+2019-03-17 11:27:02.272 21459 INFO eventlet.wsgi.server [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/eventlet/wsgi.py", line 483, in handle_one_response
+    write(b''.join(towrite))
+  File "/usr/lib/python2.7/site-packages/eventlet/wsgi.py", line 426, in write
+    _writelines(towrite)
+  File "/usr/lib64/python2.7/socket.py", line 334, in writelines
+    self.flush()
+    self._sock.sendall(view[write_offset:write_offset+buffer_size])
+  File "/usr/lib/python2.7/site-packages/eventlet/greenio/base.py", line 377, in sendall
+    tail = self.send(data, flags)
+  File "/usr/lib/python2.7/site-packages/eventlet/greenio/base.py", line 359, in send
+    total_sent += fd.send(data[total_sent:], flags)
+error: [Errno 104] Connection reset by peer
+2019-03-17 11:27:02.272 21459 INFO eventlet.wsgi.server [req-28a9fd76-12c6-464a-bc89-4dcb2d927765 ee7948fbe8e54488bfcae3227d80c673 7075171260684ad58c2609f7cc60d718 - - -] 172.16.134.45,172.16.134.45 "POST /v2/7075171260684ad58c2609f7cc60d718/volumes/09b8b372-53a1-4b3d-9f84-d055e834f649/action HTTP/1.1" status: 200  len: 0 time: 78.4793799
