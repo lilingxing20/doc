@@ -1,0 +1,6333 @@
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+attachment_id	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+backup_id	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+container	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+fail_reason	varchar(255)	YES		NULL	
+service_metadata	varchar(255)	YES		NULL	
+service	varchar(255)	YES		NULL	
+size	int(11)	YES		NULL	
+object_count	int(11)	YES		NULL	
+parent_id	varchar(36)	YES		NULL	
+temp_volume_id	varchar(36)	YES		NULL	
+temp_snapshot_id	varchar(36)	YES		NULL	
+num_dependent_backups	int(11)	YES		NULL	
+snapshot_id	varchar(36)	YES		NULL	
+data_timestamp	datetime	YES		NULL	
+restore_volume_id	varchar(36)	YES		NULL	
+encryption_key_id	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+consistencygroup_id	varchar(36)	NO	MUL	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	NO	MUL	NULL	
+binary	varchar(255)	NO		NULL	
+disabled	tinyint(1)	YES		NULL	
+disabled_reason	varchar(255)	YES		NULL	
+race_preventer	int(11)	NO		NULL	
+replication_status	varchar(36)	YES		NULL	
+frozen	tinyint(1)	NO		0	
+active_backend_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+volume_type_id	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+cgsnapshot_id	varchar(36)	YES		NULL	
+source_cgid	varchar(36)	YES		NULL	
+cluster_name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+initiator	varchar(255)	NO	MUL	NULL	
+namespace	varchar(255)	NO		NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+cipher	varchar(255)	YES		NULL	
+control_location	varchar(255)	NO		NULL	
+key_size	int(11)	YES		NULL	
+provider	varchar(255)	NO		NULL	
+volume_type_id	varchar(36)	NO		NULL	
+encryption_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+group_id	varchar(36)	NO	MUL	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+group_type_id	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+group_type_id	varchar(36)	YES	MUL	NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+group_type_id	varchar(36)	NO	MUL	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+description	varchar(255)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+is_public	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_type_id	varchar(36)	NO	MUL	NULL	
+group_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+cluster_name	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+group_type_id	varchar(36)	YES		NULL	
+status	varchar(255)	YES		NULL	
+group_snapshot_id	varchar(36)	YES		NULL	
+source_group_id	varchar(36)	YES		NULL	
+replication_status	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+image_updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	NO	MUL	NULL	
+image_id	varchar(36)	NO	MUL	NULL	
+volume_id	varchar(36)	NO		NULL	
+size	int(11)	NO		NULL	
+last_used	datetime	NO		NULL	
+cluster_name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+project_id	varchar(255)	NO		NULL	
+request_id	varchar(255)	YES		NULL	
+resource_type	varchar(36)	YES		NULL	
+resource_uuid	varchar(255)	YES		NULL	
+event_id	varchar(255)	NO		NULL	
+message_level	varchar(255)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+expires_at	datetime	YES	MUL	NULL	
+detail_id	varchar(10)	YES		NULL	
+action_id	varchar(10)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+specs_id	varchar(36)	YES	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+class_name	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+in_use	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+until_refresh	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+allocated	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES	MUL	NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+usage_id	int(11)	YES	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+delta	int(11)	NO		NULL	
+expire	datetime	YES		NULL	
+allocated_id	int(11)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES		NULL	
+binary	varchar(255)	YES		NULL	
+topic	varchar(255)	YES		NULL	
+report_count	int(11)	NO		NULL	
+disabled	tinyint(1)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+disabled_reason	varchar(255)	YES		NULL	
+modified_at	datetime	YES		NULL	
+rpc_current_version	varchar(36)	YES		NULL	
+object_current_version	varchar(36)	YES		NULL	
+replication_status	varchar(36)	YES		NULL	
+frozen	tinyint(1)	YES		NULL	
+active_backend_id	varchar(255)	YES		NULL	
+cluster_name	varchar(255)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+snapshot_id	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO	MUL	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+progress	varchar(255)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+provider_location	varchar(255)	YES		NULL	
+encryption_key_id	varchar(36)	YES		NULL	
+volume_type_id	varchar(36)	YES		NULL	
+cgsnapshot_id	varchar(36)	YES	MUL	NULL	
+provider_id	varchar(255)	YES		NULL	
+provider_auth	varchar(255)	YES		NULL	
+group_snapshot_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO	MUL	NULL	
+display_name	varchar(255)	YES		NULL	
+salt	varchar(255)	YES		NULL	
+crypt_hash	varchar(255)	YES		NULL	
+expires_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO	MUL	NULL	
+attached_host	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+mountpoint	varchar(255)	YES		NULL	
+attach_time	datetime	YES		NULL	
+detach_time	datetime	YES		NULL	
+attach_mode	varchar(36)	YES		NULL	
+attach_status	varchar(255)	YES		NULL	
+connection_info	text	YES		NULL	
+connector	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	YES	MUL	NULL	
+snapshot_id	varchar(36)	YES	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_type_id	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+volume_type_id	varchar(36)	YES	MUL	NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+qos_specs_id	varchar(36)	YES	MUL	NULL	
+is_public	tinyint(1)	YES		NULL	
+description	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+ec2_id	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+size	int(11)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+attach_status	varchar(255)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+launched_at	datetime	YES		NULL	
+terminated_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+provider_location	varchar(256)	YES		NULL	
+provider_auth	varchar(256)	YES		NULL	
+snapshot_id	varchar(36)	YES		NULL	
+volume_type_id	varchar(36)	YES		NULL	
+source_volid	varchar(36)	YES		NULL	
+bootable	tinyint(1)	YES		NULL	
+provider_geometry	varchar(255)	YES		NULL	
+_name_id	varchar(36)	YES		NULL	
+encryption_key_id	varchar(36)	YES		NULL	
+migration_status	varchar(255)	YES		NULL	
+replication_status	varchar(255)	YES		NULL	
+replication_extended_status	varchar(255)	YES		NULL	
+replication_driver_data	varchar(255)	YES		NULL	
+consistencygroup_id	varchar(36)	YES	MUL	NULL	
+provider_id	varchar(255)	YES		NULL	
+multiattach	tinyint(1)	YES		NULL	
+previous_status	varchar(255)	YES		NULL	
+cluster_name	varchar(255)	YES		NULL	
+group_id	varchar(36)	YES	MUL	NULL	
+service_uuid	varchar(36)	YES	MUL	NULL	
+shared_targets	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime(6)	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_type	varchar(40)	NO	MUL	NULL	
+resource_id	varchar(36)	NO		NULL	
+status	varchar(255)	NO		NULL	
+service_id	int(11)	YES	MUL	NULL	
+race_preventer	int(11)	NO		0	
+
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+image_id	varchar(36)	NO	MUL	NULL	
+value	text	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	NO	MUL	NULL	
+meta_data	text	YES		NULL	
+status	varchar(30)	NO		active	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+image_id	varchar(36)	NO	MUL	NULL	
+member	varchar(255)	NO		NULL	
+can_share	tinyint(1)	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	NO	MUL	NULL	
+status	varchar(20)	NO		pending	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+image_id	varchar(36)	NO	MUL	NULL	
+name	varchar(255)	NO		NULL	
+value	text	YES		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+image_id	varchar(36)	NO	MUL	NULL	
+value	varchar(255)	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+size	bigint(20)	YES		NULL	
+status	varchar(30)	NO		NULL	
+created_at	datetime	NO	MUL	NULL	
+updated_at	datetime	YES	MUL	NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	NO	MUL	NULL	
+disk_format	varchar(20)	YES		NULL	
+container_format	varchar(20)	YES		NULL	
+checksum	varchar(32)	YES	MUL	NULL	
+owner	varchar(255)	YES	MUL	NULL	
+min_disk	int(11)	NO		NULL	
+min_ram	int(11)	NO		NULL	
+protected	tinyint(1)	NO		0	
+virtual_size	bigint(20)	YES		NULL	
+visibility	enum('private','public','shared','community')	NO	MUL	shared	
+
+Field	Type	Null	Key	Default	Extra
+resource_type_id	int(11)	NO	PRI	NULL	
+namespace_id	int(11)	NO	PRI	NULL	
+properties_target	varchar(80)	YES		NULL	
+prefix	varchar(80)	YES		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+namespace	varchar(80)	NO	UNI	NULL	
+display_name	varchar(80)	YES		NULL	
+description	text	YES		NULL	
+visibility	varchar(32)	YES		NULL	
+protected	tinyint(1)	YES		NULL	
+owner	varchar(255)	NO	MUL	NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+namespace_id	int(11)	NO	MUL	NULL	
+name	varchar(80)	NO	MUL	NULL	
+description	text	YES		NULL	
+required	text	YES		NULL	
+json_schema	text	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+namespace_id	int(11)	NO	MUL	NULL	
+name	varchar(80)	NO	MUL	NULL	
+json_schema	text	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(80)	NO	UNI	NULL	
+protected	tinyint(1)	NO		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+namespace_id	int(11)	NO	MUL	NULL	
+name	varchar(80)	NO	MUL	NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+task_id	varchar(36)	NO	PRI	NULL	
+input	text	YES		NULL	
+result	text	YES		NULL	
+message	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+type	varchar(30)	NO	MUL	NULL	
+status	varchar(30)	NO	MUL	NULL	
+owner	varchar(255)	NO	MUL	NULL	
+expires_at	datetime	YES		NULL	
+created_at	datetime	NO		NULL	
+updated_at	datetime	YES	MUL	NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	NO	MUL	NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+extra	text	YES		NULL	
+description	varchar(255)	YES		NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+conductor_id	int(11)	NO	MUL	NULL	
+hardware_type	varchar(255)	NO		NULL	
+interface_type	varchar(16)	NO		NULL	
+interface_name	varchar(255)	NO		NULL	
+default	tinyint(1)	NO		NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+hostname	varchar(255)	NO	UNI	NULL	
+drivers	text	YES		NULL	
+online	tinyint(1)	YES		NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+node_id	int(11)	NO	PRI	NULL	
+tag	varchar(255)	NO	PRI	NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+version	varchar(15)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+node_id	int(11)	NO	PRI	NULL	
+trait	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+instance_uuid	varchar(36)	YES	UNI	NULL	
+chassis_id	int(11)	YES	MUL	NULL	
+power_state	varchar(15)	YES		NULL	
+target_power_state	varchar(15)	YES		NULL	
+provision_state	varchar(15)	YES		NULL	
+target_provision_state	varchar(15)	YES		NULL	
+last_error	text	YES		NULL	
+properties	text	YES		NULL	
+driver	varchar(255)	YES		NULL	
+driver_info	text	YES		NULL	
+reservation	varchar(255)	YES		NULL	
+maintenance	tinyint(1)	YES		NULL	
+extra	text	YES		NULL	
+provision_updated_at	datetime	YES		NULL	
+console_enabled	tinyint(1)	YES		NULL	
+instance_info	longtext	YES		NULL	
+conductor_affinity	int(11)	YES	MUL	NULL	
+maintenance_reason	text	YES		NULL	
+driver_internal_info	text	YES		NULL	
+name	varchar(255)	YES	UNI	NULL	
+inspection_started_at	datetime	YES		NULL	
+inspection_finished_at	datetime	YES		NULL	
+clean_step	text	YES		NULL	
+raid_config	text	YES		NULL	
+target_raid_config	text	YES		NULL	
+network_interface	varchar(255)	YES		NULL	
+resource_class	varchar(80)	YES		NULL	
+boot_interface	varchar(255)	YES		NULL	
+console_interface	varchar(255)	YES		NULL	
+deploy_interface	varchar(255)	YES		NULL	
+inspect_interface	varchar(255)	YES		NULL	
+management_interface	varchar(255)	YES		NULL	
+power_interface	varchar(255)	YES		NULL	
+raid_interface	varchar(255)	YES		NULL	
+vendor_interface	varchar(255)	YES		NULL	
+storage_interface	varchar(255)	YES		NULL	
+version	varchar(15)	YES		NULL	
+rescue_interface	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+name	varchar(255)	YES	UNI	NULL	
+node_id	int(11)	YES	MUL	NULL	
+address	varchar(18)	YES	UNI	NULL	
+extra	text	YES		NULL	
+internal_info	text	YES		NULL	
+standalone_ports_supported	tinyint(1)	YES		NULL	
+properties	text	YES		NULL	
+mode	varchar(255)	YES		NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+address	varchar(18)	YES	UNI	NULL	
+node_id	int(11)	YES	MUL	NULL	
+extra	text	YES		NULL	
+local_link_connection	text	YES		NULL	
+portgroup_id	int(11)	YES	MUL	NULL	
+pxe_enabled	tinyint(1)	YES		NULL	
+internal_info	text	YES		NULL	
+physical_network	varchar(64)	YES		NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+node_id	int(11)	YES	MUL	NULL	
+type	varchar(32)	YES	MUL	NULL	
+connector_id	varchar(255)	YES		NULL	
+extra	text	YES		NULL	
+version	varchar(15)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+node_id	int(11)	YES	MUL	NULL	
+volume_type	varchar(64)	YES		NULL	
+properties	text	YES		NULL	
+boot_index	int(11)	YES		NULL	
+volume_id	varchar(36)	YES		NULL	
+extra	text	YES		NULL	
+version	varchar(15)	YES		NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+name	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO	PRI	NULL	
+node_uuid	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+uuid	varchar(36)	NO	PRI	NULL	
+error	text	YES		NULL	
+version_id	varchar(36)	YES			
+state	enum('starting','waiting','processing','finished','error','reapplying','enrolling','aborting')	YES		NULL	
+started_at	datetime	YES		NULL	
+finished_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+uuid	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO	PRI	NULL	
+value	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+rule	varchar(36)	YES	MUL	NULL	
+action	varchar(255)	NO		NULL	
+params	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+rule	varchar(36)	YES	MUL	NULL	
+op	varchar(255)	NO		NULL	
+multiple	varchar(255)	NO		NULL	
+field	text	YES		NULL	
+params	text	YES		NULL	
+invert	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+uuid	varchar(36)	NO	PRI	NULL	
+created_at	datetime	NO		NULL	
+description	text	YES		NULL	
+disabled	tinyint(1)	YES		NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+access_secret	varchar(64)	NO		NULL	
+authorizing_user_id	varchar(64)	NO	MUL	NULL	
+project_id	varchar(64)	NO		NULL	
+role_ids	text	NO		NULL	
+consumer_id	varchar(64)	NO	MUL	NULL	
+expires_at	varchar(64)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+internal_id	int(11)	NO	PRI	NULL	auto_increment
+id	varchar(64)	NO		NULL	
+name	varchar(255)	NO		NULL	
+secret_hash	varchar(255)	NO		NULL	
+description	text	YES		NULL	
+user_id	varchar(64)	NO	MUL	NULL	
+project_id	varchar(64)	YES		NULL	
+expires_at	bigint(20)	YES		NULL	
+system	varchar(64)	YES		NULL	
+unrestricted	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+application_credential_id	int(11)	NO	PRI	NULL	
+role_id	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+type	enum('UserProject','GroupProject','UserDomain','GroupDomain')	NO	PRI	NULL	
+actor_id	varchar(64)	NO	PRI	NULL	
+target_id	varchar(64)	NO	PRI	NULL	
+role_id	varchar(64)	NO	PRI	NULL	
+inherited	tinyint(1)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+type	varchar(64)	NO	PRI	NULL	
+domain_id	varchar(64)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+description	varchar(64)	YES		NULL	
+secret	varchar(64)	NO		NULL	
+extra	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+user_id	varchar(64)	NO		NULL	
+project_id	varchar(64)	YES		NULL	
+type	varchar(255)	NO		NULL	
+extra	text	YES		NULL	
+key_hash	varchar(64)	NO		NULL	
+encrypted_blob	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+legacy_endpoint_id	varchar(64)	YES		NULL	
+interface	varchar(8)	NO		NULL	
+service_id	varchar(64)	NO	MUL	NULL	
+url	text	NO		NULL	
+extra	text	YES		NULL	
+enabled	tinyint(1)	NO		1	
+region_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+description	text	YES		NULL	
+filters	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(64)	NO	MUL	NULL	
+idp_id	varchar(64)	NO	MUL	NULL	
+protocol_id	varchar(64)	NO	MUL	NULL	
+unique_id	varchar(255)	NO		NULL	
+display_name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+idp_id	varchar(64)	NO	PRI	NULL	
+mapping_id	varchar(64)	NO		NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+public_id	varchar(64)	NO	PRI	NULL	
+domain_id	varchar(64)	NO	MUL	NULL	
+local_id	varchar(64)	NO		NULL	
+entity_type	enum('user','group')	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+enabled	tinyint(1)	NO		NULL	
+description	text	YES		NULL	
+domain_id	varchar(64)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+idp_id	varchar(64)	YES	MUL	NULL	
+remote_id	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+prior_role_id	varchar(64)	NO	PRI	NULL	
+implied_role_id	varchar(64)	NO	PRI	NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(64)	NO	UNI	NULL	
+domain_id	varchar(64)	NO	MUL	NULL	
+name	varchar(255)	NO		NULL	
+failed_auth_count	int(11)	YES		NULL	
+failed_auth_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+rules	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+domain_id	varchar(64)	NO	PRI	NULL	
+name	varchar(255)	NO	PRI	NULL	
+user_id	varchar(64)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+local_user_id	int(11)	NO	MUL	NULL	
+password	varchar(128)	YES		NULL	
+expires_at	datetime	YES		NULL	
+self_service	tinyint(1)	NO		0	
+password_hash	varchar(255)	YES		NULL	
+created_at_int	bigint(20)	NO		0	
+expires_at_int	bigint(20)	YES		NULL	
+created_at	datetime	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+type	varchar(255)	NO		NULL	
+blob	text	NO		NULL	
+extra	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+policy_id	varchar(64)	NO		NULL	
+endpoint_id	varchar(64)	YES	MUL	NULL	
+service_id	varchar(64)	YES		NULL	
+region_id	varchar(64)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+name	varchar(64)	NO		NULL	
+extra	text	YES		NULL	
+description	text	YES		NULL	
+enabled	tinyint(1)	YES		NULL	
+domain_id	varchar(64)	NO	MUL	NULL	
+parent_id	varchar(64)	YES	MUL	NULL	
+is_domain	tinyint(1)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+endpoint_id	varchar(64)	NO	PRI	NULL	
+project_id	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+endpoint_group_id	varchar(64)	NO	PRI	NULL	
+project_id	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(64)	NO	PRI	NULL	
+name	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(255)	NO	PRI	NULL	
+description	varchar(255)	NO		NULL	
+parent_region_id	varchar(255)	YES		NULL	
+extra	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+service_id	varchar(255)	YES	MUL	NULL	
+region_id	varchar(64)	YES	MUL	NULL	
+resource_name	varchar(255)	YES		NULL	
+default_limit	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+request_secret	varchar(64)	NO		NULL	
+verifier	varchar(64)	YES		NULL	
+authorizing_user_id	varchar(64)	YES		NULL	
+requested_project_id	varchar(64)	NO		NULL	
+role_ids	text	YES		NULL	
+consumer_id	varchar(64)	NO	MUL	NULL	
+expires_at	varchar(64)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+domain_id	varchar(64)	YES		NULL	
+project_id	varchar(64)	YES	MUL	NULL	
+user_id	varchar(64)	YES	MUL	NULL	
+role_id	varchar(64)	YES		NULL	
+trust_id	varchar(64)	YES		NULL	
+consumer_id	varchar(64)	YES		NULL	
+access_token_id	varchar(64)	YES		NULL	
+issued_before	datetime	NO	MUL	NULL	
+expires_at	datetime	YES		NULL	
+revoked_at	datetime	NO	MUL	NULL	
+audit_id	varchar(32)	YES	MUL	NULL	
+audit_chain_id	varchar(32)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+name	varchar(255)	NO	MUL	NULL	
+extra	text	YES		NULL	
+domain_id	varchar(64)	NO		<<null>>	
+
+Field	Type	Null	Key	Default	Extra
+domain_id	varchar(64)	NO	PRI	NULL	
+group	varchar(255)	NO	PRI	NULL	
+option	varchar(255)	NO	PRI	NULL	
+value	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+type	varchar(255)	YES		NULL	
+enabled	tinyint(1)	NO		1	
+extra	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+auth_url	varchar(256)	NO		NULL	
+id	varchar(64)	NO	PRI	NULL	
+enabled	tinyint(1)	NO		NULL	
+description	text	YES		NULL	
+sp_url	varchar(256)	NO		NULL	
+relay_state_prefix	varchar(256)	NO		ss:mem:	
+
+Field	Type	Null	Key	Default	Extra
+type	varchar(64)	NO	PRI	NULL	
+actor_id	varchar(64)	NO	PRI	NULL	
+target_id	varchar(64)	NO	PRI	NULL	
+role_id	varchar(64)	NO	PRI	NULL	
+inherited	tinyint(1)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+expires	datetime	YES	MUL	NULL	
+extra	text	YES		NULL	
+valid	tinyint(1)	NO		NULL	
+trust_id	varchar(64)	YES	MUL	NULL	
+user_id	varchar(64)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+trustor_user_id	varchar(64)	NO	MUL	NULL	
+trustee_user_id	varchar(64)	NO		NULL	
+project_id	varchar(64)	YES		NULL	
+impersonation	tinyint(1)	NO		NULL	
+deleted_at	datetime	YES		NULL	
+expires_at	datetime	YES		NULL	
+remaining_uses	int(11)	YES		NULL	
+extra	text	YES		NULL	
+expires_at_int	bigint(20)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+trust_id	varchar(64)	NO	PRI	NULL	
+role_id	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(64)	NO	PRI	NULL	
+extra	text	YES		NULL	
+enabled	tinyint(1)	YES		NULL	
+default_project_id	varchar(64)	YES	MUL	NULL	
+created_at	datetime	YES		NULL	
+last_active_at	date	YES		NULL	
+domain_id	varchar(64)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+user_id	varchar(64)	NO	PRI	NULL	
+group_id	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+user_id	varchar(64)	NO	PRI	NULL	
+option_id	varchar(4)	NO	PRI	NULL	
+option_value	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+domain_id	varchar(64)	NO	PRI	NULL	
+group	varchar(255)	NO	PRI	NULL	
+option	varchar(255)	NO	PRI	NULL	
+value	text	NO		NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+db_name	varchar(64)	NO	PRI	NULL	
+table_name	varchar(64)	NO	PRI	NULL	
+column_name	varchar(64)	NO	PRI	NULL	
+min_value	varbinary(255)	YES		NULL	
+max_value	varbinary(255)	YES		NULL	
+nulls_ratio	decimal(12,4)	YES		NULL	
+avg_length	decimal(12,4)	YES		NULL	
+avg_frequency	decimal(12,4)	YES		NULL	
+hist_size	tinyint(3) unsigned	YES		NULL	
+hist_type	enum('SINGLE_PREC_HB','DOUBLE_PREC_HB')	YES		NULL	
+histogram	varbinary(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+Db	char(64)	NO	PRI		
+User	char(80)	NO	PRI		
+Table_name	char(64)	NO	PRI		
+Column_name	char(64)	NO	PRI		
+Timestamp	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+Column_priv	set('Select','Insert','Update','References')	NO			
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+Db	char(64)	NO	PRI		
+User	char(80)	NO	PRI		
+Select_priv	enum('N','Y')	NO		N	
+Insert_priv	enum('N','Y')	NO		N	
+Update_priv	enum('N','Y')	NO		N	
+Delete_priv	enum('N','Y')	NO		N	
+Create_priv	enum('N','Y')	NO		N	
+Drop_priv	enum('N','Y')	NO		N	
+Grant_priv	enum('N','Y')	NO		N	
+References_priv	enum('N','Y')	NO		N	
+Index_priv	enum('N','Y')	NO		N	
+Alter_priv	enum('N','Y')	NO		N	
+Create_tmp_table_priv	enum('N','Y')	NO		N	
+Lock_tables_priv	enum('N','Y')	NO		N	
+Create_view_priv	enum('N','Y')	NO		N	
+Show_view_priv	enum('N','Y')	NO		N	
+Create_routine_priv	enum('N','Y')	NO		N	
+Alter_routine_priv	enum('N','Y')	NO		N	
+Execute_priv	enum('N','Y')	NO		N	
+Event_priv	enum('N','Y')	NO		N	
+Trigger_priv	enum('N','Y')	NO		N	
+
+Field	Type	Null	Key	Default	Extra
+db	char(64)	NO	PRI		
+name	char(64)	NO	PRI		
+body	longblob	NO		NULL	
+definer	char(141)	NO			
+execute_at	datetime	YES		NULL	
+interval_value	int(11)	YES		NULL	
+interval_field	enum('YEAR','QUARTER','MONTH','DAY','HOUR','MINUTE','WEEK','SECOND','MICROSECOND','YEAR_MONTH','DAY_HOUR','DAY_MINUTE','DAY_SECOND','HOUR_MINUTE','HOUR_SECOND','MINUTE_SECOND','DAY_MICROSECOND','HOUR_MICROSECOND','MINUTE_MICROSECOND','SECOND_MICROSECOND')	YES		NULL	
+created	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+modified	timestamp	NO		0000-00-00 00:00:00	
+last_executed	datetime	YES		NULL	
+starts	datetime	YES		NULL	
+ends	datetime	YES		NULL	
+status	enum('ENABLED','DISABLED','SLAVESIDE_DISABLED')	NO		ENABLED	
+on_completion	enum('DROP','PRESERVE')	NO		DROP	
+sql_mode	set('REAL_AS_FLOAT','PIPES_AS_CONCAT','ANSI_QUOTES','IGNORE_SPACE','IGNORE_BAD_TABLE_OPTIONS','ONLY_FULL_GROUP_BY','NO_UNSIGNED_SUBTRACTION','NO_DIR_IN_CREATE','POSTGRESQL','ORACLE','MSSQL','DB2','MAXDB','NO_KEY_OPTIONS','NO_TABLE_OPTIONS','NO_FIELD_OPTIONS','MYSQL323','MYSQL40','ANSI','NO_AUTO_VALUE_ON_ZERO','NO_BACKSLASH_ESCAPES','STRICT_TRANS_TABLES','STRICT_ALL_TABLES','NO_ZERO_IN_DATE','NO_ZERO_DATE','INVALID_DATES','ERROR_FOR_DIVISION_BY_ZERO','TRADITIONAL','NO_AUTO_CREATE_USER','HIGH_NOT_PRECEDENCE','NO_ENGINE_SUBSTITUTION','PAD_CHAR_TO_FULL_LENGTH')	NO			
+comment	char(64)	NO			
+originator	int(10) unsigned	NO		NULL	
+time_zone	char(64)	NO		SYSTEM	
+character_set_client	char(32)	YES		NULL	
+collation_connection	char(32)	YES		NULL	
+db_collation	char(32)	YES		NULL	
+body_utf8	longblob	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+name	char(64)	NO	PRI		
+ret	tinyint(1)	NO		0	
+dl	char(128)	NO			
+type	enum('function','aggregate')	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+event_time	timestamp(6)	NO		CURRENT_TIMESTAMP(6)	on update CURRENT_TIMESTAMP
+user_host	mediumtext	NO		NULL	
+thread_id	bigint(21) unsigned	NO		NULL	
+server_id	int(10) unsigned	NO		NULL	
+command_type	varchar(64)	NO		NULL	
+argument	mediumtext	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+domain_id	int(10) unsigned	NO	PRI	NULL	
+sub_id	bigint(20) unsigned	NO	PRI	NULL	
+server_id	int(10) unsigned	NO		NULL	
+seq_no	bigint(20) unsigned	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+help_category_id	smallint(5) unsigned	NO	PRI	NULL	
+name	char(64)	NO	UNI	NULL	
+parent_category_id	smallint(5) unsigned	YES		NULL	
+url	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+help_keyword_id	int(10) unsigned	NO	PRI	NULL	
+name	char(64)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+help_topic_id	int(10) unsigned	NO	PRI	NULL	
+help_keyword_id	int(10) unsigned	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+help_topic_id	int(10) unsigned	NO	PRI	NULL	
+name	char(64)	NO	UNI	NULL	
+help_category_id	smallint(5) unsigned	NO		NULL	
+description	text	NO		NULL	
+example	text	NO		NULL	
+url	text	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+Db	char(64)	NO	PRI		
+Select_priv	enum('N','Y')	NO		N	
+Insert_priv	enum('N','Y')	NO		N	
+Update_priv	enum('N','Y')	NO		N	
+Delete_priv	enum('N','Y')	NO		N	
+Create_priv	enum('N','Y')	NO		N	
+Drop_priv	enum('N','Y')	NO		N	
+Grant_priv	enum('N','Y')	NO		N	
+References_priv	enum('N','Y')	NO		N	
+Index_priv	enum('N','Y')	NO		N	
+Alter_priv	enum('N','Y')	NO		N	
+Create_tmp_table_priv	enum('N','Y')	NO		N	
+Lock_tables_priv	enum('N','Y')	NO		N	
+Create_view_priv	enum('N','Y')	NO		N	
+Show_view_priv	enum('N','Y')	NO		N	
+Create_routine_priv	enum('N','Y')	NO		N	
+Alter_routine_priv	enum('N','Y')	NO		N	
+Execute_priv	enum('N','Y')	NO		N	
+Trigger_priv	enum('N','Y')	NO		N	
+
+Field	Type	Null	Key	Default	Extra
+db_name	varchar(64)	NO	PRI	NULL	
+table_name	varchar(64)	NO	PRI	NULL	
+index_name	varchar(64)	NO	PRI	NULL	
+prefix_arity	int(11) unsigned	NO	PRI	NULL	
+avg_frequency	decimal(12,4)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+database_name	varchar(64)	NO	PRI	NULL	
+table_name	varchar(64)	NO	PRI	NULL	
+index_name	varchar(64)	NO	PRI	NULL	
+last_update	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+stat_name	varchar(64)	NO	PRI	NULL	
+stat_value	bigint(20) unsigned	NO		NULL	
+sample_size	bigint(20) unsigned	YES		NULL	
+stat_description	varchar(1024)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+database_name	varchar(64)	NO	PRI	NULL	
+table_name	varchar(64)	NO	PRI	NULL	
+last_update	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+n_rows	bigint(20) unsigned	NO		NULL	
+clustered_index_size	bigint(20) unsigned	NO		NULL	
+sum_of_other_index_sizes	bigint(20) unsigned	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+name	varchar(64)	NO	PRI		
+dl	varchar(128)	NO			
+
+Field	Type	Null	Key	Default	Extra
+db	char(64)	NO	PRI		
+name	char(64)	NO	PRI		
+type	enum('FUNCTION','PROCEDURE')	NO	PRI	NULL	
+specific_name	char(64)	NO			
+language	enum('SQL')	NO		SQL	
+sql_data_access	enum('CONTAINS_SQL','NO_SQL','READS_SQL_DATA','MODIFIES_SQL_DATA')	NO		CONTAINS_SQL	
+is_deterministic	enum('YES','NO')	NO		NO	
+security_type	enum('INVOKER','DEFINER')	NO		DEFINER	
+param_list	blob	NO		NULL	
+returns	longblob	NO		NULL	
+body	longblob	NO		NULL	
+definer	char(141)	NO			
+created	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+modified	timestamp	NO		0000-00-00 00:00:00	
+sql_mode	set('REAL_AS_FLOAT','PIPES_AS_CONCAT','ANSI_QUOTES','IGNORE_SPACE','IGNORE_BAD_TABLE_OPTIONS','ONLY_FULL_GROUP_BY','NO_UNSIGNED_SUBTRACTION','NO_DIR_IN_CREATE','POSTGRESQL','ORACLE','MSSQL','DB2','MAXDB','NO_KEY_OPTIONS','NO_TABLE_OPTIONS','NO_FIELD_OPTIONS','MYSQL323','MYSQL40','ANSI','NO_AUTO_VALUE_ON_ZERO','NO_BACKSLASH_ESCAPES','STRICT_TRANS_TABLES','STRICT_ALL_TABLES','NO_ZERO_IN_DATE','NO_ZERO_DATE','INVALID_DATES','ERROR_FOR_DIVISION_BY_ZERO','TRADITIONAL','NO_AUTO_CREATE_USER','HIGH_NOT_PRECEDENCE','NO_ENGINE_SUBSTITUTION','PAD_CHAR_TO_FULL_LENGTH')	NO			
+comment	text	NO		NULL	
+character_set_client	char(32)	YES		NULL	
+collation_connection	char(32)	YES		NULL	
+db_collation	char(32)	YES		NULL	
+body_utf8	longblob	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+Db	char(64)	NO	PRI		
+User	char(80)	NO	PRI		
+Routine_name	char(64)	NO	PRI		
+Routine_type	enum('FUNCTION','PROCEDURE')	NO	PRI	NULL	
+Grantor	char(141)	NO	MUL		
+Proc_priv	set('Execute','Alter Routine','Grant')	NO			
+Timestamp	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+User	char(80)	NO	PRI		
+Proxied_host	char(60)	NO	PRI		
+Proxied_user	char(80)	NO	PRI		
+With_grant	tinyint(1)	NO		0	
+Grantor	char(141)	NO	MUL		
+Timestamp	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+User	char(80)	NO	PRI		
+Role	char(80)	NO	PRI		
+Admin_option	enum('N','Y')	NO		N	
+
+Field	Type	Null	Key	Default	Extra
+Server_name	char(64)	NO	PRI		
+Host	char(64)	NO			
+Db	char(64)	NO			
+Username	char(80)	NO			
+Password	char(64)	NO			
+Port	int(4)	NO		0	
+Socket	char(64)	NO			
+Wrapper	char(64)	NO			
+Owner	char(64)	NO			
+
+Field	Type	Null	Key	Default	Extra
+start_time	timestamp(6)	NO		CURRENT_TIMESTAMP(6)	on update CURRENT_TIMESTAMP
+user_host	mediumtext	NO		NULL	
+query_time	time(6)	NO		NULL	
+lock_time	time(6)	NO		NULL	
+rows_sent	int(11)	NO		NULL	
+rows_examined	int(11)	NO		NULL	
+db	varchar(512)	NO		NULL	
+last_insert_id	int(11)	NO		NULL	
+insert_id	int(11)	NO		NULL	
+server_id	int(10) unsigned	NO		NULL	
+sql_text	mediumtext	NO		NULL	
+thread_id	bigint(21) unsigned	NO		NULL	
+rows_affected	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+db_name	varchar(64)	NO	PRI	NULL	
+table_name	varchar(64)	NO	PRI	NULL	
+cardinality	bigint(21) unsigned	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+Db	char(64)	NO	PRI		
+User	char(80)	NO	PRI		
+Table_name	char(64)	NO	PRI		
+Grantor	char(141)	NO	MUL		
+Timestamp	timestamp	NO		CURRENT_TIMESTAMP	on update CURRENT_TIMESTAMP
+Table_priv	set('Select','Insert','Update','Delete','Create','Drop','Grant','References','Index','Alter','Create View','Show view','Trigger')	NO			
+Column_priv	set('Select','Insert','Update','References')	NO			
+
+Field	Type	Null	Key	Default	Extra
+Time_zone_id	int(10) unsigned	NO	PRI	NULL	auto_increment
+Use_leap_seconds	enum('Y','N')	NO		N	
+
+Field	Type	Null	Key	Default	Extra
+Transition_time	bigint(20)	NO	PRI	NULL	
+Correction	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Name	char(64)	NO	PRI	NULL	
+Time_zone_id	int(10) unsigned	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Time_zone_id	int(10) unsigned	NO	PRI	NULL	
+Transition_time	bigint(20)	NO	PRI	NULL	
+Transition_type_id	int(10) unsigned	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+Time_zone_id	int(10) unsigned	NO	PRI	NULL	
+Transition_type_id	int(10) unsigned	NO	PRI	NULL	
+Offset	int(11)	NO		0	
+Is_DST	tinyint(3) unsigned	NO		0	
+Abbreviation	char(8)	NO			
+
+Field	Type	Null	Key	Default	Extra
+Host	char(60)	NO	PRI		
+User	char(80)	NO	PRI		
+Password	char(41)	NO			
+Select_priv	enum('N','Y')	NO		N	
+Insert_priv	enum('N','Y')	NO		N	
+Update_priv	enum('N','Y')	NO		N	
+Delete_priv	enum('N','Y')	NO		N	
+Create_priv	enum('N','Y')	NO		N	
+Drop_priv	enum('N','Y')	NO		N	
+Reload_priv	enum('N','Y')	NO		N	
+Shutdown_priv	enum('N','Y')	NO		N	
+Process_priv	enum('N','Y')	NO		N	
+File_priv	enum('N','Y')	NO		N	
+Grant_priv	enum('N','Y')	NO		N	
+References_priv	enum('N','Y')	NO		N	
+Index_priv	enum('N','Y')	NO		N	
+Alter_priv	enum('N','Y')	NO		N	
+Show_db_priv	enum('N','Y')	NO		N	
+Super_priv	enum('N','Y')	NO		N	
+Create_tmp_table_priv	enum('N','Y')	NO		N	
+Lock_tables_priv	enum('N','Y')	NO		N	
+Execute_priv	enum('N','Y')	NO		N	
+Repl_slave_priv	enum('N','Y')	NO		N	
+Repl_client_priv	enum('N','Y')	NO		N	
+Create_view_priv	enum('N','Y')	NO		N	
+Show_view_priv	enum('N','Y')	NO		N	
+Create_routine_priv	enum('N','Y')	NO		N	
+Alter_routine_priv	enum('N','Y')	NO		N	
+Create_user_priv	enum('N','Y')	NO		N	
+Event_priv	enum('N','Y')	NO		N	
+Trigger_priv	enum('N','Y')	NO		N	
+Create_tablespace_priv	enum('N','Y')	NO		N	
+ssl_type	enum('','ANY','X509','SPECIFIED')	NO			
+ssl_cipher	blob	NO		NULL	
+x509_issuer	blob	NO		NULL	
+x509_subject	blob	NO		NULL	
+max_questions	int(11) unsigned	NO		0	
+max_updates	int(11) unsigned	NO		0	
+max_connections	int(11) unsigned	NO		0	
+max_user_connections	int(11)	NO		0	
+plugin	char(64)	NO			
+authentication_string	text	NO		NULL	
+password_expired	enum('N','Y')	NO		N	
+is_role	enum('N','Y')	NO		N	
+default_role	char(80)	NO			
+max_statement_time	decimal(12,6)	NO		0.000000	
+
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+shared	tinyint(1)	NO		NULL	
+ip_version	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+agent_type	varchar(255)	NO	MUL	NULL	
+binary	varchar(255)	NO		NULL	
+topic	varchar(255)	NO		NULL	
+host	varchar(255)	NO		NULL	
+admin_state_up	tinyint(1)	NO		1	
+created_at	datetime	NO		NULL	
+started_at	datetime	NO		NULL	
+heartbeat_timestamp	datetime	NO		NULL	
+description	varchar(255)	YES		NULL	
+configurations	varchar(4095)	NO		NULL	
+load	int(11)	NO		0	
+availability_zone	varchar(255)	YES		NULL	
+resource_versions	varchar(8191)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+mac_address	varchar(32)	NO	PRI	NULL	
+ip_address	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+network_id	varchar(36)	YES		NULL	
+segmentation_id	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+vm_id	varchar(255)	YES		NULL	
+host_id	varchar(255)	YES		NULL	
+port_id	varchar(36)	YES		NULL	
+network_id	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	NO	PRI	NULL	
+network_id	varchar(36)	NO	MUL	NULL	
+router_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+auth_type	varchar(16)	NO		NULL	
+password	varchar(255)	YES		NULL	
+peer_ip	varchar(64)	NO		NULL	
+remote_as	int(11)	NO		NULL	
+tenant_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+agent_id	varchar(36)	NO	PRI	NULL	
+bgp_speaker_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+bgp_speaker_id	varchar(36)	NO	PRI	NULL	
+network_id	varchar(36)	NO	PRI	NULL	
+ip_version	int(11)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+bgp_speaker_id	varchar(36)	NO	PRI	NULL	
+bgp_peer_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+local_as	int(11)	NO		NULL	
+ip_version	int(11)	NO		NULL	
+tenant_id	varchar(255)	YES	MUL	NULL	
+advertise_floating_ip_host_routes	tinyint(1)	NO		NULL	
+advertise_tenant_networks	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+vlan	varchar(10)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI		
+network_id	varchar(36)	NO	MUL	NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+physical_interface	varchar(36)	YES		NULL	
+vlan_id	varchar(36)	YES		NULL	
+tenant_id	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+ipsec_site_conn_id	varchar(36)	NO	PRI	NULL	
+csr_tunnel_id	int(11)	NO		NULL	
+csr_ike_policy_id	int(11)	NO		NULL	
+csr_ipsec_policy_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+fw_id	varchar(36)	NO	PRI	NULL	
+port_id	varchar(36)	YES	MUL	NULL	
+direction	varchar(16)	YES		NULL	
+acl_id	varchar(36)	YES		NULL	
+router_id	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+complementary_id	varchar(36)	YES		NULL	
+device_id	varchar(255)	YES		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+management_port_id	varchar(36)	YES	MUL	NULL	
+protocol_port	int(11)	YES		NULL	
+cfg_agent_id	varchar(36)	YES	MUL	NULL	
+created_at	datetime	NO		NULL	
+status	varchar(16)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+router_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+host	varchar(255)	NO	PRI	NULL	
+ifname	varchar(64)	NO	PRI	NULL	
+ifmac	varchar(32)	YES		NULL	
+swid	varchar(32)	NO		NULL	
+module	varchar(32)	NO		NULL	
+port	varchar(32)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+neutron_type	varchar(32)	NO	PRI	NULL	
+apic_name	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+network_type	varchar(32)	NO		NULL	
+segmentation_id	int(11)	YES		NULL	
+profile_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+segment_type	enum('vlan','vxlan')	NO		NULL	
+segment_range	varchar(255)	YES		NULL	
+multicast_ip_index	int(11)	YES		NULL	
+multicast_ip_range	varchar(255)	YES		NULL	
+sub_type	varchar(255)	YES		NULL	
+physical_network	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	NO		NULL	
+vsm_ip	varchar(16)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+profile_id	varchar(36)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+profile_type	enum('network','policy')	YES		NULL	
+tenant_id	varchar(36)	NO	PRI	tenant_id_not_set	
+profile_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+physical_network	varchar(64)	NO	PRI	NULL	
+vlan_id	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO		NULL	
+network_profile_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+vxlan_id	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO		NULL	
+network_profile_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+vni	int(11)	NO	PRI	NULL	
+switch_ip	varchar(255)	NO	PRI	NULL	
+device_id	varchar(255)	NO	PRI	NULL	
+mcast_group	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+binding_id	int(11)	NO	PRI	NULL	auto_increment
+port_id	varchar(255)	YES		NULL	
+vlan_id	int(11)	NO		NULL	
+switch_ip	varchar(255)	YES		NULL	
+instance_id	varchar(255)	YES		NULL	
+vni	int(11)	YES		NULL	
+is_provider_vlan	tinyint(1)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+logical_resource_id	varchar(36)	NO	PRI	NULL	
+logical_port_id	varchar(36)	NO	PRI	NULL	
+port_type	varchar(32)	YES		NULL	
+network_type	varchar(32)	YES		NULL	
+hosting_port_id	varchar(36)	YES	MUL	NULL	
+segmentation_id	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+router_id	varchar(36)	NO	PRI	NULL	
+auto_schedule	tinyint(1)	NO		NULL	
+hosting_device_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+hash_id	varchar(255)	NO	PRI	NULL	
+hash	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	NO	PRI	NULL	
+firewall_group_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	NO	PRI	NULL	
+security_group_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+address	varchar(128)	NO	PRI	NULL	
+subnet_id	varchar(36)	NO	PRI	NULL	
+order	int(11)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+host	varchar(255)	NO	PRI	NULL	
+mac_address	varchar(32)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+is_default	tinyint(1)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+port_id	varchar(36)	NO	MUL	NULL	
+opt_name	varchar(64)	NO		NULL	
+opt_value	varchar(255)	NO		NULL	
+ip_version	int(11)	NO		4	
+
+Field	Type	Null	Key	Default	Extra
+firewall_group_id	varchar(36)	YES	MUL	NULL	
+port_id	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+status	varchar(16)	YES		NULL	
+admin_state_up	tinyint(1)	YES		NULL	
+shared	tinyint(1)	YES		NULL	
+egress_firewall_policy_id	varchar(36)	YES	MUL	NULL	
+ingress_firewall_policy_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+shared	tinyint(1)	YES		NULL	
+audited	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+audited	tinyint(1)	YES		NULL	
+shared	tinyint(1)	YES		NULL	
+rule_count	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+firewall_policy_id	varchar(36)	NO	PRI	NULL	
+firewall_rule_id	varchar(36)	NO	PRI	NULL	
+position	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+fw_id	varchar(36)	NO	PRI	NULL	
+router_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+firewall_policy_id	varchar(36)	YES	MUL	NULL	
+shared	tinyint(1)	YES		NULL	
+protocol	varchar(40)	YES		NULL	
+ip_version	int(11)	NO		NULL	
+source_ip_address	varchar(46)	YES		NULL	
+destination_ip_address	varchar(46)	YES		NULL	
+source_port_range_min	int(11)	YES		NULL	
+source_port_range_max	int(11)	YES		NULL	
+destination_port_range_min	int(11)	YES		NULL	
+destination_port_range_max	int(11)	YES		NULL	
+action	enum('allow','deny','reject')	YES		NULL	
+enabled	tinyint(1)	YES		NULL	
+position	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+protocol	varchar(40)	YES		NULL	
+ip_version	int(11)	YES		NULL	
+source_ip_address	varchar(46)	YES		NULL	
+destination_ip_address	varchar(46)	YES		NULL	
+source_port_range_min	int(11)	YES		NULL	
+source_port_range_max	int(11)	YES		NULL	
+destination_port_range_min	int(11)	YES		NULL	
+destination_port_range_max	int(11)	YES		NULL	
+action	enum('allow','deny','reject')	YES		NULL	
+shared	tinyint(1)	YES		NULL	
+enabled	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+shared	tinyint(1)	YES		NULL	
+admin_state_up	tinyint(1)	YES		NULL	
+status	varchar(16)	YES		NULL	
+firewall_policy_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+enabled	tinyint(1)	NO		1	
+service_type	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+service_profile_id	varchar(36)	NO	PRI	NULL	
+flavor_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+floatingip_id	varchar(36)	NO	PRI	NULL	
+dns_name	varchar(255)	NO		NULL	
+dns_domain	varchar(255)	NO		NULL	
+published_dns_name	varchar(255)	NO		NULL	
+published_dns_domain	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+floating_ip_address	varchar(64)	NO		NULL	
+floating_network_id	varchar(36)	NO	MUL	NULL	
+floating_port_id	varchar(36)	NO	MUL	NULL	
+fixed_port_id	varchar(36)	YES	MUL	NULL	
+fixed_ip_address	varchar(64)	YES		NULL	
+router_id	varchar(36)	YES	MUL	NULL	
+last_known_router_id	varchar(36)	YES		NULL	
+status	varchar(16)	YES		NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+router_id	varchar(36)	NO	MUL	NULL	
+l3_agent_id	varchar(36)	YES	MUL	NULL	
+state	enum('active','standby')	YES		standby	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	NO	PRI	NULL	
+network_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+vr_id	int(11)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+auth_algorithm	enum('sha1','sha256','sha384','sha512')	NO		NULL	
+encryption_algorithm	enum('3des','aes-128','aes-256','aes-192')	NO		NULL	
+phase1_negotiation_mode	enum('main')	NO		NULL	
+lifetime_units	enum('seconds','kilobytes')	NO		NULL	
+lifetime_value	int(11)	NO		NULL	
+ike_version	enum('v1','v2')	NO		NULL	
+pfs	enum('group2','group5','group14')	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+subnet_id	varchar(36)	YES	MUL	NULL	
+first_ip	varchar(64)	NO		NULL	
+last_ip	varchar(64)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	YES	MUL	NULL	
+ip_address	varchar(64)	NO	PRI	NULL	
+subnet_id	varchar(36)	NO	PRI	NULL	
+network_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+ipam_subnet_id	varchar(36)	NO	MUL	NULL	
+first_ip	varchar(64)	NO		NULL	
+last_ip	varchar(64)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+ip_address	varchar(64)	NO	PRI	NULL	
+status	varchar(36)	YES		NULL	
+ipam_subnet_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+neutron_subnet_id	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+peer_address	varchar(255)	NO		NULL	
+peer_id	varchar(255)	NO		NULL	
+route_mode	varchar(8)	NO		NULL	
+mtu	int(11)	NO		NULL	
+initiator	enum('bi-directional','response-only')	NO		NULL	
+auth_mode	varchar(16)	NO		NULL	
+psk	varchar(255)	NO		NULL	
+dpd_action	enum('hold','clear','restart','disabled','restart-by-peer')	NO		NULL	
+dpd_interval	int(11)	NO		NULL	
+dpd_timeout	int(11)	NO		NULL	
+status	varchar(16)	NO		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+vpnservice_id	varchar(36)	NO	MUL	NULL	
+ipsecpolicy_id	varchar(36)	NO	MUL	NULL	
+ikepolicy_id	varchar(36)	NO	MUL	NULL	
+local_ep_group_id	varchar(36)	YES	MUL	NULL	
+peer_ep_group_id	varchar(36)	YES	MUL	NULL	
+local_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+cidr	varchar(32)	NO	PRI	NULL	
+ipsec_site_connection_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+transform_protocol	enum('esp','ah','ah-esp')	NO		NULL	
+auth_algorithm	enum('sha1','sha256','sha384','sha512')	NO		NULL	
+encryption_algorithm	enum('3des','aes-128','aes-256','aes-192')	NO		NULL	
+encapsulation_mode	enum('tunnel','transport')	NO		NULL	
+lifetime_units	enum('seconds','kilobytes')	NO		NULL	
+lifetime_value	int(11)	NO		NULL	
+pfs	enum('group2','group5','group14')	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+type	enum('PING','TCP','HTTP','HTTPS')	NO		NULL	
+delay	int(11)	NO		NULL	
+timeout	int(11)	NO		NULL	
+max_retries	int(11)	NO		NULL	
+http_method	varchar(16)	YES		NULL	
+url_path	varchar(255)	YES		NULL	
+expected_codes	varchar(64)	YES		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+name	varchar(255)	YES		NULL	
+max_retries_down	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+listener_id	varchar(36)	NO	MUL	NULL	
+action	enum('REJECT','REDIRECT_TO_URL','REDIRECT_TO_POOL')	NO		NULL	
+redirect_pool_id	varchar(36)	YES	MUL	NULL	
+redirect_url	varchar(255)	YES		NULL	
+position	int(11)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+l7policy_id	varchar(36)	NO	MUL	NULL	
+type	enum('HOST_NAME','PATH','FILE_TYPE','HEADER','COOKIE')	NO		NULL	
+compare_type	enum('REGEX','STARTS_WITH','ENDS_WITH','CONTAINS','EQUAL_TO')	NO		NULL	
+invert	tinyint(1)	NO		NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+protocol	enum('HTTP','HTTPS','TCP','TERMINATED_HTTPS')	NO		NULL	
+protocol_port	int(11)	NO		NULL	
+connection_limit	int(11)	YES		NULL	
+loadbalancer_id	varchar(36)	YES	MUL	NULL	
+default_pool_id	varchar(36)	YES	MUL	NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+operating_status	varchar(16)	NO		NULL	
+default_tls_container_id	varchar(128)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+bytes_in	bigint(20)	NO		NULL	
+bytes_out	bigint(20)	NO		NULL	
+active_connections	bigint(20)	NO		NULL	
+total_connections	bigint(20)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+agent_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+vip_port_id	varchar(36)	YES	MUL	NULL	
+vip_subnet_id	varchar(36)	NO		NULL	
+vip_address	varchar(36)	YES		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+operating_status	varchar(16)	NO		NULL	
+flavor_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+pool_id	varchar(36)	NO	MUL	NULL	
+subnet_id	varchar(36)	YES		NULL	
+address	varchar(64)	NO		NULL	
+protocol_port	int(11)	NO		NULL	
+weight	int(11)	YES		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+operating_status	varchar(16)	NO		NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+protocol	enum('HTTP','HTTPS','TCP')	NO		NULL	
+lb_algorithm	enum('ROUND_ROBIN','LEAST_CONNECTIONS','SOURCE_IP')	NO		NULL	
+healthmonitor_id	varchar(36)	YES	UNI	NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+provisioning_status	varchar(16)	NO		NULL	
+operating_status	varchar(16)	NO		NULL	
+loadbalancer_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+pool_id	varchar(36)	NO	PRI	NULL	
+type	enum('SOURCE_IP','HTTP_COOKIE','APP_COOKIE')	NO		NULL	
+cookie_name	varchar(1024)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+listener_id	varchar(36)	NO	PRI	NULL	
+tls_container_id	varchar(128)	NO	PRI	NULL	
+position	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+name	varchar(255)	YES		NULL	
+resource_type	varchar(36)	NO		NULL	
+resource_id	varchar(36)	YES	MUL	NULL	
+target_id	varchar(36)	YES	MUL	NULL	
+event	varchar(255)	NO		NULL	
+enabled	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+net_id	varchar(36)	NO		NULL	
+lsn_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+lsn_port_id	varchar(36)	NO	PRI	NULL	
+lsn_id	varchar(36)	NO	MUL	NULL	
+sub_id	varchar(36)	NO	UNI	NULL	
+mac_addr	varchar(32)	NO	UNI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+mac_learning_enabled	tinyint(1)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+direction	enum('ingress','egress')	YES		NULL	
+remote_ip_prefix	varchar(64)	YES		NULL	
+metering_label_id	varchar(36)	NO	MUL	NULL	
+excluded	tinyint(1)	YES		0	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(1024)	YES		NULL	
+shared	tinyint(1)	YES		0	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+vlan	varchar(10)	YES		NULL	
+segment_id	varchar(36)	YES		NULL	
+network_type	varchar(10)	YES		NULL	
+tenant_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+network_id	varchar(36)	NO	MUL	NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+physical_interface	varchar(36)	YES		NULL	
+vlan_id	varchar(36)	YES		NULL	
+tenant_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+host	varchar(255)	NO	PRI	NULL	
+router_id	varchar(36)	YES		NULL	
+vif_type	varchar(64)	NO		NULL	
+vif_details	varchar(4095)	NO			
+vnic_type	varchar(64)	NO		normal	
+profile	varchar(4095)	NO			
+status	varchar(16)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+physical_network	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+geneve_vni	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO	MUL	0	
+
+Field	Type	Null	Key	Default	Extra
+ip_address	varchar(64)	NO	PRI	NULL	
+host	varchar(255)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+gre_id	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO	MUL	0	
+
+Field	Type	Null	Key	Default	Extra
+ip_address	varchar(64)	NO	PRI	NULL	
+host	varchar(255)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+vxlan_vni	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+mcast_group	varchar(64)	NO		NULL	
+associated_vni	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+host	varchar(255)	NO	PRI	NULL	
+level	int(11)	NO	PRI	NULL	
+driver	varchar(64)	YES		NULL	
+segment_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+host	varchar(255)	NO	PRI		
+vif_type	varchar(64)	NO		NULL	
+vnic_type	varchar(64)	NO		normal	
+profile	varchar(4095)	NO			
+vif_details	varchar(4095)	NO			
+status	varchar(16)	NO		ACTIVE	
+
+Field	Type	Null	Key	Default	Extra
+vlan_id	int(11)	NO	PRI	NULL	auto_increment
+profile_id	varchar(64)	NO		NULL	
+created_on_ucs	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+physical_network	varchar(64)	NO	PRI	NULL	
+vlan_id	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+vxlan_vni	int(11)	NO	PRI	NULL	
+allocated	tinyint(1)	NO	MUL	0	
+
+Field	Type	Null	Key	Default	Extra
+ip_address	varchar(64)	NO	PRI	NULL	
+udp_port	int(11)	NO		NULL	
+host	varchar(255)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+network_gateway_id	varchar(36)	YES	MUL	NULL	
+network_id	varchar(36)	YES	MUL	NULL	
+segmentation_type	enum('flat','vlan')	YES		NULL	
+segmentation_id	int(11)	YES		NULL	
+port_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+dhcp_agent_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+dns_domain	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+network_gateway_id	varchar(36)	NO	PRI	NULL	
+interface_name	varchar(64)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(36)	YES		NULL	
+name	varchar(255)	YES		NULL	
+connector_type	varchar(10)	YES		NULL	
+connector_ip	varchar(64)	YES		NULL	
+status	varchar(16)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+tenant_id	varchar(36)	YES		NULL	
+default	tinyint(1)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+queue_id	varchar(36)	YES	MUL	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+object_id	varchar(36)	NO	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+target_tenant	varchar(255)	NO		NULL	
+action	varchar(255)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+status	varchar(16)	YES		NULL	
+admin_state_up	tinyint(1)	YES		NULL	
+vlan_transparent	tinyint(1)	YES		NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+availability_zone_hints	varchar(255)	YES		NULL	
+mtu	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+port_security_enabled	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+network_id	varchar(36)	NO	MUL	NULL	
+network_type	varchar(32)	NO		NULL	
+physical_network	varchar(64)	YES		NULL	
+segmentation_id	int(11)	YES		NULL	
+is_dynamic	tinyint(1)	NO		0	
+segment_index	int(11)	NO		0	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+subnet_id	varchar(36)	NO		NULL	
+ip_address	varchar(64)	NO		NULL	
+nsx_service_id	varchar(36)	NO		NULL	
+nsx_binding_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(36)	NO	PRI	NULL	
+dvs_id	varchar(36)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_port_id	varchar(36)	NO		NULL	
+nsx_switch_id	varchar(36)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+qos_policy_id	varchar(36)	NO	PRI	NULL	
+switch_profile_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(36)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+port_id	varchar(36)	YES		NULL	
+nsx_service_type	enum('dhcp')	NO	PRI	NULL	
+nsx_service_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+session_id	varchar(36)	NO		NULL	
+dpd_profile_id	varchar(36)	NO		NULL	
+ike_profile_id	varchar(36)	NO		NULL	
+ipsec_profile_id	varchar(36)	NO		NULL	
+peer_ep_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+rule_id	int(11)	NO	PRI	NULL	
+nexthop	varchar(64)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+purpose	varchar(32)	NO	PRI	NULL	
+certificate	varchar(9216)	NO		NULL	
+private_key	varchar(5120)	NO		NULL	
+updated_at	datetime	YES		NULL	
+created_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+security_group_id	varchar(36)	NO	PRI	NULL	
+logging	tinyint(1)	NO		NULL	
+provider	tinyint(1)	NO		0	
+policy	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+rule_id	varchar(36)	NO	PRI	NULL	
+local_ip_prefix	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+connection_id	varchar(36)	NO	PRI	NULL	
+port_id	varchar(36)	NO	MUL	NULL	
+bridge_endpoint_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+tap_flow_id	varchar(36)	NO	PRI	NULL	
+port_mirror_session_id	varchar(36)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project	varchar(36)	NO	PRI	NULL	
+plugin	enum('dvs','nsx-v','nsx-t')	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+subnet_id	varchar(36)	NO	PRI	NULL	
+nsx_pool_id	varchar(36)	NO	PRI	NULL	
+updated_at	datetime	YES		NULL	
+created_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+l7policy_id	varchar(36)	NO	PRI	NULL	
+lb_rule_id	varchar(36)	NO		NULL	
+lb_vs_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+l7policy_id	varchar(36)	NO	PRI	NULL	
+l7rule_id	varchar(36)	NO	PRI	NULL	
+lb_rule_id	varchar(36)	NO		NULL	
+lb_vs_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+listener_id	varchar(36)	NO	PRI	NULL	
+app_profile_id	varchar(36)	NO		NULL	
+lb_vs_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+lb_router_id	varchar(36)	NO		NULL	
+lb_service_id	varchar(36)	NO		NULL	
+vip_address	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+pool_id	varchar(36)	NO	PRI	NULL	
+hm_id	varchar(36)	NO	PRI	NULL	
+lb_monitor_id	varchar(36)	NO		NULL	
+lb_pool_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+pool_id	varchar(36)	NO	PRI	NULL	
+lb_pool_id	varchar(36)	NO		NULL	
+lb_vs_id	varchar(36)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+peer_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+edge_id	varchar(36)	NO	PRI	NULL	
+bgp_speaker_id	varchar(36)	NO	MUL	NULL	
+bgp_identifier	varchar(64)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+edge_id	varchar(36)	NO	PRI	NULL	
+mac_address	varchar(32)	NO	PRI	NULL	
+binding_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+edge_id	varchar(36)	NO	PRI	NULL	
+vnic_index	int(11)	NO	PRI	NULL	
+tunnel_index	int(11)	NO	PRI	NULL	
+network_id	varchar(36)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+rule_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(36)	NO	PRI	NULL	
+rule_vse_id	varchar(36)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+ext_ip_address	varchar(64)	NO	PRI	NULL	
+router_id	varchar(36)	YES		NULL	
+purpose	enum('inter_edge_net')	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_purpose	enum('inter_edge_net')	NO	PRI	NULL	
+network_id	varchar(36)	YES	MUL	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+availability_zone	varchar(36)	NO	PRI	default	
+
+Field	Type	Null	Key	Default	Extra
+cert_id	varchar(128)	NO	PRI	NULL	
+edge_id	varchar(36)	NO	PRI	NULL	
+edge_cert_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+policy_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(36)	NO		NULL	
+edge_app_rule_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+listener_id	varchar(36)	NO	PRI	NULL	
+app_profile_id	varchar(36)	NO		NULL	
+vse_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(36)	NO		NULL	
+edge_fw_rule_id	varchar(36)	NO		NULL	
+vip_address	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+pool_id	varchar(36)	NO	PRI	NULL	
+hm_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(36)	NO	PRI	NULL	
+edge_mon_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+loadbalancer_id	varchar(36)	NO	PRI	NULL	
+pool_id	varchar(36)	NO	PRI	NULL	
+edge_pool_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+vnic_type	varchar(64)	NO		normal	
+updated_at	datetime	YES		NULL	
+created_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+device_id	varchar(255)	NO	MUL	NULL	
+index	int(11)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_id	varchar(42)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+status	varchar(16)	NO		NULL	
+status_description	varchar(255)	YES		NULL	
+router_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(36)	YES		NULL	
+lswitch_id	varchar(36)	YES		NULL	
+appliance_size	enum('compact','large','xlarge','quadlarge')	YES		NULL	
+edge_type	enum('service','vdr')	YES		NULL	
+availability_zone	varchar(36)	YES		default	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+router_id	varchar(36)	NO	PRI	NULL	
+distributed	tinyint(1)	NO		NULL	
+router_type	enum('shared','exclusive')	NO		NULL	
+service_router	tinyint(1)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+nsx_rule_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+neutron_id	varchar(36)	NO	PRI	NULL	
+ip_section_id	varchar(100)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+policy_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+subnet_id	varchar(36)	NO	PRI	NULL	
+dns_search_domain	varchar(255)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+dhcp_mtu	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+binding_type	enum('flat','vlan','portgroup','vxlan')	NO	PRI	NULL	
+phy_uuid	varchar(36)	NO	PRI	NULL	
+vlan_id	int(11)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+net_partition_id	varchar(36)	NO	PRI	NULL	
+router_id	varchar(36)	NO	PRI	NULL	
+nuage_router_id	varchar(36)	YES	UNI	NULL	
+nuage_rtr_rd	varchar(36)	YES		NULL	
+nuage_rtr_rt	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(64)	YES		NULL	
+l3dom_tmplt_id	varchar(36)	YES		NULL	
+l2dom_tmplt_id	varchar(36)	YES		NULL	
+isolated_zone	varchar(64)	YES		NULL	
+shared_zone	varchar(64)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+network_type	varchar(32)	NO		NULL	
+physical_network	varchar(64)	NO		NULL	
+vlan_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+subnet_id	varchar(36)	NO	PRI	NULL	
+net_partition_id	varchar(36)	YES	MUL	NULL	
+nuage_subnet_id	varchar(36)	YES	UNI	NULL	
+nuage_l2dom_tmplt_id	varchar(36)	YES		NULL	
+nuage_user_id	varchar(36)	YES		NULL	
+nuage_group_id	varchar(36)	YES		NULL	
+nuage_managed_subnet	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+host	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+data_plane_status	varchar(16)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+current_dns_name	varchar(255)	NO		NULL	
+current_dns_domain	varchar(255)	NO		NULL	
+previous_dns_name	varchar(255)	NO		NULL	
+previous_dns_domain	varchar(255)	NO		NULL	
+dns_name	varchar(255)	NO		NULL	
+dns_domain	varchar(255)	NO			
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+queue_id	varchar(36)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+network_id	varchar(36)	NO	MUL	NULL	
+mac_address	varchar(32)	NO		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+status	varchar(16)	NO		NULL	
+device_id	varchar(255)	NO	MUL	NULL	
+device_owner	varchar(255)	NO		NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+ip_allocation	varchar(16)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+port_security_enabled	tinyint(1)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+provider_name	varchar(255)	NO	PRI	NULL	
+resource_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+standard_attr_id	bigint(20)	NO	PRI	NULL	
+entity	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+qos_policy_id	varchar(36)	NO	MUL	NULL	
+max_kbps	int(11)	YES		NULL	
+max_burst_kbps	int(11)	YES		NULL	
+direction	enum('egress','ingress')	NO		egress	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+qos_policy_id	varchar(36)	NO	UNI	NULL	
+dscp_mark	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+policy_id	varchar(36)	NO	MUL	NULL	
+fip_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+qos_policy_id	varchar(36)	NO	MUL	NULL	
+min_kbps	int(11)	YES		NULL	
+direction	enum('egress','ingress')	NO		egress	
+
+Field	Type	Null	Key	Default	Extra
+policy_id	varchar(36)	NO	MUL	NULL	
+network_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+qos_policy_id	varchar(36)	NO	MUL	NULL	
+project_id	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+policy_id	varchar(36)	NO	MUL	NULL	
+port_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+target_tenant	varchar(255)	NO	MUL	NULL	
+action	varchar(255)	NO		NULL	
+object_id	varchar(36)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+tenant_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+default	tinyint(1)	YES		0	
+min	int(11)	NO		NULL	
+max	int(11)	YES		NULL	
+qos_marking	enum('untrusted','trusted')	YES		NULL	
+dscp	int(11)	YES		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	NO	PRI	NULL	
+resource	varchar(255)	NO	PRI	NULL	
+dirty	tinyint(1)	NO		0	
+in_use	int(11)	NO		0	
+reserved	int(11)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+project_id	varchar(255)	YES		NULL	
+expiration	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+resource	varchar(255)	NO	PRI	NULL	
+reservation_id	varchar(36)	NO	PRI	NULL	
+amount	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+router_id	varchar(36)	NO	PRI	NULL	
+distributed	tinyint(1)	NO		0	
+service_router	tinyint(1)	NO		0	
+ha	tinyint(1)	NO		0	
+ha_vr_id	int(11)	YES		NULL	
+availability_zone_hints	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+router_id	varchar(36)	NO	PRI	NULL	
+l3_agent_id	varchar(36)	NO	PRI	NULL	
+binding_index	int(11)	NO		1	
+
+Field	Type	Null	Key	Default	Extra
+router_id	varchar(36)	NO	PRI	NULL	
+port_id	varchar(36)	NO	PRI	NULL	
+port_type	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+destination	varchar(64)	NO	PRI	NULL	
+nexthop	varchar(64)	NO	PRI	NULL	
+router_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+source	varchar(64)	NO		NULL	
+destination	varchar(64)	NO		NULL	
+action	varchar(10)	NO		NULL	
+router_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+status	varchar(16)	YES		NULL	
+admin_state_up	tinyint(1)	YES		NULL	
+gw_port_id	varchar(36)	YES	MUL	NULL	
+enable_snat	tinyint(1)	NO		1	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+flavor_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+security_group_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+security_group_id	varchar(36)	NO	MUL	NULL	
+remote_group_id	varchar(36)	YES	MUL	NULL	
+direction	enum('ingress','egress')	YES		NULL	
+ethertype	varchar(40)	YES		NULL	
+protocol	varchar(40)	YES		NULL	
+port_range_min	int(11)	YES		NULL	
+port_range_max	int(11)	YES		NULL	
+remote_ip_prefix	varchar(255)	YES		NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+segment_id	varchar(36)	NO	PRI	NULL	
+host	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+description	varchar(1024)	YES		NULL	
+driver	varchar(1024)	NO		NULL	
+enabled	tinyint(1)	NO		1	
+metainfo	varchar(4096)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+flowclassifier_id	varchar(36)	NO	PRI	NULL	
+portchain_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+portpairgroup_id	varchar(36)	NO	PRI	NULL	
+portchain_id	varchar(36)	NO	PRI	NULL	
+position	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+keyword	varchar(255)	NO	PRI	NULL	
+value	varchar(255)	YES		NULL	
+classifier_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+ethertype	varchar(40)	YES		NULL	
+protocol	varchar(40)	YES		NULL	
+description	varchar(255)	YES		NULL	
+source_port_range_min	int(11)	YES		NULL	
+source_port_range_max	int(11)	YES		NULL	
+destination_port_range_min	int(11)	YES		NULL	
+destination_port_range_max	int(11)	YES		NULL	
+source_ip_prefix	varchar(255)	YES		NULL	
+destination_ip_prefix	varchar(255)	YES		NULL	
+logical_source_port	varchar(36)	YES	MUL	NULL	
+logical_destination_port	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+nsp	int(11)	NO		NULL	
+nsi	int(11)	NO		NULL	
+node_type	varchar(32)	YES		NULL	
+portchain_id	varchar(255)	YES	MUL	NULL	
+status	varchar(32)	YES		NULL	
+next_group_id	int(11)	YES		NULL	
+next_hop	varchar(512)	YES		NULL	
+fwd_path	tinyint(1)	NO		NULL	
+ppg_n_tuple_mapping	varchar(1024)	YES		NULL	
+tap_enabled	tinyint(1)	NO		0	
+previous_node_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+pathnode_id	varchar(36)	NO	PRI	NULL	
+portpair_id	varchar(36)	NO	PRI	NULL	
+weight	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+keyword	varchar(255)	NO	PRI	NULL	
+value	varchar(255)	YES		NULL	
+chain_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+chain_id	int(11)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+keyword	varchar(255)	NO	PRI	NULL	
+value	varchar(1024)	YES		NULL	
+pair_group_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+group_id	int(11)	NO	UNI	NULL	
+tap_enabled	tinyint(1)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+ingress	varchar(36)	NO	MUL	NULL	
+egress	varchar(36)	NO	MUL	NULL	
+portpairgroup_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+ingress	varchar(36)	YES		NULL	
+egress	varchar(36)	YES		NULL	
+host_id	varchar(255)	NO		NULL	
+mac_address	varchar(32)	NO		NULL	
+network_type	varchar(8)	YES		NULL	
+segment_id	int(11)	YES		NULL	
+local_endpoint	varchar(64)	NO		NULL	
+in_mac_address	varchar(32)	YES		NULL	
+correlation	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+keyword	varchar(255)	NO	PRI	NULL	
+value	varchar(255)	YES		NULL	
+pair_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+service_graph_id	varchar(36)	NO	PRI	NULL	
+src_chain	varchar(36)	NO	PRI	NULL	
+dst_chain	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+uuid	varchar(36)	NO	PRI	NULL	
+intid	int(11)	NO	UNI	NULL	
+type_	varchar(32)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	bigint(20)	NO	PRI	NULL	auto_increment
+resource_type	varchar(255)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+description	varchar(255)	YES		NULL	
+revision_number	bigint(20)	NO		0	
+
+Field	Type	Null	Key	Default	Extra
+subnet_id	varchar(36)	NO	PRI	NULL	
+service_type	varchar(255)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+cidr	varchar(64)	NO	PRI	NULL	
+subnetpool_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+ip_version	int(11)	NO		NULL	
+default_prefixlen	int(11)	NO		NULL	
+min_prefixlen	int(11)	NO		NULL	
+max_prefixlen	int(11)	NO		NULL	
+shared	tinyint(1)	NO		NULL	
+default_quota	int(11)	YES		NULL	
+hash	varchar(36)	NO			
+address_scope_id	varchar(36)	YES		NULL	
+is_default	tinyint(1)	NO		0	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+destination	varchar(64)	NO	PRI	NULL	
+nexthop	varchar(64)	NO	PRI	NULL	
+subnet_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+network_id	varchar(36)	YES	MUL	NULL	
+ip_version	int(11)	NO		NULL	
+cidr	varchar(64)	NO		NULL	
+gateway_ip	varchar(64)	YES		NULL	
+enable_dhcp	tinyint(1)	YES		NULL	
+ipv6_ra_mode	enum('slaac','dhcpv6-stateful','dhcpv6-stateless')	YES		NULL	
+ipv6_address_mode	enum('slaac','dhcpv6-stateful','dhcpv6-stateless')	YES		NULL	
+subnetpool_id	varchar(36)	YES	MUL	NULL	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+segment_id	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+port_id	varchar(36)	NO	PRI	NULL	
+trunk_id	varchar(36)	NO	MUL	NULL	
+segmentation_type	varchar(32)	NO		NULL	
+segmentation_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+standard_attr_id	bigint(20)	NO	PRI	NULL	
+tag	varchar(60)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+admin_state_up	tinyint(1)	NO		1	
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+port_id	varchar(36)	NO	UNI	NULL	
+status	varchar(16)	NO		ACTIVE	
+standard_attr_id	bigint(20)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+network_id	varchar(36)	NO	PRI	NULL	
+binding_type	enum('flat','vlan','stt','gre','l3_ext','geneve','portgroup','nsx-net')	NO	PRI	NULL	
+phy_uuid	varchar(36)	NO	PRI	NULL	
+vlan_id	int(11)	NO	PRI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+status	varchar(16)	NO		NULL	
+status_description	varchar(255)	YES		NULL	
+router_id	varchar(36)	NO	PRI	NULL	
+edge_id	varchar(16)	YES		NULL	
+lswitch_id	varchar(36)	NO		NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+version_num	varchar(32)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	varchar(36)	NO	PRI	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+endpoint_type	enum('subnet','cidr','vlan','network','router')	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+endpoint	varchar(255)	NO	PRI	NULL	
+endpoint_group_id	varchar(36)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+project_id	varchar(255)	YES	MUL	NULL	
+id	varchar(36)	NO	PRI	NULL	
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+status	varchar(16)	NO		NULL	
+admin_state_up	tinyint(1)	NO		NULL	
+subnet_id	varchar(36)	YES	MUL	NULL	
+router_id	varchar(36)	NO	MUL	NULL	
+external_v4_ip	varchar(16)	YES		NULL	
+external_v6_ip	varchar(64)	YES		NULL	
+flavor_id	varchar(36)	YES	MUL	NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+hypervisor	varchar(255)	YES	MUL	NULL	
+os	varchar(255)	YES		NULL	
+architecture	varchar(255)	YES		NULL	
+version	varchar(255)	YES		NULL	
+url	varchar(255)	YES		NULL	
+md5hash	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES	MUL	NULL	
+aggregate_id	int(11)	NO	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+aggregate_id	int(11)	NO	MUL	NULL	
+key	varchar(255)	NO	MUL	NULL	
+value	varchar(255)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_provider_id	int(11)	NO	MUL	NULL	
+consumer_id	varchar(36)	NO	MUL	NULL	
+resource_class_id	int(11)	NO	MUL	NULL	
+used	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+device_name	varchar(255)	YES		NULL	
+delete_on_termination	tinyint(1)	YES		NULL	
+snapshot_id	varchar(36)	YES	MUL	NULL	
+volume_id	varchar(36)	YES	MUL	NULL	
+volume_size	int(11)	YES		NULL	
+no_device	tinyint(1)	YES		NULL	
+connection_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+source_type	varchar(255)	YES		NULL	
+destination_type	varchar(255)	YES		NULL	
+guest_format	varchar(255)	YES		NULL	
+device_type	varchar(255)	YES		NULL	
+disk_bus	varchar(255)	YES		NULL	
+boot_index	int(11)	YES		NULL	
+image_id	varchar(36)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+attachment_id	varchar(36)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+start_period	datetime	NO		NULL	
+last_refreshed	datetime	YES		NULL	
+bw_in	bigint(20)	YES		NULL	
+bw_out	bigint(20)	YES		NULL	
+mac	varchar(255)	YES		NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+last_ctr_in	bigint(20)	YES		NULL	
+last_ctr_out	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+api_url	varchar(255)	YES		NULL	
+weight_offset	float	YES		NULL	
+weight_scale	float	YES		NULL	
+name	varchar(255)	YES	MUL	NULL	
+is_parent	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+transport_url	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+file_name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+service_id	int(11)	YES		NULL	
+vcpus	int(11)	NO		NULL	
+memory_mb	int(11)	NO		NULL	
+local_gb	int(11)	NO		NULL	
+vcpus_used	int(11)	NO		NULL	
+memory_mb_used	int(11)	NO		NULL	
+local_gb_used	int(11)	NO		NULL	
+hypervisor_type	mediumtext	NO		NULL	
+hypervisor_version	int(11)	NO		NULL	
+cpu_info	mediumtext	NO		NULL	
+disk_available_least	int(11)	YES		NULL	
+free_ram_mb	int(11)	YES		NULL	
+free_disk_gb	int(11)	YES		NULL	
+current_workload	int(11)	YES		NULL	
+running_vms	int(11)	YES		NULL	
+hypervisor_hostname	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+host_ip	varchar(39)	YES		NULL	
+supported_instances	text	YES		NULL	
+pci_stats	text	YES		NULL	
+metrics	text	YES		NULL	
+extra_resources	text	YES		NULL	
+stats	text	YES		NULL	
+numa_topology	text	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+ram_allocation_ratio	float	YES		NULL	
+cpu_allocation_ratio	float	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+disk_allocation_ratio	float	YES		NULL	
+mapped	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+token_hash	varchar(255)	NO	UNI	NULL	
+console_type	varchar(255)	NO		NULL	
+host	varchar(255)	NO	MUL	NULL	
+port	int(11)	NO		NULL	
+internal_access_path	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	NO	MUL	NULL	
+expires	int(11)	NO		NULL	
+access_url_base	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+username	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+console_type	varchar(255)	YES		NULL	
+public_hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+compute_host	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_name	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+port	int(11)	YES		NULL	
+pool_id	int(11)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+domain	varchar(255)	NO	PRI	NULL	
+scope	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES	MUL	NULL	
+network_id	int(11)	YES	MUL	NULL	
+allocated	tinyint(1)	YES		NULL	
+leased	tinyint(1)	YES		NULL	
+reserved	tinyint(1)	YES		NULL	
+virtual_interface_id	int(11)	YES	MUL	NULL	
+host	varchar(255)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES	MUL	NULL	
+fixed_ip_id	int(11)	YES	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+host	varchar(255)	YES	MUL	NULL	
+auto_assigned	tinyint(1)	YES		NULL	
+pool	varchar(255)	YES	MUL	NULL	
+interface	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+action	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+request_id	varchar(255)	YES	MUL	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+message	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+event	varchar(255)	YES		NULL	
+action_id	int(11)	YES	MUL	NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+result	varchar(255)	YES		NULL	
+traceback	text	YES		NULL	
+deleted	int(11)	YES		NULL	
+host	varchar(255)	YES		NULL	
+details	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	MUL	NULL	
+numa_topology	text	YES		NULL	
+pci_requests	text	YES		NULL	
+flavor	text	YES		NULL	
+vcpu_model	text	YES		NULL	
+migration_context	text	YES		NULL	
+keypairs	text	YES		NULL	
+device_metadata	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	YES	MUL	NULL	
+code	int(11)	NO		NULL	
+message	varchar(255)	YES		NULL	
+details	mediumtext	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_id	varchar(255)	YES	MUL	NULL	
+group_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+policy	varchar(255)	YES	MUL	NULL	
+group_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO	MUL	NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+network_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	NO	UNI	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO	MUL	NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+name	varchar(255)	YES	MUL	NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+memory_mb	int(11)	NO		NULL	
+vcpus	int(11)	NO		NULL	
+swap	int(11)	NO		NULL	
+vcpu_weight	int(11)	YES		NULL	
+flavorid	varchar(255)	YES	MUL	NULL	
+rxtx_factor	float	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+disabled	tinyint(1)	YES		NULL	
+is_public	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES	MUL	NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+internal_id	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+image_ref	varchar(255)	YES		NULL	
+kernel_id	varchar(255)	YES		NULL	
+ramdisk_id	varchar(255)	YES		NULL	
+launch_index	int(11)	YES		NULL	
+key_name	varchar(255)	YES		NULL	
+key_data	mediumtext	YES		NULL	
+power_state	int(11)	YES		NULL	
+vm_state	varchar(255)	YES		NULL	
+memory_mb	int(11)	YES		NULL	
+vcpus	int(11)	YES		NULL	
+hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+user_data	mediumtext	YES		NULL	
+reservation_id	varchar(255)	YES	MUL	NULL	
+launched_at	datetime	YES		NULL	
+terminated_at	datetime	YES	MUL	NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+locked	tinyint(1)	YES		NULL	
+os_type	varchar(255)	YES		NULL	
+launched_on	mediumtext	YES		NULL	
+instance_type_id	int(11)	YES		NULL	
+vm_mode	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO	UNI	NULL	
+architecture	varchar(255)	YES		NULL	
+root_device_name	varchar(255)	YES		NULL	
+access_ip_v4	varchar(39)	YES		NULL	
+access_ip_v6	varchar(39)	YES		NULL	
+config_drive	varchar(255)	YES		NULL	
+task_state	varchar(255)	YES	MUL	NULL	
+default_ephemeral_device	varchar(255)	YES		NULL	
+default_swap_device	varchar(255)	YES		NULL	
+progress	int(11)	YES		NULL	
+auto_disk_config	tinyint(1)	YES		NULL	
+shutdown_terminate	tinyint(1)	YES		NULL	
+disable_terminate	tinyint(1)	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+cell_name	varchar(255)	YES		NULL	
+node	varchar(255)	YES		NULL	
+deleted	int(11)	YES	MUL	NULL	
+locked_by	enum('owner','admin')	YES		NULL	
+cleaned	int(11)	YES		NULL	
+ephemeral_key_uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_provider_id	int(11)	NO	MUL	NULL	
+resource_class_id	int(11)	NO	MUL	NULL	
+total	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+min_unit	int(11)	NO		NULL	
+max_unit	int(11)	NO		NULL	
+step_size	int(11)	NO		NULL	
+allocation_ratio	float	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	NO		NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+fingerprint	varchar(255)	YES		NULL	
+public_key	mediumtext	YES		NULL	
+deleted	int(11)	YES		NULL	
+type	enum('ssh','x509')	NO		ssh	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES	MUL	NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+source_compute	varchar(255)	YES		NULL	
+dest_compute	varchar(255)	YES		NULL	
+dest_host	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+old_instance_type_id	int(11)	YES		NULL	
+new_instance_type_id	int(11)	YES		NULL	
+source_node	varchar(255)	YES		NULL	
+dest_node	varchar(255)	YES		NULL	
+deleted	int(11)	YES	MUL	NULL	
+migration_type	enum('migration','resize','live-migration','evacuation','live-resize')	YES		NULL	
+hidden	tinyint(1)	YES		NULL	
+memory_total	bigint(20)	YES		NULL	
+memory_processed	bigint(20)	YES		NULL	
+memory_remaining	bigint(20)	YES		NULL	
+disk_total	bigint(20)	YES		NULL	
+disk_processed	bigint(20)	YES		NULL	
+disk_remaining	bigint(20)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+injected	tinyint(1)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+netmask	varchar(39)	YES		NULL	
+bridge	varchar(255)	YES	MUL	NULL	
+gateway	varchar(39)	YES		NULL	
+broadcast	varchar(39)	YES		NULL	
+dns1	varchar(39)	YES		NULL	
+vlan	int(11)	YES	MUL	NULL	
+vpn_public_address	varchar(39)	YES		NULL	
+vpn_public_port	int(11)	YES		NULL	
+vpn_private_address	varchar(39)	YES		NULL	
+dhcp_start	varchar(39)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+host	varchar(255)	YES	MUL	NULL	
+cidr_v6	varchar(43)	YES	MUL	NULL	
+gateway_v6	varchar(39)	YES		NULL	
+label	varchar(255)	YES		NULL	
+netmask_v6	varchar(39)	YES		NULL	
+bridge_interface	varchar(255)	YES		NULL	
+multi_host	tinyint(1)	YES		NULL	
+dns2	varchar(39)	YES		NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+priority	int(11)	YES		NULL	
+rxtx_base	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+mtu	int(11)	YES		NULL	
+dhcp_server	varchar(39)	YES		NULL	
+enable_dhcp	tinyint(1)	YES		NULL	
+share_address	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+compute_node_id	int(11)	NO	MUL	NULL	
+address	varchar(12)	NO		NULL	
+product_id	varchar(4)	NO		NULL	
+vendor_id	varchar(4)	NO		NULL	
+dev_type	varchar(8)	NO		NULL	
+dev_id	varchar(255)	YES		NULL	
+label	varchar(255)	NO		NULL	
+status	varchar(36)	NO		NULL	
+extra_info	text	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+request_id	varchar(36)	YES		NULL	
+numa_node	int(11)	YES		NULL	
+parent_addr	varchar(12)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	NO	MUL	NULL	
+project_id	varchar(255)	NO	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+class_name	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+in_use	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+until_refresh	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	MUL	NULL	
+usage_id	int(11)	NO	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+delta	int(11)	NO		NULL	
+expire	datetime	YES		NULL	
+deleted	int(11)	YES	MUL	NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+resource_provider_id	int(11)	NO	PRI	NULL	
+aggregate_id	int(11)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	UNI	NULL	
+name	varchar(200)	YES	UNI	NULL	
+generation	int(11)	YES		NULL	
+can_host	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+security_group_id	int(11)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+parent_group_id	int(11)	YES	MUL	NULL	
+protocol	varchar(255)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+group_id	int(11)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES	MUL	NULL	
+binary	varchar(255)	YES		NULL	
+topic	varchar(255)	YES		NULL	
+report_count	int(11)	NO		NULL	
+disabled	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+disabled_reason	varchar(255)	YES		NULL	
+last_seen_up	datetime	YES		NULL	
+forced_down	tinyint(1)	YES		NULL	
+version	int(11)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+hypervisor	varchar(255)	YES		NULL	
+os	varchar(255)	YES		NULL	
+architecture	varchar(255)	YES		NULL	
+version	varchar(255)	YES		NULL	
+url	varchar(255)	YES		NULL	
+md5hash	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES		NULL	
+aggregate_id	int(11)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+aggregate_id	int(11)	NO		NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+device_name	varchar(255)	YES		NULL	
+delete_on_termination	tinyint(1)	YES		NULL	
+snapshot_id	varchar(36)	YES		NULL	
+volume_id	varchar(36)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+no_device	tinyint(1)	YES		NULL	
+connection_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+source_type	varchar(255)	YES		NULL	
+destination_type	varchar(255)	YES		NULL	
+guest_format	varchar(255)	YES		NULL	
+device_type	varchar(255)	YES		NULL	
+disk_bus	varchar(255)	YES		NULL	
+boot_index	int(11)	YES		NULL	
+image_id	varchar(36)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+attachment_id	varchar(36)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+start_period	datetime	NO		NULL	
+last_refreshed	datetime	YES		NULL	
+bw_in	bigint(20)	YES		NULL	
+bw_out	bigint(20)	YES		NULL	
+mac	varchar(255)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+last_ctr_in	bigint(20)	YES		NULL	
+last_ctr_out	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+api_url	varchar(255)	YES		NULL	
+weight_offset	float	YES		NULL	
+weight_scale	float	YES		NULL	
+name	varchar(255)	YES		NULL	
+is_parent	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+transport_url	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+file_name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+service_id	int(11)	YES		NULL	
+vcpus	int(11)	NO		NULL	
+memory_mb	int(11)	NO		NULL	
+local_gb	int(11)	NO		NULL	
+vcpus_used	int(11)	NO		NULL	
+memory_mb_used	int(11)	NO		NULL	
+local_gb_used	int(11)	NO		NULL	
+hypervisor_type	mediumtext	NO		NULL	
+hypervisor_version	int(11)	NO		NULL	
+cpu_info	mediumtext	NO		NULL	
+disk_available_least	int(11)	YES		NULL	
+free_ram_mb	int(11)	YES		NULL	
+free_disk_gb	int(11)	YES		NULL	
+current_workload	int(11)	YES		NULL	
+running_vms	int(11)	YES		NULL	
+hypervisor_hostname	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+host_ip	varchar(39)	YES		NULL	
+supported_instances	text	YES		NULL	
+pci_stats	text	YES		NULL	
+metrics	text	YES		NULL	
+extra_resources	text	YES		NULL	
+stats	text	YES		NULL	
+numa_topology	text	YES		NULL	
+host	varchar(255)	YES		NULL	
+ram_allocation_ratio	float	YES		NULL	
+cpu_allocation_ratio	float	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+disk_allocation_ratio	float	YES		NULL	
+mapped	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+username	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+console_type	varchar(255)	YES		NULL	
+public_hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+compute_host	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_name	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+port	int(11)	YES		NULL	
+pool_id	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+domain	varchar(255)	NO	PRI	NULL	
+scope	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+network_id	int(11)	YES		NULL	
+allocated	tinyint(1)	YES		NULL	
+leased	tinyint(1)	YES		NULL	
+reserved	tinyint(1)	YES		NULL	
+virtual_interface_id	int(11)	YES		NULL	
+host	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+fixed_ip_id	int(11)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+auto_assigned	tinyint(1)	YES		NULL	
+pool	varchar(255)	YES		NULL	
+interface	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+action	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+request_id	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+message	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+event	varchar(255)	YES		NULL	
+action_id	int(11)	YES		NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+result	varchar(255)	YES		NULL	
+traceback	text	YES		NULL	
+deleted	int(11)	YES		NULL	
+host	varchar(255)	YES		NULL	
+details	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	MUL	NULL	
+numa_topology	text	YES		NULL	
+pci_requests	text	YES		NULL	
+flavor	text	YES		NULL	
+vcpu_model	text	YES		NULL	
+migration_context	text	YES		NULL	
+keypairs	text	YES		NULL	
+device_metadata	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	YES		NULL	
+code	int(11)	NO		NULL	
+message	varchar(255)	YES		NULL	
+details	mediumtext	YES		NULL	
+host	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_id	varchar(255)	YES		NULL	
+group_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+policy	varchar(255)	YES		NULL	
+group_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO		NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+network_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO		NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO		NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO		NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+name	varchar(255)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+memory_mb	int(11)	NO		NULL	
+vcpus	int(11)	NO		NULL	
+swap	int(11)	NO		NULL	
+vcpu_weight	int(11)	YES		NULL	
+flavorid	varchar(255)	YES		NULL	
+rxtx_factor	float	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+disabled	tinyint(1)	YES		NULL	
+is_public	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+internal_id	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+image_ref	varchar(255)	YES		NULL	
+kernel_id	varchar(255)	YES		NULL	
+ramdisk_id	varchar(255)	YES		NULL	
+launch_index	int(11)	YES		NULL	
+key_name	varchar(255)	YES		NULL	
+key_data	mediumtext	YES		NULL	
+power_state	int(11)	YES		NULL	
+vm_state	varchar(255)	YES		NULL	
+memory_mb	int(11)	YES		NULL	
+vcpus	int(11)	YES		NULL	
+hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+user_data	mediumtext	YES		NULL	
+reservation_id	varchar(255)	YES		NULL	
+launched_at	datetime	YES		NULL	
+terminated_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+locked	tinyint(1)	YES		NULL	
+os_type	varchar(255)	YES		NULL	
+launched_on	mediumtext	YES		NULL	
+instance_type_id	int(11)	YES		NULL	
+vm_mode	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO		NULL	
+architecture	varchar(255)	YES		NULL	
+root_device_name	varchar(255)	YES		NULL	
+access_ip_v4	varchar(39)	YES		NULL	
+access_ip_v6	varchar(39)	YES		NULL	
+config_drive	varchar(255)	YES		NULL	
+task_state	varchar(255)	YES		NULL	
+default_ephemeral_device	varchar(255)	YES		NULL	
+default_swap_device	varchar(255)	YES		NULL	
+progress	int(11)	YES		NULL	
+auto_disk_config	tinyint(1)	YES		NULL	
+shutdown_terminate	tinyint(1)	YES		NULL	
+disable_terminate	tinyint(1)	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+cell_name	varchar(255)	YES		NULL	
+node	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+locked_by	enum('owner','admin')	YES		NULL	
+cleaned	int(11)	YES		NULL	
+ephemeral_key_uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+fingerprint	varchar(255)	YES		NULL	
+public_key	mediumtext	YES		NULL	
+deleted	int(11)	YES		NULL	
+type	enum('ssh','x509')	NO		ssh	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+source_compute	varchar(255)	YES		NULL	
+dest_compute	varchar(255)	YES		NULL	
+dest_host	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+old_instance_type_id	int(11)	YES		NULL	
+new_instance_type_id	int(11)	YES		NULL	
+source_node	varchar(255)	YES		NULL	
+dest_node	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+migration_type	enum('migration','resize','live-migration','evacuation','live-resize')	YES		NULL	
+hidden	tinyint(1)	YES		NULL	
+memory_total	bigint(20)	YES		NULL	
+memory_processed	bigint(20)	YES		NULL	
+memory_remaining	bigint(20)	YES		NULL	
+disk_total	bigint(20)	YES		NULL	
+disk_processed	bigint(20)	YES		NULL	
+disk_remaining	bigint(20)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+injected	tinyint(1)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+netmask	varchar(39)	YES		NULL	
+bridge	varchar(255)	YES		NULL	
+gateway	varchar(39)	YES		NULL	
+broadcast	varchar(39)	YES		NULL	
+dns1	varchar(39)	YES		NULL	
+vlan	int(11)	YES		NULL	
+vpn_public_address	varchar(39)	YES		NULL	
+vpn_public_port	int(11)	YES		NULL	
+vpn_private_address	varchar(39)	YES		NULL	
+dhcp_start	varchar(39)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+cidr_v6	varchar(43)	YES		NULL	
+gateway_v6	varchar(39)	YES		NULL	
+label	varchar(255)	YES		NULL	
+netmask_v6	varchar(39)	YES		NULL	
+bridge_interface	varchar(255)	YES		NULL	
+multi_host	tinyint(1)	YES		NULL	
+dns2	varchar(39)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+priority	int(11)	YES		NULL	
+rxtx_base	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+mtu	int(11)	YES		NULL	
+dhcp_server	varchar(39)	YES		NULL	
+enable_dhcp	tinyint(1)	YES		NULL	
+share_address	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	NO		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+compute_node_id	int(11)	NO		NULL	
+address	varchar(12)	NO		NULL	
+product_id	varchar(4)	YES		NULL	
+vendor_id	varchar(4)	YES		NULL	
+dev_type	varchar(8)	YES		NULL	
+dev_id	varchar(255)	YES		NULL	
+label	varchar(255)	NO		NULL	
+status	varchar(36)	NO		NULL	
+extra_info	text	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+request_id	varchar(36)	YES		NULL	
+numa_node	int(11)	YES		NULL	
+parent_addr	varchar(12)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	NO		NULL	
+project_id	varchar(255)	NO		NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+class_name	varchar(255)	YES		NULL	
+resource	varchar(255)	YES		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	YES		NULL	
+in_use	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+until_refresh	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+usage_id	int(11)	NO		NULL	
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	YES		NULL	
+delta	int(11)	NO		NULL	
+expire	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+security_group_id	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+parent_group_id	int(11)	YES		NULL	
+protocol	varchar(255)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+group_id	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES		NULL	
+binary	varchar(255)	YES		NULL	
+topic	varchar(255)	YES		NULL	
+report_count	int(11)	NO		NULL	
+disabled	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+disabled_reason	varchar(255)	YES		NULL	
+last_seen_up	datetime	YES		NULL	
+forced_down	tinyint(1)	YES		NULL	
+version	int(11)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+progress	varchar(255)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+deleted	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+task_name	varchar(255)	NO		NULL	
+state	varchar(255)	NO		NULL	
+host	varchar(255)	NO		NULL	
+period_beginning	datetime	NO		NULL	
+period_ending	datetime	NO		NULL	
+message	varchar(255)	NO		NULL	
+task_items	int(11)	YES		NULL	
+errors	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(255)	YES		NULL	
+network_id	int(11)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	NO		NULL	
+tot_last_refreshed	datetime	YES		NULL	
+tot_reads	bigint(20)	YES		NULL	
+tot_read_bytes	bigint(20)	YES		NULL	
+tot_writes	bigint(20)	YES		NULL	
+tot_write_bytes	bigint(20)	YES		NULL	
+curr_last_refreshed	datetime	YES		NULL	
+curr_reads	bigint(20)	YES		NULL	
+curr_read_bytes	bigint(20)	YES		NULL	
+curr_writes	bigint(20)	YES		NULL	
+curr_write_bytes	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+project_id	varchar(36)	YES		NULL	
+user_id	varchar(36)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+progress	varchar(255)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+deleted	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+resource_id	varchar(36)	NO	PRI	NULL	
+tag	varchar(80)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+task_name	varchar(255)	NO	MUL	NULL	
+state	varchar(255)	NO		NULL	
+host	varchar(255)	NO	MUL	NULL	
+period_beginning	datetime	NO	MUL	NULL	
+period_ending	datetime	NO	MUL	NULL	
+message	varchar(255)	NO		NULL	
+task_items	int(11)	YES		NULL	
+errors	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(255)	YES	MUL	NULL	
+network_id	int(11)	YES	MUL	NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	NO		NULL	
+tot_last_refreshed	datetime	YES		NULL	
+tot_reads	bigint(20)	YES		NULL	
+tot_read_bytes	bigint(20)	YES		NULL	
+tot_writes	bigint(20)	YES		NULL	
+tot_write_bytes	bigint(20)	YES		NULL	
+curr_last_refreshed	datetime	YES		NULL	
+curr_reads	bigint(20)	YES		NULL	
+curr_read_bytes	bigint(20)	YES		NULL	
+curr_writes	bigint(20)	YES		NULL	
+curr_write_bytes	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+project_id	varchar(36)	YES		NULL	
+user_id	varchar(64)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES	MUL	NULL	
+aggregate_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+aggregate_id	int(11)	NO	MUL	NULL	
+key	varchar(255)	NO	MUL	NULL	
+value	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	MUL	NULL	
+name	varchar(255)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_provider_id	int(11)	NO	MUL	NULL	
+consumer_id	varchar(36)	NO	MUL	NULL	
+resource_class_id	int(11)	NO	MUL	NULL	
+used	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+request_spec_id	int(11)	YES		NULL	
+project_id	varchar(255)	NO	MUL	NULL	
+user_id	varchar(255)	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+instance_metadata	text	YES		NULL	
+progress	int(11)	YES		NULL	
+vm_state	varchar(255)	YES		NULL	
+task_state	varchar(255)	YES		NULL	
+image_ref	varchar(255)	YES		NULL	
+access_ip_v4	varchar(39)	YES		NULL	
+access_ip_v6	varchar(39)	YES		NULL	
+info_cache	text	YES		NULL	
+security_groups	text	YES		NULL	
+config_drive	tinyint(1)	YES		NULL	
+key_name	varchar(255)	YES		NULL	
+locked_by	enum('owner','admin')	YES		NULL	
+instance_uuid	varchar(36)	YES	UNI	NULL	
+instance	mediumtext	YES		NULL	
+block_device_mappings	mediumtext	YES		NULL	
+tags	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	UNI	NULL	
+name	varchar(255)	YES		NULL	
+transport_url	text	YES		NULL	
+database_connection	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	UNI	NULL	
+project_id	int(11)	NO	MUL	NULL	
+user_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+flavor_id	int(11)	NO	MUL	NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+flavor_id	int(11)	NO	MUL	NULL	
+project_id	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+name	varchar(255)	NO	UNI	NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+memory_mb	int(11)	NO		NULL	
+vcpus	int(11)	NO		NULL	
+swap	int(11)	NO		NULL	
+vcpu_weight	int(11)	YES		NULL	
+flavorid	varchar(255)	NO	UNI	NULL	
+rxtx_factor	float	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+disabled	tinyint(1)	YES		NULL	
+is_public	tinyint(1)	YES		NULL	
+description	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+cell_id	int(11)	NO	MUL	NULL	
+host	varchar(255)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(255)	YES	MUL	NULL	
+group_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+policy	varchar(255)	YES	MUL	NULL	
+group_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO	UNI	NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	UNI	NULL	
+cell_id	int(11)	YES	MUL	NULL	
+project_id	varchar(255)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_provider_id	int(11)	NO	MUL	NULL	
+resource_class_id	int(11)	NO	MUL	NULL	
+total	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+min_unit	int(11)	NO		NULL	
+max_unit	int(11)	NO		NULL	
+step_size	int(11)	NO		NULL	
+allocation_ratio	float	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	NO		NULL	
+user_id	varchar(255)	NO	MUL	NULL	
+fingerprint	varchar(255)	YES		NULL	
+public_key	text	YES		NULL	
+type	enum('ssh','x509')	NO		ssh	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+user_id	varchar(255)	NO	MUL	NULL	
+project_id	varchar(255)	NO	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+external_id	varchar(255)	NO	UNI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+class_name	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+in_use	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+until_refresh	int(11)	YES		NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	UNI	NULL	
+spec	mediumtext	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	MUL	NULL	
+usage_id	int(11)	NO	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+delta	int(11)	NO		NULL	
+expire	datetime	YES	MUL	NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	NO	UNI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+resource_provider_id	int(11)	NO	PRI	NULL	
+aggregate_id	int(11)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+trait_id	int(11)	NO	PRI	NULL	
+resource_provider_id	int(11)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	UNI	NULL	
+name	varchar(200)	YES	UNI	NULL	
+generation	int(11)	YES		NULL	
+can_host	int(11)	YES		NULL	
+root_provider_id	int(11)	YES	MUL	NULL	
+parent_provider_id	int(11)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	NO	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+external_id	varchar(255)	NO	UNI	NULL	
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+hypervisor	varchar(255)	YES	MUL	NULL	
+os	varchar(255)	YES		NULL	
+architecture	varchar(255)	YES		NULL	
+version	varchar(255)	YES		NULL	
+url	varchar(255)	YES		NULL	
+md5hash	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES	MUL	NULL	
+aggregate_id	int(11)	NO	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+aggregate_id	int(11)	NO	MUL	NULL	
+key	varchar(255)	NO	MUL	NULL	
+value	varchar(255)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_provider_id	int(11)	NO	MUL	NULL	
+consumer_id	varchar(36)	NO	MUL	NULL	
+resource_class_id	int(11)	NO	MUL	NULL	
+used	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+device_name	varchar(255)	YES		NULL	
+delete_on_termination	tinyint(1)	YES		NULL	
+snapshot_id	varchar(36)	YES	MUL	NULL	
+volume_id	varchar(36)	YES	MUL	NULL	
+volume_size	int(11)	YES		NULL	
+no_device	tinyint(1)	YES		NULL	
+connection_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+source_type	varchar(255)	YES		NULL	
+destination_type	varchar(255)	YES		NULL	
+guest_format	varchar(255)	YES		NULL	
+device_type	varchar(255)	YES		NULL	
+disk_bus	varchar(255)	YES		NULL	
+boot_index	int(11)	YES		NULL	
+image_id	varchar(36)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+attachment_id	varchar(36)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+start_period	datetime	NO		NULL	
+last_refreshed	datetime	YES		NULL	
+bw_in	bigint(20)	YES		NULL	
+bw_out	bigint(20)	YES		NULL	
+mac	varchar(255)	YES		NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+last_ctr_in	bigint(20)	YES		NULL	
+last_ctr_out	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+api_url	varchar(255)	YES		NULL	
+weight_offset	float	YES		NULL	
+weight_scale	float	YES		NULL	
+name	varchar(255)	YES	MUL	NULL	
+is_parent	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+transport_url	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+file_name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+service_id	int(11)	YES		NULL	
+vcpus	int(11)	NO		NULL	
+memory_mb	int(11)	NO		NULL	
+local_gb	int(11)	NO		NULL	
+vcpus_used	int(11)	NO		NULL	
+memory_mb_used	int(11)	NO		NULL	
+local_gb_used	int(11)	NO		NULL	
+hypervisor_type	mediumtext	NO		NULL	
+hypervisor_version	int(11)	NO		NULL	
+cpu_info	mediumtext	NO		NULL	
+disk_available_least	int(11)	YES		NULL	
+free_ram_mb	int(11)	YES		NULL	
+free_disk_gb	int(11)	YES		NULL	
+current_workload	int(11)	YES		NULL	
+running_vms	int(11)	YES		NULL	
+hypervisor_hostname	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+host_ip	varchar(39)	YES		NULL	
+supported_instances	text	YES		NULL	
+pci_stats	text	YES		NULL	
+metrics	text	YES		NULL	
+extra_resources	text	YES		NULL	
+stats	text	YES		NULL	
+numa_topology	text	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+ram_allocation_ratio	float	YES		NULL	
+cpu_allocation_ratio	float	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+disk_allocation_ratio	float	YES		NULL	
+mapped	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+token_hash	varchar(255)	NO	UNI	NULL	
+console_type	varchar(255)	NO		NULL	
+host	varchar(255)	NO	MUL	NULL	
+port	int(11)	NO		NULL	
+internal_access_path	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	NO	MUL	NULL	
+expires	int(11)	NO		NULL	
+access_url_base	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+username	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+console_type	varchar(255)	YES		NULL	
+public_hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+compute_host	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_name	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+port	int(11)	YES		NULL	
+pool_id	int(11)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+domain	varchar(255)	NO	PRI	NULL	
+scope	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES	MUL	NULL	
+network_id	int(11)	YES	MUL	NULL	
+allocated	tinyint(1)	YES		NULL	
+leased	tinyint(1)	YES		NULL	
+reserved	tinyint(1)	YES		NULL	
+virtual_interface_id	int(11)	YES	MUL	NULL	
+host	varchar(255)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES	MUL	NULL	
+fixed_ip_id	int(11)	YES	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+host	varchar(255)	YES	MUL	NULL	
+auto_assigned	tinyint(1)	YES		NULL	
+pool	varchar(255)	YES	MUL	NULL	
+interface	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+action	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+request_id	varchar(255)	YES	MUL	NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+message	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+event	varchar(255)	YES		NULL	
+action_id	int(11)	YES	MUL	NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+result	varchar(255)	YES		NULL	
+traceback	text	YES		NULL	
+deleted	int(11)	YES		NULL	
+host	varchar(255)	YES		NULL	
+details	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	MUL	NULL	
+numa_topology	text	YES		NULL	
+pci_requests	text	YES		NULL	
+flavor	text	YES		NULL	
+vcpu_model	text	YES		NULL	
+migration_context	text	YES		NULL	
+keypairs	text	YES		NULL	
+device_metadata	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	YES	MUL	NULL	
+code	int(11)	NO		NULL	
+message	varchar(255)	YES		NULL	
+details	mediumtext	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_id	varchar(255)	YES	MUL	NULL	
+group_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+policy	varchar(255)	YES	MUL	NULL	
+group_id	int(11)	NO	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO	MUL	NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+network_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	NO	UNI	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	MUL	NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO	MUL	NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO	MUL	NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+name	varchar(255)	YES	MUL	NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+memory_mb	int(11)	NO		NULL	
+vcpus	int(11)	NO		NULL	
+swap	int(11)	NO		NULL	
+vcpu_weight	int(11)	YES		NULL	
+flavorid	varchar(255)	YES	MUL	NULL	
+rxtx_factor	float	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+disabled	tinyint(1)	YES		NULL	
+is_public	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES	MUL	NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+internal_id	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+image_ref	varchar(255)	YES		NULL	
+kernel_id	varchar(255)	YES		NULL	
+ramdisk_id	varchar(255)	YES		NULL	
+launch_index	int(11)	YES		NULL	
+key_name	varchar(255)	YES		NULL	
+key_data	mediumtext	YES		NULL	
+power_state	int(11)	YES		NULL	
+vm_state	varchar(255)	YES		NULL	
+memory_mb	int(11)	YES		NULL	
+vcpus	int(11)	YES		NULL	
+hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES	MUL	NULL	
+user_data	mediumtext	YES		NULL	
+reservation_id	varchar(255)	YES	MUL	NULL	
+launched_at	datetime	YES		NULL	
+terminated_at	datetime	YES	MUL	NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+locked	tinyint(1)	YES		NULL	
+os_type	varchar(255)	YES		NULL	
+launched_on	mediumtext	YES		NULL	
+instance_type_id	int(11)	YES		NULL	
+vm_mode	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO	UNI	NULL	
+architecture	varchar(255)	YES		NULL	
+root_device_name	varchar(255)	YES		NULL	
+access_ip_v4	varchar(39)	YES		NULL	
+access_ip_v6	varchar(39)	YES		NULL	
+config_drive	varchar(255)	YES		NULL	
+task_state	varchar(255)	YES	MUL	NULL	
+default_ephemeral_device	varchar(255)	YES		NULL	
+default_swap_device	varchar(255)	YES		NULL	
+progress	int(11)	YES		NULL	
+auto_disk_config	tinyint(1)	YES		NULL	
+shutdown_terminate	tinyint(1)	YES		NULL	
+disable_terminate	tinyint(1)	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+cell_name	varchar(255)	YES		NULL	
+node	varchar(255)	YES		NULL	
+deleted	int(11)	YES	MUL	NULL	
+locked_by	enum('owner','admin')	YES		NULL	
+cleaned	int(11)	YES		NULL	
+ephemeral_key_uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+resource_provider_id	int(11)	NO	MUL	NULL	
+resource_class_id	int(11)	NO	MUL	NULL	
+total	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+min_unit	int(11)	NO		NULL	
+max_unit	int(11)	NO		NULL	
+step_size	int(11)	NO		NULL	
+allocation_ratio	float	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	NO		NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+fingerprint	varchar(255)	YES		NULL	
+public_key	mediumtext	YES		NULL	
+deleted	int(11)	YES		NULL	
+type	enum('ssh','x509')	NO		ssh	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES	MUL	NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+source_compute	varchar(255)	YES		NULL	
+dest_compute	varchar(255)	YES		NULL	
+dest_host	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+old_instance_type_id	int(11)	YES		NULL	
+new_instance_type_id	int(11)	YES		NULL	
+source_node	varchar(255)	YES		NULL	
+dest_node	varchar(255)	YES		NULL	
+deleted	int(11)	YES	MUL	NULL	
+migration_type	enum('migration','resize','live-migration','evacuation','live-resize')	YES		NULL	
+hidden	tinyint(1)	YES		NULL	
+memory_total	bigint(20)	YES		NULL	
+memory_processed	bigint(20)	YES		NULL	
+memory_remaining	bigint(20)	YES		NULL	
+disk_total	bigint(20)	YES		NULL	
+disk_processed	bigint(20)	YES		NULL	
+disk_remaining	bigint(20)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+injected	tinyint(1)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+netmask	varchar(39)	YES		NULL	
+bridge	varchar(255)	YES	MUL	NULL	
+gateway	varchar(39)	YES		NULL	
+broadcast	varchar(39)	YES		NULL	
+dns1	varchar(39)	YES		NULL	
+vlan	int(11)	YES	MUL	NULL	
+vpn_public_address	varchar(39)	YES		NULL	
+vpn_public_port	int(11)	YES		NULL	
+vpn_private_address	varchar(39)	YES		NULL	
+dhcp_start	varchar(39)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+host	varchar(255)	YES	MUL	NULL	
+cidr_v6	varchar(43)	YES	MUL	NULL	
+gateway_v6	varchar(39)	YES		NULL	
+label	varchar(255)	YES		NULL	
+netmask_v6	varchar(39)	YES		NULL	
+bridge_interface	varchar(255)	YES		NULL	
+multi_host	tinyint(1)	YES		NULL	
+dns2	varchar(39)	YES		NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+priority	int(11)	YES		NULL	
+rxtx_base	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+mtu	int(11)	YES		NULL	
+dhcp_server	varchar(39)	YES		NULL	
+enable_dhcp	tinyint(1)	YES		NULL	
+share_address	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+compute_node_id	int(11)	NO	MUL	NULL	
+address	varchar(12)	NO		NULL	
+product_id	varchar(4)	NO		NULL	
+vendor_id	varchar(4)	NO		NULL	
+dev_type	varchar(8)	NO		NULL	
+dev_id	varchar(255)	YES		NULL	
+label	varchar(255)	NO		NULL	
+status	varchar(36)	NO		NULL	
+extra_info	text	YES		NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+request_id	varchar(36)	YES		NULL	
+numa_node	int(11)	YES		NULL	
+parent_addr	varchar(12)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	NO	MUL	NULL	
+project_id	varchar(255)	NO	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+class_name	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+in_use	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+until_refresh	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	MUL	NULL	
+usage_id	int(11)	NO	MUL	NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+resource	varchar(255)	YES		NULL	
+delta	int(11)	NO		NULL	
+expire	datetime	YES		NULL	
+deleted	int(11)	YES	MUL	NULL	
+user_id	varchar(255)	YES	MUL	NULL	
+
+Field	Type	Null	Key	Default	Extra
+resource_provider_id	int(11)	NO	PRI	NULL	
+aggregate_id	int(11)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO	UNI	NULL	
+name	varchar(200)	YES	UNI	NULL	
+generation	int(11)	YES		NULL	
+can_host	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+security_group_id	int(11)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+parent_group_id	int(11)	YES	MUL	NULL	
+protocol	varchar(255)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+group_id	int(11)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES	MUL	NULL	
+binary	varchar(255)	YES		NULL	
+topic	varchar(255)	YES		NULL	
+report_count	int(11)	NO		NULL	
+disabled	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+disabled_reason	varchar(255)	YES		NULL	
+last_seen_up	datetime	YES		NULL	
+forced_down	tinyint(1)	YES		NULL	
+version	int(11)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+hypervisor	varchar(255)	YES		NULL	
+os	varchar(255)	YES		NULL	
+architecture	varchar(255)	YES		NULL	
+version	varchar(255)	YES		NULL	
+url	varchar(255)	YES		NULL	
+md5hash	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES		NULL	
+aggregate_id	int(11)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+aggregate_id	int(11)	NO		NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+device_name	varchar(255)	YES		NULL	
+delete_on_termination	tinyint(1)	YES		NULL	
+snapshot_id	varchar(36)	YES		NULL	
+volume_id	varchar(36)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+no_device	tinyint(1)	YES		NULL	
+connection_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+source_type	varchar(255)	YES		NULL	
+destination_type	varchar(255)	YES		NULL	
+guest_format	varchar(255)	YES		NULL	
+device_type	varchar(255)	YES		NULL	
+disk_bus	varchar(255)	YES		NULL	
+boot_index	int(11)	YES		NULL	
+image_id	varchar(36)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+attachment_id	varchar(36)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+start_period	datetime	NO		NULL	
+last_refreshed	datetime	YES		NULL	
+bw_in	bigint(20)	YES		NULL	
+bw_out	bigint(20)	YES		NULL	
+mac	varchar(255)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+last_ctr_in	bigint(20)	YES		NULL	
+last_ctr_out	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+api_url	varchar(255)	YES		NULL	
+weight_offset	float	YES		NULL	
+weight_scale	float	YES		NULL	
+name	varchar(255)	YES		NULL	
+is_parent	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+transport_url	varchar(255)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+file_name	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+service_id	int(11)	YES		NULL	
+vcpus	int(11)	NO		NULL	
+memory_mb	int(11)	NO		NULL	
+local_gb	int(11)	NO		NULL	
+vcpus_used	int(11)	NO		NULL	
+memory_mb_used	int(11)	NO		NULL	
+local_gb_used	int(11)	NO		NULL	
+hypervisor_type	mediumtext	NO		NULL	
+hypervisor_version	int(11)	NO		NULL	
+cpu_info	mediumtext	NO		NULL	
+disk_available_least	int(11)	YES		NULL	
+free_ram_mb	int(11)	YES		NULL	
+free_disk_gb	int(11)	YES		NULL	
+current_workload	int(11)	YES		NULL	
+running_vms	int(11)	YES		NULL	
+hypervisor_hostname	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+host_ip	varchar(39)	YES		NULL	
+supported_instances	text	YES		NULL	
+pci_stats	text	YES		NULL	
+metrics	text	YES		NULL	
+extra_resources	text	YES		NULL	
+stats	text	YES		NULL	
+numa_topology	text	YES		NULL	
+host	varchar(255)	YES		NULL	
+ram_allocation_ratio	float	YES		NULL	
+cpu_allocation_ratio	float	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+disk_allocation_ratio	float	YES		NULL	
+mapped	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+username	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+console_type	varchar(255)	YES		NULL	
+public_hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+compute_host	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_name	varchar(255)	YES		NULL	
+password	varchar(255)	YES		NULL	
+port	int(11)	YES		NULL	
+pool_id	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	tinyint(1)	YES		NULL	
+domain	varchar(255)	NO	PRI	NULL	
+scope	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+network_id	int(11)	YES		NULL	
+allocated	tinyint(1)	YES		NULL	
+leased	tinyint(1)	YES		NULL	
+reserved	tinyint(1)	YES		NULL	
+virtual_interface_id	int(11)	YES		NULL	
+host	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(39)	YES		NULL	
+fixed_ip_id	int(11)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+auto_assigned	tinyint(1)	YES		NULL	
+pool	varchar(255)	YES		NULL	
+interface	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+action	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+request_id	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+message	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+event	varchar(255)	YES		NULL	
+action_id	int(11)	YES		NULL	
+start_time	datetime	YES		NULL	
+finish_time	datetime	YES		NULL	
+result	varchar(255)	YES		NULL	
+traceback	text	YES		NULL	
+deleted	int(11)	YES		NULL	
+host	varchar(255)	YES		NULL	
+details	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO	MUL	NULL	
+numa_topology	text	YES		NULL	
+pci_requests	text	YES		NULL	
+flavor	text	YES		NULL	
+vcpu_model	text	YES		NULL	
+migration_context	text	YES		NULL	
+keypairs	text	YES		NULL	
+device_metadata	text	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	YES		NULL	
+code	int(11)	NO		NULL	
+message	varchar(255)	YES		NULL	
+details	mediumtext	YES		NULL	
+host	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_id	varchar(255)	YES		NULL	
+group_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+policy	varchar(255)	YES		NULL	
+group_id	int(11)	NO		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO		NULL	
+name	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+network_info	mediumtext	YES		NULL	
+instance_uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_uuid	varchar(36)	NO		NULL	
+key	varchar(255)	NO		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO		NULL	
+key	varchar(255)	YES		NULL	
+value	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+instance_type_id	int(11)	NO		NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+name	varchar(255)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+memory_mb	int(11)	NO		NULL	
+vcpus	int(11)	NO		NULL	
+swap	int(11)	NO		NULL	
+vcpu_weight	int(11)	YES		NULL	
+flavorid	varchar(255)	YES		NULL	
+rxtx_factor	float	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+disabled	tinyint(1)	YES		NULL	
+is_public	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+internal_id	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+image_ref	varchar(255)	YES		NULL	
+kernel_id	varchar(255)	YES		NULL	
+ramdisk_id	varchar(255)	YES		NULL	
+launch_index	int(11)	YES		NULL	
+key_name	varchar(255)	YES		NULL	
+key_data	mediumtext	YES		NULL	
+power_state	int(11)	YES		NULL	
+vm_state	varchar(255)	YES		NULL	
+memory_mb	int(11)	YES		NULL	
+vcpus	int(11)	YES		NULL	
+hostname	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+user_data	mediumtext	YES		NULL	
+reservation_id	varchar(255)	YES		NULL	
+launched_at	datetime	YES		NULL	
+terminated_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+locked	tinyint(1)	YES		NULL	
+os_type	varchar(255)	YES		NULL	
+launched_on	mediumtext	YES		NULL	
+instance_type_id	int(11)	YES		NULL	
+vm_mode	varchar(255)	YES		NULL	
+uuid	varchar(36)	NO		NULL	
+architecture	varchar(255)	YES		NULL	
+root_device_name	varchar(255)	YES		NULL	
+access_ip_v4	varchar(39)	YES		NULL	
+access_ip_v6	varchar(39)	YES		NULL	
+config_drive	varchar(255)	YES		NULL	
+task_state	varchar(255)	YES		NULL	
+default_ephemeral_device	varchar(255)	YES		NULL	
+default_swap_device	varchar(255)	YES		NULL	
+progress	int(11)	YES		NULL	
+auto_disk_config	tinyint(1)	YES		NULL	
+shutdown_terminate	tinyint(1)	YES		NULL	
+disable_terminate	tinyint(1)	YES		NULL	
+root_gb	int(11)	YES		NULL	
+ephemeral_gb	int(11)	YES		NULL	
+cell_name	varchar(255)	YES		NULL	
+node	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+locked_by	enum('owner','admin')	YES		NULL	
+cleaned	int(11)	YES		NULL	
+ephemeral_key_uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+fingerprint	varchar(255)	YES		NULL	
+public_key	mediumtext	YES		NULL	
+deleted	int(11)	YES		NULL	
+type	enum('ssh','x509')	NO		ssh	
+
+Field	Type	Null	Key	Default	Extra
+repository_id	varchar(250)	NO	PRI	NULL	
+repository_path	text	YES		NULL	
+version	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+source_compute	varchar(255)	YES		NULL	
+dest_compute	varchar(255)	YES		NULL	
+dest_host	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+old_instance_type_id	int(11)	YES		NULL	
+new_instance_type_id	int(11)	YES		NULL	
+source_node	varchar(255)	YES		NULL	
+dest_node	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+migration_type	enum('migration','resize','live-migration','evacuation','live-resize')	YES		NULL	
+hidden	tinyint(1)	YES		NULL	
+memory_total	bigint(20)	YES		NULL	
+memory_processed	bigint(20)	YES		NULL	
+memory_remaining	bigint(20)	YES		NULL	
+disk_total	bigint(20)	YES		NULL	
+disk_processed	bigint(20)	YES		NULL	
+disk_remaining	bigint(20)	YES		NULL	
+uuid	varchar(36)	YES	UNI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+injected	tinyint(1)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+netmask	varchar(39)	YES		NULL	
+bridge	varchar(255)	YES		NULL	
+gateway	varchar(39)	YES		NULL	
+broadcast	varchar(39)	YES		NULL	
+dns1	varchar(39)	YES		NULL	
+vlan	int(11)	YES		NULL	
+vpn_public_address	varchar(39)	YES		NULL	
+vpn_public_port	int(11)	YES		NULL	
+vpn_private_address	varchar(39)	YES		NULL	
+dhcp_start	varchar(39)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+host	varchar(255)	YES		NULL	
+cidr_v6	varchar(43)	YES		NULL	
+gateway_v6	varchar(39)	YES		NULL	
+label	varchar(255)	YES		NULL	
+netmask_v6	varchar(39)	YES		NULL	
+bridge_interface	varchar(255)	YES		NULL	
+multi_host	tinyint(1)	YES		NULL	
+dns2	varchar(39)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+priority	int(11)	YES		NULL	
+rxtx_base	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+mtu	int(11)	YES		NULL	
+dhcp_server	varchar(39)	YES		NULL	
+enable_dhcp	tinyint(1)	YES		NULL	
+share_address	tinyint(1)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	NO		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+compute_node_id	int(11)	NO		NULL	
+address	varchar(12)	NO		NULL	
+product_id	varchar(4)	YES		NULL	
+vendor_id	varchar(4)	YES		NULL	
+dev_type	varchar(8)	YES		NULL	
+dev_id	varchar(255)	YES		NULL	
+label	varchar(255)	NO		NULL	
+status	varchar(36)	NO		NULL	
+extra_info	text	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+request_id	varchar(36)	YES		NULL	
+numa_node	int(11)	YES		NULL	
+parent_addr	varchar(12)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	NO		NULL	
+project_id	varchar(255)	NO		NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+class_name	varchar(255)	YES		NULL	
+resource	varchar(255)	YES		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	YES		NULL	
+in_use	int(11)	NO		NULL	
+reserved	int(11)	NO		NULL	
+until_refresh	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+id	int(11)	NO	PRI	NULL	auto_increment
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	NO		NULL	
+hard_limit	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+usage_id	int(11)	NO		NULL	
+project_id	varchar(255)	YES		NULL	
+resource	varchar(255)	YES		NULL	
+delta	int(11)	NO		NULL	
+expire	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+deleted	int(11)	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+protocol	varchar(5)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+security_group_id	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+parent_group_id	int(11)	YES		NULL	
+protocol	varchar(255)	YES		NULL	
+from_port	int(11)	YES		NULL	
+to_port	int(11)	YES		NULL	
+cidr	varchar(43)	YES		NULL	
+group_id	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+name	varchar(255)	YES		NULL	
+description	varchar(255)	YES		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+host	varchar(255)	YES		NULL	
+binary	varchar(255)	YES		NULL	
+topic	varchar(255)	YES		NULL	
+report_count	int(11)	NO		NULL	
+disabled	tinyint(1)	YES		NULL	
+deleted	int(11)	YES		NULL	
+disabled_reason	varchar(255)	YES		NULL	
+last_seen_up	datetime	YES		NULL	
+forced_down	tinyint(1)	YES		NULL	
+version	int(11)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+progress	varchar(255)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+deleted	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+task_name	varchar(255)	NO		NULL	
+state	varchar(255)	NO		NULL	
+host	varchar(255)	NO		NULL	
+period_beginning	datetime	NO		NULL	
+period_ending	datetime	NO		NULL	
+message	varchar(255)	NO		NULL	
+task_items	int(11)	YES		NULL	
+errors	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(255)	YES		NULL	
+network_id	int(11)	YES		NULL	
+uuid	varchar(36)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+deleted	int(11)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	NO		NULL	
+tot_last_refreshed	datetime	YES		NULL	
+tot_reads	bigint(20)	YES		NULL	
+tot_read_bytes	bigint(20)	YES		NULL	
+tot_writes	bigint(20)	YES		NULL	
+tot_write_bytes	bigint(20)	YES		NULL	
+curr_last_refreshed	datetime	YES		NULL	
+curr_reads	bigint(20)	YES		NULL	
+curr_read_bytes	bigint(20)	YES		NULL	
+curr_writes	bigint(20)	YES		NULL	
+curr_write_bytes	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+project_id	varchar(36)	YES		NULL	
+user_id	varchar(36)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	varchar(36)	NO	PRI	NULL	
+volume_id	varchar(36)	NO		NULL	
+user_id	varchar(255)	YES		NULL	
+project_id	varchar(255)	YES		NULL	
+status	varchar(255)	YES		NULL	
+progress	varchar(255)	YES		NULL	
+volume_size	int(11)	YES		NULL	
+scheduled_at	datetime	YES		NULL	
+display_name	varchar(255)	YES		NULL	
+display_description	varchar(255)	YES		NULL	
+deleted	varchar(36)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+resource_id	varchar(36)	NO	PRI	NULL	
+tag	varchar(80)	NO	PRI	NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+task_name	varchar(255)	NO	MUL	NULL	
+state	varchar(255)	NO		NULL	
+host	varchar(255)	NO	MUL	NULL	
+period_beginning	datetime	NO	MUL	NULL	
+period_ending	datetime	NO	MUL	NULL	
+message	varchar(255)	NO		NULL	
+task_items	int(11)	YES		NULL	
+errors	int(11)	YES		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+address	varchar(255)	YES	MUL	NULL	
+network_id	int(11)	YES	MUL	NULL	
+uuid	varchar(36)	YES	MUL	NULL	
+instance_uuid	varchar(36)	YES	MUL	NULL	
+deleted	int(11)	YES		NULL	
+tag	varchar(255)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+uuid	varchar(36)	NO		NULL	
+deleted	int(11)	YES		NULL	
+
+Field	Type	Null	Key	Default	Extra
+created_at	datetime	YES		NULL	
+updated_at	datetime	YES		NULL	
+deleted_at	datetime	YES		NULL	
+id	int(11)	NO	PRI	NULL	auto_increment
+volume_id	varchar(36)	NO		NULL	
+tot_last_refreshed	datetime	YES		NULL	
+tot_reads	bigint(20)	YES		NULL	
+tot_read_bytes	bigint(20)	YES		NULL	
+tot_writes	bigint(20)	YES		NULL	
+tot_write_bytes	bigint(20)	YES		NULL	
+curr_last_refreshed	datetime	YES		NULL	
+curr_reads	bigint(20)	YES		NULL	
+curr_read_bytes	bigint(20)	YES		NULL	
+curr_writes	bigint(20)	YES		NULL	
+curr_write_bytes	bigint(20)	YES		NULL	
+deleted	int(11)	YES		NULL	
+instance_uuid	varchar(36)	YES		NULL	
+project_id	varchar(36)	YES		NULL	
+user_id	varchar(64)	YES		NULL	
+availability_zone	varchar(255)	YES		NULL	
+
+
