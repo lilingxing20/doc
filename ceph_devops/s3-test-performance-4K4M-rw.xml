@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workload name="s3-test-performance" description="buckets*objects=1*1000 size=4Kb/4Mb num_workers=10 read:write=100:100">
+
+  <!-- s3 accesskey secretkey -->
+  <storage type="s3" config="accesskey=GPXN5APNKCAGJMJF8I83;secretkey=jNDc5rpVpoCJQvbtNs1bGxV0LSoRdNCfrDSgdmHL;proxyhost=;proxyport=;endpoint=http://10.25.22.102:8000"/>
+
+  <!-- Test Objects Workflow -->
+  <workflow>
+
+    <!-- Create  Bucket  -->
+    <workstage name="create-buckets">
+      <work type="init" workers="1" config="cprefix=mys3test;containers=r(1,1)"/>
+    </workstage>
+
+    <!-- Small Objects Write 4KB -->
+    <workstage name="write">
+      <work name="main1" workers="10" runtime="600">
+        <operation type="write" ratio="100" config="cprefix=mys3test;containers=r(1,1);oprefix=mya;objects=u(1,1000);sizes=c(4)KB"/>
+      </work>
+    </workstage>
+
+    <!-- sleep 10 -->
+    <workstage name="delay" closuredelay="10">
+      <work type="delay" workers="1" />
+    </workstage>
+
+    <!-- Small Objects Read -->
+    <workstage name="read">
+      <work name="main1" workers="10" runtime="600">
+        <operation type="read" ratio="100" config="cprefix=mys3test;containers=r(1,1);oprefix=mya;objects=u(1,1000)"/>
+      </work>
+    </workstage>
+
+    <!-- Small objects cleanup -->
+    <workstage name="cleanup">
+      <work type="cleanup" workers="10" config="cprefix=mys3test;containers=r(1,1);oprefix=mya;objects=r(1,1000)"/>
+    </workstage>
+
+    <!-- sleep 10 -->
+    <workstage name="delay" closuredelay="10">
+      <work type="delay" workers="1" />
+    </workstage>
+
+    <!-- Big Objects Write-->
+    <workstage name="write">
+      <work name="main1" workers="10" runtime="600">
+        <operation type="write" ratio="100" config="cprefix=mys3test;containers=r(1,1);oprefix=myb;objects=u(1,1000);sizes=c(4)MB"/>
+      </work>
+    </workstage>
+
+    <!-- sleep 10 -->
+    <workstage name="delay" closuredelay="10">
+      <work type="delay" workers="1" />
+    </workstage>
+
+    <!-- Big Objects Read -->
+    <workstage name="read">
+      <work name="main1" workers="10" runtime="2700">
+        <operation type="read" ratio="100" config="cprefix=mys3test;containers=r(1,1);oprefix=myb;objects=u(1,1000)"/>
+      </work>
+    </workstage>
+
+    <!-- Cleanup small objects -->
+    <workstage name="cleanup">
+      <work type="cleanup" workers="10" config="cprefix=mys3test;containers=r(1,1);oprefix=myb;objects=r(1,1000)"/>
+    </workstage>
+
+    <!-- sleep 10 -->
+    <workstage name="delay" closuredelay="10">
+      <work type="delay" workers="1" />
+    </workstage>
+
+    <!-- Prepare small objects -->
+    <workstage name="prepare">
+      <work type="prepare" workers="1" config="cprefix=mys3test;containers=r(1,1);objects=r(1,500);sizes=c(4)KB" />
+    </workstage>
+
+    <!-- Mixed read and write small objects -->
+    <workstage name="read-write">
+      <work name="main" workers="10" runtime="600">
+        <operation type="read" ratio="80" config="cprefix=mys3test;containers=u(1,1);oprefix=myc;objects=u(1,500)" />
+        <operation type="write" ratio="20" config="cprefix=mys3test;containers=u(1,1);oprefix=myc;objects=u(501,1000);sizes=c(4)KB" />
+      </work>
+    </workstage>
+
+    <!-- Cleanup small objects -->
+    <workstage name="cleanup">
+      <work type="cleanup" workers="10" config="cprefix=mys3test;containers=r(1,1);oprefix=myc;objects=r(1,1000)"/>
+    </workstage>
+
+    <!-- Prepare big objects -->
+    <workstage name="prepare">
+      <work type="prepare" workers="1" config="cprefix=mys3test;containers=r(1,1);objects=r(1,500);sizes=c(4)MB" />
+    </workstage>
+
+    <!-- Mixed read and write big objects -->
+    <workstage name="read-write">
+      <work name="main" workers="10" runtime="600">
+        <operation type="read" ratio="80" config="cprefix=mys3test;containers=u(1,1);oprefix=myd;objects=u(1,500)" />
+        <operation type="write" ratio="20" config="cprefix=mys3test;containers=u(1,1);oprefix=myd;objects=u(501,1000);sizes=c(4)MB" />
+      </work>
+    </workstage>
+
+    <!-- Cleanup small objects -->
+    <workstage name="cleanup">
+      <work type="cleanup" workers="10" config="cprefix=mys3test;containers=r(1,1);oprefix=myd;objects=r(1,1000)"/>
+    </workstage>
+
+    <!-- Delete  Bucket  -->
+    <workstage name="dispose">
+      <work type="dispose" workers="1" config="cprefix=mys3test;containers=r(1,1)"/>
+    </workstage>
+
+  </workflow>
+</workload>
