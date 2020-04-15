@@ -1,0 +1,2816 @@
+#
+#     [Aug 31 2017, 13:20:33]
+#
+preprocess_inuwpar()
+{
+while [[ -n $1 ]]; do
+   typeset OPTION=$1
+   case $OPTION in
+     -D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+     -M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+     -I) INUWPAR_ENABLED="1";;
+     -K) shift; INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $1";;
+     -k) shift; INUWPAR_FILE=$1;;
+     *) ARGS=${ARGS:+"$ARGS "}"'$OPTION'";;
+   esac
+   shift
+done
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+if [[ -n $INUWPAR_ENABLED ]]; then
+    eval /usr/sbin/inuwpar $INUWPAR /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+else
+    eval /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+fi
+}
+preprocess_inuwpar -d '/dev/cd0' -f 'openssh.base                                                       ALL  @@I:openssh.base _all_filesets,openssh.license                                                    ALL  @@I:openssh.license _all_filesets,openssh.man.en_US                                                  ALL  @@I:openssh.man.en_US _all_filesets,openssl.base                                                       ALL  @@I:openssl.base _all_filesets,openssl.license                                                    ALL  @@I:openssl.license _all_filesets,openssl.man.en_US                                                  ALL  @@I:openssl.man.en_US _all_filesets'  '-c' '-N' '-g' '-X'   '-G'   '-Y'  '-M'  -k '_all_wpars' 
+#
+#     [Sep 01 2017, 05:33:37]
+#
+preprocess_inuwpar()
+{
+while [[ -n $1 ]]; do
+   typeset OPTION=$1
+   case $OPTION in
+     -D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+     -M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+     -I) INUWPAR_ENABLED="1";;
+     -K) shift; INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $1";;
+     -k) shift; INUWPAR_FILE=$1;;
+     *) ARGS=${ARGS:+"$ARGS "}"'$OPTION'";;
+   esac
+   shift
+done
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+if [[ -n $INUWPAR_ENABLED ]]; then
+    eval /usr/sbin/inuwpar $INUWPAR /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+else
+    eval /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+fi
+}
+preprocess_inuwpar -d '/dev/cd0' -f 'bos.alt_disk_install                                               ALL  @@I:bos.alt_disk_install _all_filesets'  '-c' '-N' '-g' '-X'   '-G'   '-Y'  '-M'  -k '_all_wpars' 
+#
+#     [Sep 01 2017, 07:33:59]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'en0' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Sep 01 2017, 07:46:56]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Sep 01 2017, 08:06:16]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Sep 05 2017, 01:57:02]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Sep 06 2017, 04:46:31]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Sep 06 2017, 11:13:53]
+#
+/usr/sbin/mktcpip -h'0901-image-t1' -a'172.30.128.179' -m'255.255.255.0' -i'en0' -g'172.30.128.254' -A'no' -t'N/A'
+#
+#     [Sep 06 2017, 11:16:07]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Oct 19 2017, 01:40:36]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'en0' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Oct 23 2017, 08:07:13]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Oct 23 2017, 12:13:16]
+#
+/usr/sbin/mktcpip -h'aix7100-s' -a'172.30.240.6' -m'255.255.255.0' -i'en0' -g'172.30.240.254' -A'no' -t'N/A'
+#
+#     [Oct 23 2017, 12:33:33]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Feb 09 2018, 07:25:34]
+#
+function setup_dhcp 
+{
+#
+# Generate replacement text
+#
+STATE="NONE"
+OUTPUT=""
+
+for i in $* 
+do
+	case "$STATE" in
+		"NONE")
+			if [ "$i" = "interface" ]
+			then
+				STATE="interface"
+			elif [ "$i" = "when" ]
+			then
+				STATE="when"
+			elif [ "$i" = ":option" ]
+			then
+				STATE="option"
+			fi;;
+		
+		"when")
+			WHEN=$i
+			STATE="NONE";;
+		
+		"interface")
+			INTERFACE=$i
+			if [ "$OUTPUT" = "" ]
+			then
+				OUTPUT="interface $i\n{"
+			else
+				OUTPUT=$OUTPUT"\ninterface $i\n{"
+			fi
+			STATE="NONE";;
+		
+		"option")
+			NUM=$i
+			STRING=""
+			STATE="optionnum";;
+		
+		"optionnum")
+			if [ "$i" = ":option" ]
+			then
+				STATE="option"
+				if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+				   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+				   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+				   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+				   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+				then
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM \"$STRING\""
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+					fi
+				else
+					if [ "$OUTPUT" = "" ]
+					then
+				OUTPUT="	option $NUM $STRING"
+					else
+				OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+					fi
+				fi
+			else
+				if [ "$STRING" = "" ]
+				then
+					STRING=$i
+				else
+					STRING=$STRING" "$i
+				fi
+			fi;;
+	esac 
+done
+
+if [ "$STATE" = "optionnum" ]
+then
+	if [ "$NUM" = "12" ] || [ "$NUM" = "14" ] || 
+	   [ "$NUM" = "15" ] || [ "$NUM" = "17" ] || 
+	   [ "$NUM" = "18" ] || [ "$NUM" = "40" ] || 
+	   [ "$NUM" = "43" ] || [ "$NUM" = "47" ] || 
+	   [ "$NUM" = "53" ] || [ "$NUM" = "56" ]
+	then
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM \"$STRING\""
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM \"$STRING\""
+		fi
+	else
+		if [ "$OUTPUT" = "" ]
+		then
+			OUTPUT="	option $NUM $STRING"
+		else
+			OUTPUT=$OUTPUT"\n	option $NUM $STRING"
+		fi
+	fi
+fi
+
+if [ "$OUTPUT" = "" ]
+then
+	continue
+else
+	OUTPUT=$OUTPUT"\n}\n"
+fi
+
+#
+# Remove interface
+#
+
+EAT="0"
+
+rm -rf /tmp/dhcpcd.ini.$$
+
+exec 3< /etc/dhcpcd.ini
+while read -u3 -r line
+do
+
+if [ "$EAT" = "0" ] && [ "${line#interface }" != "$line" ]
+then
+	HERE=${line#*interface }
+	WORKINGIF=${HERE%%( )+([a-zA-Z0-9 \t])*}
+fi
+
+if [ "$EAT" != 0 ] || 
+   ([ "$WORKINGIF" != "" ] && 
+    ([ "$INTERFACE" = "$WORKINGIF" ] || [ "$INTERFACE" = "any" ] ||
+     ([ "$INTERFACE" != "any" ] && [ "$WORKINGIF" = "any" ])))
+then
+	if [ "$EAT" = "0" ]
+	then
+		EAT="1"
+	elif [ "$EAT" = "1" ]
+	then
+		if [ "$line" = "{" ]
+		then
+			EAT="2"
+		else
+			EAT="0"
+			WORKINGIF=""
+			echo $line >> /tmp/dhcpcd.ini.$$
+		fi
+	elif [ "$EAT" = "2" ]
+	then
+		if [ "$line" = "}" ]
+		then
+			EAT="0"
+			WORKINGIF=""
+		fi
+	fi
+else
+	echo $line >> /tmp/dhcpcd.ini.$$
+fi
+
+done
+exec 3<&-
+
+mv /etc/dhcpcd.ini /etc/dhcpcd.ini.bak
+mv /tmp/dhcpcd.ini.$$ /etc/dhcpcd.ini
+
+#
+# Add interface back
+#
+echo $OUTPUT >> /etc/dhcpcd.ini
+
+if [ "$WHEN" = "1" ]
+then
+	echo $WHEN > /dev/null
+elif [ "$WHEN" = "2" ]
+then
+	startsrc -s dhcpcd
+else
+	if [ "$WHEN" = "3" ]
+	then
+		/usr/sbin/chrctcp -a dhcpcd
+	else
+		/usr/sbin/chrctcp -S -a dhcpcd
+	fi
+fi
+}
+setup_dhcp interface 'any' when '4' :option 19 '0' :option 20 '0' :option 27 '0' :option 29 '0' :option 30 '0' :option 31 '0' :option 34 '0' :option 36 '0' :option 39 '0'
+#
+#     [Mar 05 2020, 19:45:05]
+#
+preprocess_inuwpar()
+{
+while [[ -n $1 ]]; do
+   typeset OPTION=$1
+   case $OPTION in
+     -D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+     -M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+     -I) INUWPAR_ENABLED="1";;
+     -K) shift; INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $1";;
+     -k) shift; INUWPAR_FILE=$1;;
+     *) ARGS=${ARGS:+"$ARGS "}"'$OPTION'";;
+   esac
+   shift
+done
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+if [[ -n $INUWPAR_ENABLED ]]; then
+    eval /usr/sbin/inuwpar $INUWPAR /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+else
+    eval /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+fi
+}
+preprocess_inuwpar -d '/dev/cd0' -f 'qall_latest'  '-c' '-N' '-g' '-X'   '-G'     '-M'  -k '_all_wpars' 
+#
+#     [Mar 05 2020, 20:09:08]
+#
+preprocess_inuwpar()
+{
+while [[ -n $1 ]]; do
+   typeset OPTION=$1
+   case $OPTION in
+     -D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+     -M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+     -I) INUWPAR_ENABLED="1";;
+     -K) shift; INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $1";;
+     -k) shift; INUWPAR_FILE=$1;;
+     *) ARGS=${ARGS:+"$ARGS "}"'$OPTION'";;
+   esac
+   shift
+done
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+if [[ -n $INUWPAR_ENABLED ]]; then
+    eval /usr/sbin/inuwpar $INUWPAR /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+else
+    eval /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+fi
+}
+preprocess_inuwpar -d '/dev/cd0' -f '_all_latest'  '-c' '-N' '-g' '-X'   '-G'     '-M'  -k '_all_wpars' 
+#
+#     [Mar 05 2020, 20:15:25]
+#
+preprocess_inuwpar()
+{
+while [[ -n $1 ]]; do
+   typeset OPTION=$1
+   case $OPTION in
+     -D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+     -M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+     -I) INUWPAR_ENABLED="1";;
+     -K) shift; INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $1";;
+     -k) shift; INUWPAR_FILE=$1;;
+     *) ARGS=${ARGS:+"$ARGS "}"'$OPTION'";;
+   esac
+   shift
+done
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+if [[ -n $INUWPAR_ENABLED ]]; then
+    eval /usr/sbin/inuwpar $INUWPAR /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+else
+    eval /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+fi
+}
+preprocess_inuwpar -d '/dev/cd1' -f 'bos.sysmgt                                                         ALL  @@I:bos.sysmgt _all_filesets'  '-c' '-N' '-g' '-X'   '-G'   '-Y'  '-M'  -k '_all_wpars' 
+#
+#     [Mar 05 2020, 21:13:19]
+#
+config_master()
+{
+RING_SPEED=
+CABLE_TYPE=
+REGISTRATION_PORT=
+MASTER_PORT=
+CLIENT_REG=
+while getopts n:p:r:m:c:i: option
+do
+  case $option in
+    n) NETNAME=$OPTARG;;
+    p) PIF_NAME=$OPTARG;;
+    r) REGISTRATION_PORT=$OPTARG;;
+    m) MASTER_PORT=$OPTARG;;
+    c) CLIENT_REG=$OPTARG;;
+    i) IP_VERS=$OPTARG;;
+  esac
+done
+
+if [[ $PIF_NAME = tr* ]]
+then
+  RING_SPEED=`mktcpip -S ${PIF_NAME} 2>&1 | 	awk 'BEGIN { RS="\n"; FS=":" } 	  { for (i=1;i<=NF;i++) 	  { if ( match($i,/speed/) ) (j=i) } 	  if (NR==2){print $j} }'`
+else
+  if [[ $PIF_NAME = e[nt]* ]]
+  then
+    CABLE_TYPE=`mktcpip -S ${PIF_NAME} 2>&1 | 	awk 'BEGIN { RS="\n"; FS=":" } 	  { for (i=1;i<=NF;i++) 	  { if ( match($i,/type/) ) (j=i) } 	  if (NR==2){print $j} }'`
+  fi
+fi
+
+PLATFORM=`bootinfo -p`
+NETBOOT_KERNEL=64
+
+nimconfig -anetname=$NETNAME           -apif_name=$PIF_NAME 	  -aplatform=$PLATFORM 	  -anetboot_kernel=$NETBOOT_KERNEL           ${RING_SPEED:+-aring_speed=$RING_SPEED}           ${CABLE_TYPE:+-acable_type=$CABLE_TYPE}           ${REGISTRATION_PORT:+-aregistration_port=$REGISTRATION_PORT}           ${MASTER_PORT:+-amaster_port=$MASTER_PORT}           ${CLIENT_REG:+-aclient_reg=$CLIENT_REG}           ${IP_VERS:+-aip_vers=$IP_VERS}
+}
+config_master  -n 'nim-server01' -p 'en0'
+#
+#     [Mar 05 2020, 21:54:24]
+#
+lsres() 
+{
+	lsnim ${1:--c resources} 
+	exit $?
+}
+lsres
+#
+#     [Mar 05 2020, 22:05:28]
+#
+mkres() 
+{
+    MKSYSB_FLAGS=
+    COMMENTS=
+    MK_IMAGE=
+    SERVER=
+    EXCLUDE_FILES=
+    SOURCE=
+    LOCATION=
+
+    while getopts N:t:s:l:c:R:f:mS:e:b:K:Q:PFaZApJT option
+    do
+        case $option in
+            N) NAME=$OPTARG;;
+            t) TYPE=$OPTARG;;
+            s) SERVER=-aserver=$OPTARG ;;
+            l) LOCATION=-alocation=$OPTARG ;;
+            c) COMMENTS="$OPTARG" ;;
+            m) MK_IMAGE=-amk_image=yes ;;
+            S) SOURCE=-asource=$OPTARG 
+               CLIENT=$OPTARG ;;
+            f) MKSYSB_FLAGS=${MKSYSB_FLAGS}$OPTARG ;;
+            b) MKSYSB_FLAGS=${MKSYSB_FLAGS}b$OPTARG ;;
+            e) EXCLUDE_FILES=-aexclude_files=$OPTARG ;;
+            P) SIZE_PREVIEW=-asize_preview=yes ;;
+	    J) MKSYSB_FLAGS=${MKSYSB_FLAGS}P ;;
+            F) FORCE=-F ;;
+            K) NFS_SEC=$OPTARG;;
+            Q) NFS_VERS=$OPTARG;;
+	    R) REP_SRC=$OPTARG;;
+            a) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+
+               if [[ ${version} -gt 5 ]] || [[ ${version} -eq 5 ]] && [[ ${release} -gt 2 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}a
+               fi ;;
+            Z) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+
+               if [[ ${version} -gt 5 ]] || [[ ${version} -eq 5 ]] && [[ ${release} -gt 3 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}Z
+               fi ;;
+            T) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+               mod=`echo ${sysbr_level} | cut -d. -f3`
+
+               if [[ ${version} -gt 7 ]] || [[ ${version} -eq 7 && ${release} -gt 1 ]] || [[ ${version} -eq 7 && ${mod} -gt 2 ]] || [[ ${version} -eq 6 && ${release} -gt 1 ]] || [[ ${version} -eq 6 && ${mod} -gt 8 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}T
+               fi ;;
+            A) MKSYSB_FLAGS=${MKSYSB_FLAGS}A;;
+            p) MKSYSB_FLAGS=${MKSYSB_FLAGS}p;;
+        esac
+    done
+
+    # Make sure that both $REP_SRC and $SOURCE are not specified together
+    if [[ -n ${REP_SRC} ]] && [[ -n ${SOURCE} ]]
+    then
+       # include the error definitions
+       . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh
+
+       # display an error message
+       dspmsg -s ${ERR_SET} cmdnim.cat ${ERR_M_EXCLUS_REP_SRC} "0042-313 The \"Source for Replication\" option and the
+	\"NIM CLIENT to backup\" option may not 
+	be specified together.
+" 
+       return -1
+    elif [[ -n ${REP_SRC} ]] && [[ -n ${MK_IMAGE} ]]
+    then
+
+       # include the error definitions
+       . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh
+
+       # display an error message
+       dspmsg -s ${ERR_SET} cmdnim.cat ${ERR_M_EXCLUS_MKIMAGE_SRC} "0042-314 The \"Source for Replication\" option and the
+	\"CREATE system backup image\" option may not 
+	be specified together.
+"
+       return -1
+    fi
+
+
+
+    nim -o define -t ${TYPE} ${FORCE} ${SERVER} ${LOCATION} ${SOURCE}         ${MK_IMAGE} ${MKSYSB_FLAGS:+-amksysb_flags=$MKSYSB_FLAGS}             ${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS}         ${EXCLUDE_FILES} ${SIZE_PREVIEW}                                      ${REP_SRC:+-a source=$REP_SRC}                                        ${COMMENTS:+-acomments="${COMMENTS}"} ${NAME}
+    exit $?
+}
+mkres -N 'aix7_mksysb' -t 'mksysb' -s 'master' -l '/nim/mksysb/aix71'  '-T' '-A'
+#
+#     [Mar 05 2020, 22:13:07]
+#
+mkres() 
+{
+	while getopts aN:t:s:S:l:c:f:K:Q:x option
+	do 
+		case $option in 
+			a) AUTOE=TRUE;;
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			s) SERVER=$OPTARG;;
+			S) SOURCE=$OPTARG
+				if lsnim ${SOURCE} >/dev/null 2>&1
+				then
+					:
+				elif [[ -n "$( /usr/sbin/lsdev -Cl ${SOURCE} 2>/dev/null )" ]]
+				then
+					SOURCE=/dev/${SOURCE}
+				fi
+				;;
+			l) LOCATION=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			f) FLAGS=${FLAGS}$OPTARG;;
+			K) NFS_SEC=$OPTARG;;
+			Q) NFS_VERS=$OPTARG;;
+		esac 
+	done 
+        [[ -n ${FLAGS} ]] &&  FLAGS=aQ${FLAGS}
+        [[ ${FLAGS} = *N* ]] && [[ ${FLAGS} != *c* ]] && FLAGS=c${FLAGS}
+	nim -o define -t $TYPE -a server=$SERVER -a location=$LOCATION 		${SOURCE:+-a source=$SOURCE} ${COMMENTS:+-a comments="$COMMENTS"} 		${AUTOE:+-a auto_expand=no} ${FLAGS:+-a installp_flags=-${FLAGS}} 		${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS} 		$NAME
+
+	rc=$?
+
+	if [[ $FLAGS = *p* ]] && [[ $rc -eq 0 ]]; then
+		nim -o remove $NAME
+		rc=$?
+	fi
+
+	exit $rc
+}
+mkres -N 'aix7_spot' -t 'spot' -s 'master' -S 'aix7_mksysb' -l '/nim/spot/aix7_spot' '-x' -f '' -f '' -f '' -f 'g' -f '' -f ''
+#
+#     [Mar 05 2020, 22:15:09]
+#
+lsres() 
+{
+	lsnim ${1:--c resources} 
+	exit $?
+}
+lsres
+#
+#     [Mar 05 2020, 22:17:00]
+#
+mkres() 
+{
+	while getopts aN:t:s:S:l:c:f:K:Q:x option
+	do 
+		case $option in 
+			a) AUTOE=TRUE;;
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			s) SERVER=$OPTARG;;
+			S) SOURCE=$OPTARG
+				if lsnim ${SOURCE} >/dev/null 2>&1
+				then
+					:
+				elif [[ -n "$( /usr/sbin/lsdev -Cl ${SOURCE} 2>/dev/null )" ]]
+				then
+					SOURCE=/dev/${SOURCE}
+				fi
+				;;
+			l) LOCATION=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			f) FLAGS=${FLAGS}$OPTARG;;
+			K) NFS_SEC=$OPTARG;;
+			Q) NFS_VERS=$OPTARG;;
+		esac 
+	done 
+        [[ -n ${FLAGS} ]] &&  FLAGS=aQ${FLAGS}
+        [[ ${FLAGS} = *N* ]] && [[ ${FLAGS} != *c* ]] && FLAGS=c${FLAGS}
+	nim -o define -t $TYPE -a server=$SERVER -a location=$LOCATION 		${SOURCE:+-a source=$SOURCE} ${COMMENTS:+-a comments="$COMMENTS"} 		${AUTOE:+-a auto_expand=no} ${FLAGS:+-a installp_flags=-${FLAGS}} 		${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS} 		$NAME
+
+	rc=$?
+
+	if [[ $FLAGS = *p* ]] && [[ $rc -eq 0 ]]; then
+		nim -o remove $NAME
+		rc=$?
+	fi
+
+	exit $rc
+}
+mkres -N 'aix7_spot' -t 'spot' -s 'master' -S 'aix7_mksysb' -l '/nim/spot' '-x' -f '' -f '' -f '' -f 'g' -f '' -f ''
+#
+#     [Mar 05 2020, 22:45:57]
+#
+rmres()
+{
+    while getopts N:r option
+    do
+        case $option in
+            N) NAME=$OPTARG ;;
+            r) RM_IMAGE=-arm_image=yes ;;
+        esac
+    done
+
+    nim -o remove $RM_IMAGE $NAME
+}
+rmres -N'aix7_mksysb'
+#
+#     [Mar 05 2020, 22:46:06]
+#
+lsres() 
+{
+	lsnim ${1:--c resources} 
+	exit $?
+}
+lsres
+#
+#     [Mar 05 2020, 22:47:05]
+#
+mkres() 
+{
+    MKSYSB_FLAGS=
+    COMMENTS=
+    MK_IMAGE=
+    SERVER=
+    EXCLUDE_FILES=
+    SOURCE=
+    LOCATION=
+
+    while getopts N:t:s:l:c:R:f:mS:e:b:K:Q:PFaZApJT option
+    do
+        case $option in
+            N) NAME=$OPTARG;;
+            t) TYPE=$OPTARG;;
+            s) SERVER=-aserver=$OPTARG ;;
+            l) LOCATION=-alocation=$OPTARG ;;
+            c) COMMENTS="$OPTARG" ;;
+            m) MK_IMAGE=-amk_image=yes ;;
+            S) SOURCE=-asource=$OPTARG 
+               CLIENT=$OPTARG ;;
+            f) MKSYSB_FLAGS=${MKSYSB_FLAGS}$OPTARG ;;
+            b) MKSYSB_FLAGS=${MKSYSB_FLAGS}b$OPTARG ;;
+            e) EXCLUDE_FILES=-aexclude_files=$OPTARG ;;
+            P) SIZE_PREVIEW=-asize_preview=yes ;;
+	    J) MKSYSB_FLAGS=${MKSYSB_FLAGS}P ;;
+            F) FORCE=-F ;;
+            K) NFS_SEC=$OPTARG;;
+            Q) NFS_VERS=$OPTARG;;
+	    R) REP_SRC=$OPTARG;;
+            a) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+
+               if [[ ${version} -gt 5 ]] || [[ ${version} -eq 5 ]] && [[ ${release} -gt 2 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}a
+               fi ;;
+            Z) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+
+               if [[ ${version} -gt 5 ]] || [[ ${version} -eq 5 ]] && [[ ${release} -gt 3 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}Z
+               fi ;;
+            T) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+               mod=`echo ${sysbr_level} | cut -d. -f3`
+
+               if [[ ${version} -gt 7 ]] || [[ ${version} -eq 7 && ${release} -gt 1 ]] || [[ ${version} -eq 7 && ${mod} -gt 2 ]] || [[ ${version} -eq 6 && ${release} -gt 1 ]] || [[ ${version} -eq 6 && ${mod} -gt 8 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}T
+               fi ;;
+            A) MKSYSB_FLAGS=${MKSYSB_FLAGS}A;;
+            p) MKSYSB_FLAGS=${MKSYSB_FLAGS}p;;
+        esac
+    done
+
+    # Make sure that both $REP_SRC and $SOURCE are not specified together
+    if [[ -n ${REP_SRC} ]] && [[ -n ${SOURCE} ]]
+    then
+       # include the error definitions
+       . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh
+
+       # display an error message
+       dspmsg -s ${ERR_SET} cmdnim.cat ${ERR_M_EXCLUS_REP_SRC} "0042-313 The \"Source for Replication\" option and the
+	\"NIM CLIENT to backup\" option may not 
+	be specified together.
+" 
+       return -1
+    elif [[ -n ${REP_SRC} ]] && [[ -n ${MK_IMAGE} ]]
+    then
+
+       # include the error definitions
+       . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh
+
+       # display an error message
+       dspmsg -s ${ERR_SET} cmdnim.cat ${ERR_M_EXCLUS_MKIMAGE_SRC} "0042-314 The \"Source for Replication\" option and the
+	\"CREATE system backup image\" option may not 
+	be specified together.
+"
+       return -1
+    fi
+
+
+
+    nim -o define -t ${TYPE} ${FORCE} ${SERVER} ${LOCATION} ${SOURCE}         ${MK_IMAGE} ${MKSYSB_FLAGS:+-amksysb_flags=$MKSYSB_FLAGS}             ${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS}         ${EXCLUDE_FILES} ${SIZE_PREVIEW}                                      ${REP_SRC:+-a source=$REP_SRC}                                        ${COMMENTS:+-acomments="${COMMENTS}"} ${NAME}
+    exit $?
+}
+mkres -N 'aix7_mksysb' -t 'mksysb' -s 'master' -l '/nim/mksysb/aix7'  '-T' '-A'
+#
+#     [Mar 05 2020, 22:47:40]
+#
+mkres() 
+{
+	while getopts aN:t:s:S:l:c:f:K:Q:x option
+	do 
+		case $option in 
+			a) AUTOE=TRUE;;
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			s) SERVER=$OPTARG;;
+			S) SOURCE=$OPTARG
+				if lsnim ${SOURCE} >/dev/null 2>&1
+				then
+					:
+				elif [[ -n "$( /usr/sbin/lsdev -Cl ${SOURCE} 2>/dev/null )" ]]
+				then
+					SOURCE=/dev/${SOURCE}
+				fi
+				;;
+			l) LOCATION=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			f) FLAGS=${FLAGS}$OPTARG;;
+			K) NFS_SEC=$OPTARG;;
+			Q) NFS_VERS=$OPTARG;;
+		esac 
+	done 
+        [[ -n ${FLAGS} ]] &&  FLAGS=aQ${FLAGS}
+        [[ ${FLAGS} = *N* ]] && [[ ${FLAGS} != *c* ]] && FLAGS=c${FLAGS}
+	nim -o define -t $TYPE -a server=$SERVER -a location=$LOCATION 		${SOURCE:+-a source=$SOURCE} ${COMMENTS:+-a comments="$COMMENTS"} 		${AUTOE:+-a auto_expand=no} ${FLAGS:+-a installp_flags=-${FLAGS}} 		${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS} 		$NAME
+
+	rc=$?
+
+	if [[ $FLAGS = *p* ]] && [[ $rc -eq 0 ]]; then
+		nim -o remove $NAME
+		rc=$?
+	fi
+
+	exit $rc
+}
+mkres -N 'aix7_spot' -t 'spot' -s 'master' -S 'aix7_mksysb' -l '/nim/spot/' '-x' -f '' -f '' -f '' -f 'g' -f '' -f ''
+#
+#     [Mar 05 2020, 22:59:03]
+#
+add_machine()
+{
+	HADDR=0
+	while getopts N:t:P:T:n:h:a:l:C:c:E:U:k:S:d:K:m:I:M:V:Y: FLAG
+	do
+		case $FLAG in
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			P) PLATFORM=$OPTARG;;
+			T) CABLE=$OPTARG;;
+			n) NETNAME=$OPTARG;;
+			h) HOSTNAME=$OPTARG;;
+			a) HADDR=$OPTARG;;
+			l) ADAPTER=$OPTARG;;
+			C) CPUID=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			E) IPLROM_EMU=$OPTARG;;
+			U) GROUP=$OPTARG;;
+			k) NETBOOT_KERNEL=$OPTARG;;
+			S) SPEED=$OPTARG;;
+			d) DUPLEX=$OPTARG;;
+			K) NIMSERVICE=$OPTARG;;
+			m) MANAGINGSYS=$OPTARG;;
+			I) IDENTITY=$OPTARG;;
+			M) MGMT_SOURCE=$OPTARG;;
+			V) VLAN_TAG=$OPTARG;;
+			Y) VLAN_PRI=$OPTARG;;
+		esac
+	done
+	[ -n "$ADAPTER" ] && 		PIF="$NETNAME $HOSTNAME $HADDR $ADAPTER" || 		PIF="$NETNAME $HOSTNAME $HADDR"
+	if [[ -n "$SPEED" || -n "$DUPLEX" ]] 
+	then
+		NET_SETTINGS="$SPEED $DUPLEX"
+	fi
+	if [[ (-n "$MANAGINGSYS" && -n "$MGMT_SOURCE") || (-n "$MANAGINGSYS" && -n "$IDENTITY") ]]
+	then
+		echo You cannot input both LPAR and WPAR Management System Information.
+		exit 1
+	fi
+	nim -o define -t $TYPE -a platform=$PLATFORM -a if1="$PIF" 		${CABLE:+-a cable_type1=$CABLE} 		${NET_SETTINGS:+-a net_settings1="$NET_SETTINGS"} 		${IPLROM_EMU:+-a iplrom_emu=$IPLROM_EMU} 		${GROUP:+-a group=$GROUP} 		${NETBOOT_KERNEL:+-a netboot_kernel=$NETBOOT_KERNEL} 		${NIMSERVICE:+-a connect=$NIMSERVICE} 		${MANAGINGSYS:+-a mgmt_profile1="$MANAGINGSYS $NAME"} 		${CPUID:+-a cpuid=$CPUID} ${COMMENTS:+-a comments="$COMMENTS"} 		${IDENTITY:+-a identity=$IDENTITY} ${MGMT_SOURCE:+-a mgmt_source=$MGMT_SOURCE} 		${VLAN_TAG:+-a vlan_tag=$VLAN_TAG} ${VLAN_PRI:+-a vlan_pri=$VLAN_PRI} $NAME
+	exit $?
+}
+add_machine -N 'aix02' -t'standalone' -P 'chrp' -k '64' -T'bnc' -n'nim-server01' -h 'aix02' -a'0'
+#
+#     [Mar 05 2020, 23:10:53]
+#
+bosinst() 
+{
+FLAGS=
+INSTALLP_BUNDLE=
+GRP_TIME_LIMIT=
+GRP_CONCURRENT=
+while getopts r:p:l:m:b:i:x:s:F:Lv:cn:o:f:T:C:ehgt:jSd:KD: option
+do
+  case $option in
+    r) SOURCE=$OPTARG;;
+    p) SPOT=$OPTARG;;
+    l) LPP_SOURCE=$OPTARG;;
+    m) MKSYSB=$OPTARG;;
+    b) BOSINST_DATA=$OPTARG;;
+    i) IMAGE_DATA=$OPTARG;;
+    s) SCRIPT=$OPTARG;;
+    F) FB_SCRIPT=$OPTARG;;
+    v) RESOLV_CONF=$OPTARG;;
+    L) ACCEPT_LICENSES=yes;;
+    c) NO_NIM_CLIENT=yes;;
+    n) INSTALLP_BUNDLE=$INSTALLP_BUNDLE" -a installp_bundle=$OPTARG";;
+    o) FILESETS=$OPTARG;;
+    f) FLAGS=$FLAGS$OPTARG;;
+    e) NO_CLIENT_BOOT=yes;;
+    h) SET_BOOTLIST=yes;;
+    g) FORCE_PUSH=yes;;
+    t) TARGET=$OPTARG;;
+    j) PRESERVE_RES=yes;;
+    T) GRP_TIME_LIMIT=$OPTARG;;
+    C) GRP_CONCURRENT=$OPTARG;;
+	S) SCHEDULE=yes;;
+    d) # Make sure that the schedule arguments are
+       # all preceded by a zero if less than 10.
+       # The at command will fail otherwise.
+       if [[ ${OPTARG} -lt 10 ]] &&
+          [[ ${OPTARG} != 0* ]]
+       then
+          SCHED_ARGS=$SCHED_ARGS\0$OPTARG
+       else
+          SCHED_ARGS=$SCHED_ARGS$OPTARG
+       fi ;;
+    K) CONSOLE=yes;;
+    D) DISPLAY=$OPTARG;;
+  esac
+done
+
+[[ -n ${FLAGS} ]] &&  FLAGS=a${FLAGS}
+
+# Check for simple errors in installp flag combinations.
+/usr/lpp/bos.sysmgt/nim/methods/m_sm_nim chk_installp_flags_smit ${FLAGS}
+if [[ $? -ne 0 ]]
+then
+  return -1
+fi
+
+# Make sure schedule information is complete.
+if [[ -n ${SCHEDULE} ]] && [[ -z ${SCHED_ARGS} ]]
+then
+   . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh;
+   dspmsg -s $ERR_SET cmdnim.cat $ERR_INCOMPLETE_SCHED_ARGS '0042-280 %s: Specify a complete date and time for the scheduled operation in the form: YYMMDDhhmm.
+' nim
+    return -1
+fi
+
+[[ -n ${SCHEDULE} ]] &&  SCHEDULE="-S ${SCHED_ARGS}"
+
+if [[ -n $FILESETS ]]
+then
+  INSTALLP_BUNDLE=
+fi
+nim -o bos_inst -a source=${SOURCE}                 -a spot=${SPOT}                 ${LPP_SOURCE:+-a lpp_source=$LPP_SOURCE}                 ${MKSYSB:+-a mksysb=$MKSYSB}                 ${BOSINST_DATA:+-a bosinst_data=$BOSINST_DATA}                 ${IMAGE_DATA:+-a image_data=$IMAGE_DATA}                 ${SCRIPT:+-a script=$SCRIPT}                 ${FB_SCRIPT:+-a fb_script=$FB_SCRIPT}                 ${RESOLV_CONF:+-a resolv_conf=$RESOLV_CONF}                 ${ACCEPT_LICENSES:+-a accept_licenses=$ACCEPT_LICENSES}                 ${NO_NIM_CLIENT:+-a no_nim_client=$NO_NIM_CLIENT}                 ${INSTALLP_BUNDLE:+$INSTALLP_BUNDLE}                 ${FILESETS:+-a filesets="$FILESETS"}                 ${FLAGS:+-a installp_flags=-$FLAGS}                 ${NO_CLIENT_BOOT:+-a no_client_boot=$NO_CLIENT_BOOT}                 ${SET_BOOTLIST:+-a set_bootlist=$SET_BOOTLIST}                 ${FORCE_PUSH:+-a force_push=$FORCE_PUSH}                 ${PRESERVE_RES:+-a preserve_res=$PRESERVE_RES} 		${GRP_TIME_LIMIT:+-a time_limit=${GRP_TIME_LIMIT}} 		${GRP_CONCURRENT:+-a concurrent=${GRP_CONCURRENT}} 				${SCHEDULE} 		${CONSOLE:+-a open_console=$CONSOLE} 		${DISPLAY:+-a display="$DISPLAY"}                 ${TARGET}
+}
+bosinst -t 'aix02' -r 'mksysb' -p 'aix7_spot' -m 'aix7_mksysb' '-L'  '-j' -f 'c' -f 'N' -f 'g' -f 'X' -f '' -f '' -f '' -f ''
+#
+#     [Mar 06 2020, 00:03:36]
+#
+add_machine()
+{
+	HADDR=0
+	while getopts N:t:P:T:n:h:a:l:C:c:E:U:k:S:d:K:m:I:M:V:Y: FLAG
+	do
+		case $FLAG in
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			P) PLATFORM=$OPTARG;;
+			T) CABLE=$OPTARG;;
+			n) NETNAME=$OPTARG;;
+			h) HOSTNAME=$OPTARG;;
+			a) HADDR=$OPTARG;;
+			l) ADAPTER=$OPTARG;;
+			C) CPUID=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			E) IPLROM_EMU=$OPTARG;;
+			U) GROUP=$OPTARG;;
+			k) NETBOOT_KERNEL=$OPTARG;;
+			S) SPEED=$OPTARG;;
+			d) DUPLEX=$OPTARG;;
+			K) NIMSERVICE=$OPTARG;;
+			m) MANAGINGSYS=$OPTARG;;
+			I) IDENTITY=$OPTARG;;
+			M) MGMT_SOURCE=$OPTARG;;
+			V) VLAN_TAG=$OPTARG;;
+			Y) VLAN_PRI=$OPTARG;;
+		esac
+	done
+	[ -n "$ADAPTER" ] && 		PIF="$NETNAME $HOSTNAME $HADDR $ADAPTER" || 		PIF="$NETNAME $HOSTNAME $HADDR"
+	if [[ -n "$SPEED" || -n "$DUPLEX" ]] 
+	then
+		NET_SETTINGS="$SPEED $DUPLEX"
+	fi
+	if [[ (-n "$MANAGINGSYS" && -n "$MGMT_SOURCE") || (-n "$MANAGINGSYS" && -n "$IDENTITY") ]]
+	then
+		echo You cannot input both LPAR and WPAR Management System Information.
+		exit 1
+	fi
+	nim -o define -t $TYPE -a platform=$PLATFORM -a if1="$PIF" 		${CABLE:+-a cable_type1=$CABLE} 		${NET_SETTINGS:+-a net_settings1="$NET_SETTINGS"} 		${IPLROM_EMU:+-a iplrom_emu=$IPLROM_EMU} 		${GROUP:+-a group=$GROUP} 		${NETBOOT_KERNEL:+-a netboot_kernel=$NETBOOT_KERNEL} 		${NIMSERVICE:+-a connect=$NIMSERVICE} 		${MANAGINGSYS:+-a mgmt_profile1="$MANAGINGSYS $NAME"} 		${CPUID:+-a cpuid=$CPUID} ${COMMENTS:+-a comments="$COMMENTS"} 		${IDENTITY:+-a identity=$IDENTITY} ${MGMT_SOURCE:+-a mgmt_source=$MGMT_SOURCE} 		${VLAN_TAG:+-a vlan_tag=$VLAN_TAG} ${VLAN_PRI:+-a vlan_pri=$VLAN_PRI} $NAME
+	exit $?
+}
+add_machine -N 'aix02' -t'standalone' -P 'chrp' -k '64' -T'bnc' -n'nim-server01' -h 'aix02' -a'0'
+#
+#     [Mar 06 2020, 00:04:27]
+#
+add_machine()
+{
+	HADDR=0
+	CLGWAY=0
+	MGWAY=0
+	while getopts N:t:P:T:S:d:n:h:a:l:C:c:E:U:W:s:g:G:k:i:K:m:V:Y: FLAG
+	do
+		case $FLAG in
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			P) PLATFORM=$OPTARG;;
+			T) CABLE=$OPTARG;;
+			S) SPEED=$OPTARG;;
+			d) DUPLEX=$OPTARG;;
+			n) NETNAME=$OPTARG;;
+			h) HOSTNAME=$OPTARG;;
+			a) HADDR=$OPTARG;;
+			l) ADAPTER=$OPTARG;;
+			C) CPUID=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			E) IPLROM_EMU=$OPTARG;;
+			U) GROUP=$OPTARG;;
+			W) NETTYPE=$OPTARG;;
+			s) SNM=$OPTARG;;
+			g) CLGWAY=$OPTARG;;
+			G) MGWAY=$OPTARG;;
+			k) NETBOOT_KERNEL=$OPTARG;;
+			i) IEEE_ENT=$OPTARG;;
+			K) NIMSERVICE=$OPTARG;;
+			m) MANAGINGSYS=$OPTARG;;
+			V) VLAN_TAG=$OPTARG;;
+			Y) VLAN_PRI=$OPTARG;;
+		esac
+	done
+	[ -n "$ADAPTER" ] && 		PIF="find_net $HOSTNAME $HADDR $ADAPTER" || 		PIF="find_net $HOSTNAME $HADDR"
+	NET_DEF="$NETTYPE $SNM $CLGWAY $MGWAY $NETNAME"
+
+	if [[ -n "$SPEED" || -n "$DUPLEX" ]] 
+	then
+		NET_SETTINGS="$SPEED $DUPLEX"
+	fi
+	
+	nim -o define -t $TYPE -a platform=$PLATFORM -a if1="$PIF" 		-a net_definition="$NET_DEF" 		${CABLE:+-a cable_type1=$CABLE} 		${NET_SETTINGS:+-a net_settings1="$NET_SETTINGS"} 		${IPLROM_EMU:+-a iplrom_emu=$IPLROM_EMU} 		${GROUP:+-a group=$GROUP} 		${NETBOOT_KERNEL:+-a netboot_kernel=$NETBOOT_KERNEL} 		${NIMSERVICE:+-a connect=$NIMSERVICE} 		${MANAGINGSYS:+-a mgmt_profile1="$MANAGINGSYS $NAME"} 		${CPUID:+-a cpuid=$CPUID} ${COMMENTS:+-a comments="$COMMENTS"} 		${VLAN_TAG:+-a vlan_tag=$VLAN_TAG} ${VLAN_PRI:+-a vlan_pri=$VLAN_PRI} $NAME
+	rc1=$?
+	rc2=0
+	if [[ $rc1 -eq 0 ]] && [[ ${IEEE_ENT} = yes ]]
+	then
+		nim -o change -a ieee_ent=yes ${NETNAME}
+		rc2=$?
+	fi
+	exit $rc1+$rc2
+}
+add_machine -N 'aix03' -t'standalone' -P 'chrp' -k '64' -T'bnc' -n'ent-Network1' -W'ent' -i '' -s '255.255.255.0' -g '172.30.240.254' -G '172.30.240.254' -h 'aix03' -a'0'
+#
+#     [Mar 06 2020, 00:05:26]
+#
+add_machine()
+{
+	HADDR=0
+	while getopts N:t:P:T:n:h:a:l:C:c:E:U:k:S:d:K:m:I:M:V:Y: FLAG
+	do
+		case $FLAG in
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			P) PLATFORM=$OPTARG;;
+			T) CABLE=$OPTARG;;
+			n) NETNAME=$OPTARG;;
+			h) HOSTNAME=$OPTARG;;
+			a) HADDR=$OPTARG;;
+			l) ADAPTER=$OPTARG;;
+			C) CPUID=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			E) IPLROM_EMU=$OPTARG;;
+			U) GROUP=$OPTARG;;
+			k) NETBOOT_KERNEL=$OPTARG;;
+			S) SPEED=$OPTARG;;
+			d) DUPLEX=$OPTARG;;
+			K) NIMSERVICE=$OPTARG;;
+			m) MANAGINGSYS=$OPTARG;;
+			I) IDENTITY=$OPTARG;;
+			M) MGMT_SOURCE=$OPTARG;;
+			V) VLAN_TAG=$OPTARG;;
+			Y) VLAN_PRI=$OPTARG;;
+		esac
+	done
+	[ -n "$ADAPTER" ] && 		PIF="$NETNAME $HOSTNAME $HADDR $ADAPTER" || 		PIF="$NETNAME $HOSTNAME $HADDR"
+	if [[ -n "$SPEED" || -n "$DUPLEX" ]] 
+	then
+		NET_SETTINGS="$SPEED $DUPLEX"
+	fi
+	if [[ (-n "$MANAGINGSYS" && -n "$MGMT_SOURCE") || (-n "$MANAGINGSYS" && -n "$IDENTITY") ]]
+	then
+		echo You cannot input both LPAR and WPAR Management System Information.
+		exit 1
+	fi
+	nim -o define -t $TYPE -a platform=$PLATFORM -a if1="$PIF" 		${CABLE:+-a cable_type1=$CABLE} 		${NET_SETTINGS:+-a net_settings1="$NET_SETTINGS"} 		${IPLROM_EMU:+-a iplrom_emu=$IPLROM_EMU} 		${GROUP:+-a group=$GROUP} 		${NETBOOT_KERNEL:+-a netboot_kernel=$NETBOOT_KERNEL} 		${NIMSERVICE:+-a connect=$NIMSERVICE} 		${MANAGINGSYS:+-a mgmt_profile1="$MANAGINGSYS $NAME"} 		${CPUID:+-a cpuid=$CPUID} ${COMMENTS:+-a comments="$COMMENTS"} 		${IDENTITY:+-a identity=$IDENTITY} ${MGMT_SOURCE:+-a mgmt_source=$MGMT_SOURCE} 		${VLAN_TAG:+-a vlan_tag=$VLAN_TAG} ${VLAN_PRI:+-a vlan_pri=$VLAN_PRI} $NAME
+	exit $?
+}
+add_machine -N 'aix03' -t'standalone' -P 'chrp' -k '64' -T'bnc' -n'nim-server01' -h 'aix03' -a'0'
+#
+#     [Mar 06 2020, 00:07:44]
+#
+bosinst() 
+{
+FLAGS=
+INSTALLP_BUNDLE=
+GRP_TIME_LIMIT=
+GRP_CONCURRENT=
+while getopts r:p:l:m:b:i:x:s:F:Lv:cn:o:f:T:C:ehgt:jSd:KD: option
+do
+  case $option in
+    r) SOURCE=$OPTARG;;
+    p) SPOT=$OPTARG;;
+    l) LPP_SOURCE=$OPTARG;;
+    m) MKSYSB=$OPTARG;;
+    b) BOSINST_DATA=$OPTARG;;
+    i) IMAGE_DATA=$OPTARG;;
+    s) SCRIPT=$OPTARG;;
+    F) FB_SCRIPT=$OPTARG;;
+    v) RESOLV_CONF=$OPTARG;;
+    L) ACCEPT_LICENSES=yes;;
+    c) NO_NIM_CLIENT=yes;;
+    n) INSTALLP_BUNDLE=$INSTALLP_BUNDLE" -a installp_bundle=$OPTARG";;
+    o) FILESETS=$OPTARG;;
+    f) FLAGS=$FLAGS$OPTARG;;
+    e) NO_CLIENT_BOOT=yes;;
+    h) SET_BOOTLIST=yes;;
+    g) FORCE_PUSH=yes;;
+    t) TARGET=$OPTARG;;
+    j) PRESERVE_RES=yes;;
+    T) GRP_TIME_LIMIT=$OPTARG;;
+    C) GRP_CONCURRENT=$OPTARG;;
+	S) SCHEDULE=yes;;
+    d) # Make sure that the schedule arguments are
+       # all preceded by a zero if less than 10.
+       # The at command will fail otherwise.
+       if [[ ${OPTARG} -lt 10 ]] &&
+          [[ ${OPTARG} != 0* ]]
+       then
+          SCHED_ARGS=$SCHED_ARGS\0$OPTARG
+       else
+          SCHED_ARGS=$SCHED_ARGS$OPTARG
+       fi ;;
+    K) CONSOLE=yes;;
+    D) DISPLAY=$OPTARG;;
+  esac
+done
+
+[[ -n ${FLAGS} ]] &&  FLAGS=a${FLAGS}
+
+# Check for simple errors in installp flag combinations.
+/usr/lpp/bos.sysmgt/nim/methods/m_sm_nim chk_installp_flags_smit ${FLAGS}
+if [[ $? -ne 0 ]]
+then
+  return -1
+fi
+
+# Make sure schedule information is complete.
+if [[ -n ${SCHEDULE} ]] && [[ -z ${SCHED_ARGS} ]]
+then
+   . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh;
+   dspmsg -s $ERR_SET cmdnim.cat $ERR_INCOMPLETE_SCHED_ARGS '0042-280 %s: Specify a complete date and time for the scheduled operation in the form: YYMMDDhhmm.
+' nim
+    return -1
+fi
+
+[[ -n ${SCHEDULE} ]] &&  SCHEDULE="-S ${SCHED_ARGS}"
+
+if [[ -n $FILESETS ]]
+then
+  INSTALLP_BUNDLE=
+fi
+nim -o bos_inst -a source=${SOURCE}                 -a spot=${SPOT}                 ${LPP_SOURCE:+-a lpp_source=$LPP_SOURCE}                 ${MKSYSB:+-a mksysb=$MKSYSB}                 ${BOSINST_DATA:+-a bosinst_data=$BOSINST_DATA}                 ${IMAGE_DATA:+-a image_data=$IMAGE_DATA}                 ${SCRIPT:+-a script=$SCRIPT}                 ${FB_SCRIPT:+-a fb_script=$FB_SCRIPT}                 ${RESOLV_CONF:+-a resolv_conf=$RESOLV_CONF}                 ${ACCEPT_LICENSES:+-a accept_licenses=$ACCEPT_LICENSES}                 ${NO_NIM_CLIENT:+-a no_nim_client=$NO_NIM_CLIENT}                 ${INSTALLP_BUNDLE:+$INSTALLP_BUNDLE}                 ${FILESETS:+-a filesets="$FILESETS"}                 ${FLAGS:+-a installp_flags=-$FLAGS}                 ${NO_CLIENT_BOOT:+-a no_client_boot=$NO_CLIENT_BOOT}                 ${SET_BOOTLIST:+-a set_bootlist=$SET_BOOTLIST}                 ${FORCE_PUSH:+-a force_push=$FORCE_PUSH}                 ${PRESERVE_RES:+-a preserve_res=$PRESERVE_RES} 		${GRP_TIME_LIMIT:+-a time_limit=${GRP_TIME_LIMIT}} 		${GRP_CONCURRENT:+-a concurrent=${GRP_CONCURRENT}} 				${SCHEDULE} 		${CONSOLE:+-a open_console=$CONSOLE} 		${DISPLAY:+-a display="$DISPLAY"}                 ${TARGET}
+}
+bosinst -t 'aix03' -r 'mksysb' -p 'aix7_spot' -m 'aix7_mksysb'   '-j' -f 'c' -f 'N' -f 'g' -f 'X' -f '' -f '' -f '' -f ''
+#
+#     [Mar 06 2020, 00:29:28]
+#
+preprocess_inuwpar()
+{
+while [[ -n $1 ]]; do
+   typeset OPTION=$1
+   case $OPTION in
+     -D) INUWPAR=${INUWPAR:+"$INUWPAR "}"-D";;
+     -M) INUWPAR=${INUWPAR:+"$INUWPAR "}"-G";;
+     -I) INUWPAR_ENABLED="1";;
+     -K) shift; INUWPAR=${INUWPAR:+"$INUWPAR "}"-d $1";;
+     -k) shift; INUWPAR_FILE=$1;;
+     *) ARGS=${ARGS:+"$ARGS "}"'$OPTION'";;
+   esac
+   shift
+done
+if [[ -n $INUWPAR_FILE ]]; then
+  if [[ `head -1 $INUWPAR_FILE` == '_all_wpars' ]]; then
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-A"
+  else
+    awk '{gsub(/ /,"\n");print}' < $INUWPAR_FILE > /tmp/inuwpar.$$.list
+    mv /tmp/inuwpar.$$.list $INUWPAR_FILE
+    INUWPAR=${INUWPAR:+"$INUWPAR "}"-f $INUWPAR_FILE"
+  fi
+fi
+if [[ -n $INUWPAR_ENABLED ]]; then
+    eval /usr/sbin/inuwpar $INUWPAR /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+else
+    eval /usr/lib/instl/sm_inst installp_cmd -a -Q ${ARGS:+$ARGS}
+fi
+}
+preprocess_inuwpar -d '/dev/cd1' -f '+ 7.1.0.0  Network File System Server                                  @@I:bos.net.nfs.server 7.1.0.0'  '-c' '-N' '-g' '-X'   '-G'     '-M'  -k '_all_wpars' 
+#
+#     [Mar 06 2020, 00:36:30]
+#
+/usr/sbin/mknfsexp -d '/nfs' '-B' -S 'sys,krb5p,krb5i,krb5,dh' -t 'rw'
+#
+#     [Mar 06 2020, 00:46:18]
+#
+lsres() 
+{
+	lsnim ${1:--c resources} 
+	exit $?
+}
+lsres

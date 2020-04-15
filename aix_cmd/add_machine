@@ -1,0 +1,47 @@
+#
+#     [Mar 05 2020, 22:59:03]
+#
+add_machine()
+{
+	HADDR=0
+	while getopts N:t:P:T:n:h:a:l:C:c:E:U:k:S:d:K:m:I:M:V:Y: FLAG
+	do
+		case $FLAG in
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			P) PLATFORM=$OPTARG;;
+			T) CABLE=$OPTARG;;
+			n) NETNAME=$OPTARG;;
+			h) HOSTNAME=$OPTARG;;
+			a) HADDR=$OPTARG;;
+			l) ADAPTER=$OPTARG;;
+			C) CPUID=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			E) IPLROM_EMU=$OPTARG;;
+			U) GROUP=$OPTARG;;
+			k) NETBOOT_KERNEL=$OPTARG;;
+			S) SPEED=$OPTARG;;
+			d) DUPLEX=$OPTARG;;
+			K) NIMSERVICE=$OPTARG;;
+			m) MANAGINGSYS=$OPTARG;;
+			I) IDENTITY=$OPTARG;;
+			M) MGMT_SOURCE=$OPTARG;;
+			V) VLAN_TAG=$OPTARG;;
+			Y) VLAN_PRI=$OPTARG;;
+		esac
+	done
+	[ -n "$ADAPTER" ] && 		PIF="$NETNAME $HOSTNAME $HADDR $ADAPTER" || 		PIF="$NETNAME $HOSTNAME $HADDR"
+	if [[ -n "$SPEED" || -n "$DUPLEX" ]] 
+	then
+		NET_SETTINGS="$SPEED $DUPLEX"
+	fi
+	if [[ (-n "$MANAGINGSYS" && -n "$MGMT_SOURCE") || (-n "$MANAGINGSYS" && -n "$IDENTITY") ]]
+	then
+		echo You cannot input both LPAR and WPAR Management System Information.
+		exit 1
+	fi
+	nim -o define -t $TYPE -a platform=$PLATFORM -a if1="$PIF" 		${CABLE:+-a cable_type1=$CABLE} 		${NET_SETTINGS:+-a net_settings1="$NET_SETTINGS"} 		${IPLROM_EMU:+-a iplrom_emu=$IPLROM_EMU} 		${GROUP:+-a group=$GROUP} 		${NETBOOT_KERNEL:+-a netboot_kernel=$NETBOOT_KERNEL} 		${NIMSERVICE:+-a connect=$NIMSERVICE} 		${MANAGINGSYS:+-a mgmt_profile1="$MANAGINGSYS $NAME"} 		${CPUID:+-a cpuid=$CPUID} ${COMMENTS:+-a comments="$COMMENTS"} 		${IDENTITY:+-a identity=$IDENTITY} ${MGMT_SOURCE:+-a mgmt_source=$MGMT_SOURCE} 		${VLAN_TAG:+-a vlan_tag=$VLAN_TAG} ${VLAN_PRI:+-a vlan_pri=$VLAN_PRI} $NAME
+	exit $?
+}
+
+# add_machine -N 'aix02' -t'standalone' -P 'chrp' -k '64' -T'bnc' -n'nim-server01' -h 'aix02' -a'0'

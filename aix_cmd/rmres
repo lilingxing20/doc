@@ -1,0 +1,16 @@
+#
+#     [Mar 05 2020, 22:45:57]
+#
+rmres()
+{
+    while getopts N:r option
+    do
+        case $option in
+            N) NAME=$OPTARG ;;
+            r) RM_IMAGE=-arm_image=yes ;;
+        esac
+    done
+
+    nim -o remove $RM_IMAGE $NAME
+}
+# rmres -N'aix7_mksysb'

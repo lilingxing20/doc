@@ -1,0 +1,77 @@
+#
+#     [Mar 06 2020, 00:07:44]
+#
+bosinst() 
+{
+FLAGS=
+INSTALLP_BUNDLE=
+GRP_TIME_LIMIT=
+GRP_CONCURRENT=
+while getopts r:p:l:m:b:i:x:s:F:Lv:cn:o:f:T:C:ehgt:jSd:KD: option
+do
+  case $option in
+    r) SOURCE=$OPTARG;;
+    p) SPOT=$OPTARG;;
+    l) LPP_SOURCE=$OPTARG;;
+    m) MKSYSB=$OPTARG;;
+    b) BOSINST_DATA=$OPTARG;;
+    i) IMAGE_DATA=$OPTARG;;
+    s) SCRIPT=$OPTARG;;
+    F) FB_SCRIPT=$OPTARG;;
+    v) RESOLV_CONF=$OPTARG;;
+    L) ACCEPT_LICENSES=yes;;
+    c) NO_NIM_CLIENT=yes;;
+    n) INSTALLP_BUNDLE=$INSTALLP_BUNDLE" -a installp_bundle=$OPTARG";;
+    o) FILESETS=$OPTARG;;
+    f) FLAGS=$FLAGS$OPTARG;;
+    e) NO_CLIENT_BOOT=yes;;
+    h) SET_BOOTLIST=yes;;
+    g) FORCE_PUSH=yes;;
+    t) TARGET=$OPTARG;;
+    j) PRESERVE_RES=yes;;
+    T) GRP_TIME_LIMIT=$OPTARG;;
+    C) GRP_CONCURRENT=$OPTARG;;
+	S) SCHEDULE=yes;;
+    d) # Make sure that the schedule arguments are
+       # all preceded by a zero if less than 10.
+       # The at command will fail otherwise.
+       if [[ ${OPTARG} -lt 10 ]] &&
+          [[ ${OPTARG} != 0* ]]
+       then
+          SCHED_ARGS=$SCHED_ARGS\0$OPTARG
+       else
+          SCHED_ARGS=$SCHED_ARGS$OPTARG
+       fi ;;
+    K) CONSOLE=yes;;
+    D) DISPLAY=$OPTARG;;
+  esac
+done
+
+[[ -n ${FLAGS} ]] &&  FLAGS=a${FLAGS}
+
+# Check for simple errors in installp flag combinations.
+/usr/lpp/bos.sysmgt/nim/methods/m_sm_nim chk_installp_flags_smit ${FLAGS}
+if [[ $? -ne 0 ]]
+then
+  return -1
+fi
+
+# Make sure schedule information is complete.
+if [[ -n ${SCHEDULE} ]] && [[ -z ${SCHED_ARGS} ]]
+then
+   . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh;
+   dspmsg -s $ERR_SET cmdnim.cat $ERR_INCOMPLETE_SCHED_ARGS '0042-280 %s: Specify a complete date and time for the scheduled operation in the form: YYMMDDhhmm.
+' nim
+    return -1
+fi
+
+[[ -n ${SCHEDULE} ]] &&  SCHEDULE="-S ${SCHED_ARGS}"
+
+if [[ -n $FILESETS ]]
+then
+  INSTALLP_BUNDLE=
+fi
+nim -o bos_inst -a source=${SOURCE}                 -a spot=${SPOT}                 ${LPP_SOURCE:+-a lpp_source=$LPP_SOURCE}                 ${MKSYSB:+-a mksysb=$MKSYSB}                 ${BOSINST_DATA:+-a bosinst_data=$BOSINST_DATA}                 ${IMAGE_DATA:+-a image_data=$IMAGE_DATA}                 ${SCRIPT:+-a script=$SCRIPT}                 ${FB_SCRIPT:+-a fb_script=$FB_SCRIPT}                 ${RESOLV_CONF:+-a resolv_conf=$RESOLV_CONF}                 ${ACCEPT_LICENSES:+-a accept_licenses=$ACCEPT_LICENSES}                 ${NO_NIM_CLIENT:+-a no_nim_client=$NO_NIM_CLIENT}                 ${INSTALLP_BUNDLE:+$INSTALLP_BUNDLE}                 ${FILESETS:+-a filesets="$FILESETS"}                 ${FLAGS:+-a installp_flags=-$FLAGS}                 ${NO_CLIENT_BOOT:+-a no_client_boot=$NO_CLIENT_BOOT}                 ${SET_BOOTLIST:+-a set_bootlist=$SET_BOOTLIST}                 ${FORCE_PUSH:+-a force_push=$FORCE_PUSH}                 ${PRESERVE_RES:+-a preserve_res=$PRESERVE_RES} 		${GRP_TIME_LIMIT:+-a time_limit=${GRP_TIME_LIMIT}} 		${GRP_CONCURRENT:+-a concurrent=${GRP_CONCURRENT}} 				${SCHEDULE} 		${CONSOLE:+-a open_console=$CONSOLE} 		${DISPLAY:+-a display="$DISPLAY"}                 ${TARGET}
+}
+
+#bosinst -t 'aix03' -r 'mksysb' -p 'aix7_spot' -m 'aix7_mksysb'   '-j' -f 'c' -f 'N' -f 'g' -f 'X' -f '' -f '' -f '' -f ''

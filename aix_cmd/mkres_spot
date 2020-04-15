@@ -1,0 +1,44 @@
+#
+#     [Mar 05 2020, 22:13:07]
+#
+mkres() 
+{
+	while getopts aN:t:s:S:l:c:f:K:Q:x option
+	do 
+		case $option in 
+			a) AUTOE=TRUE;;
+			N) NAME=$OPTARG;;
+			t) TYPE=$OPTARG;;
+			s) SERVER=$OPTARG;;
+			S) SOURCE=$OPTARG
+				if lsnim ${SOURCE} >/dev/null 2>&1
+				then
+					:
+				elif [[ -n "$( /usr/sbin/lsdev -Cl ${SOURCE} 2>/dev/null )" ]]
+				then
+					SOURCE=/dev/${SOURCE}
+				fi
+				;;
+			l) LOCATION=$OPTARG;;
+			c) COMMENTS=$OPTARG;;
+			f) FLAGS=${FLAGS}$OPTARG;;
+			K) NFS_SEC=$OPTARG;;
+			Q) NFS_VERS=$OPTARG;;
+		esac 
+	done 
+        [[ -n ${FLAGS} ]] &&  FLAGS=aQ${FLAGS}
+        [[ ${FLAGS} = *N* ]] && [[ ${FLAGS} != *c* ]] && FLAGS=c${FLAGS}
+	nim -o define -t $TYPE -a server=$SERVER -a location=$LOCATION 		${SOURCE:+-a source=$SOURCE} ${COMMENTS:+-a comments="$COMMENTS"} 		${AUTOE:+-a auto_expand=no} ${FLAGS:+-a installp_flags=-${FLAGS}} 		${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS} 		$NAME
+
+	rc=$?
+
+	if [[ $FLAGS = *p* ]] && [[ $rc -eq 0 ]]; then
+		nim -o remove $NAME
+		rc=$?
+	fi
+
+	exit $rc
+}
+
+# mkres -N 'aix7_spot' -t 'spot' -s 'master' -S 'aix7_mksysb' -l '/nim/spot/aix7_spot' '-x' -f '' -f '' -f '' -f 'g' -f '' -f ''
+

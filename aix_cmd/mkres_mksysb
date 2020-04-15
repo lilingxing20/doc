@@ -1,0 +1,92 @@
+#
+#     [Mar 05 2020, 22:05:28]
+#
+mkres() 
+{
+    MKSYSB_FLAGS=
+    COMMENTS=
+    MK_IMAGE=
+    SERVER=
+    EXCLUDE_FILES=
+    SOURCE=
+    LOCATION=
+
+    while getopts N:t:s:l:c:R:f:mS:e:b:K:Q:PFaZApJT option
+    do
+        case $option in
+            N) NAME=$OPTARG;;
+            t) TYPE=$OPTARG;;
+            s) SERVER=-aserver=$OPTARG ;;
+            l) LOCATION=-alocation=$OPTARG ;;
+            c) COMMENTS="$OPTARG" ;;
+            m) MK_IMAGE=-amk_image=yes ;;
+            S) SOURCE=-asource=$OPTARG 
+               CLIENT=$OPTARG ;;
+            f) MKSYSB_FLAGS=${MKSYSB_FLAGS}$OPTARG ;;
+            b) MKSYSB_FLAGS=${MKSYSB_FLAGS}b$OPTARG ;;
+            e) EXCLUDE_FILES=-aexclude_files=$OPTARG ;;
+            P) SIZE_PREVIEW=-asize_preview=yes ;;
+	    J) MKSYSB_FLAGS=${MKSYSB_FLAGS}P ;;
+            F) FORCE=-F ;;
+            K) NFS_SEC=$OPTARG;;
+            Q) NFS_VERS=$OPTARG;;
+	    R) REP_SRC=$OPTARG;;
+            a) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+
+               if [[ ${version} -gt 5 ]] || [[ ${version} -eq 5 ]] && [[ ${release} -gt 2 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}a
+               fi ;;
+            Z) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+
+               if [[ ${version} -gt 5 ]] || [[ ${version} -eq 5 ]] && [[ ${release} -gt 3 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}Z
+               fi ;;
+            T) sysbr_level=`nim -o lslpp -a lslpp_flags="-lcOu" $CLIENT 2>/dev/null | grep bos.sysmgt.sysbr | cut -d: -f3`
+               version=`echo ${sysbr_level} | cut -d. -f1`
+               release=`echo ${sysbr_level} | cut -d. -f2`
+               mod=`echo ${sysbr_level} | cut -d. -f3`
+
+               if [[ ${version} -gt 7 ]] || [[ ${version} -eq 7 && ${release} -gt 1 ]] || [[ ${version} -eq 7 && ${mod} -gt 2 ]] || [[ ${version} -eq 6 && ${release} -gt 1 ]] || [[ ${version} -eq 6 && ${mod} -gt 8 ]]; then
+                    MKSYSB_FLAGS=${MKSYSB_FLAGS}T
+               fi ;;
+            A) MKSYSB_FLAGS=${MKSYSB_FLAGS}A;;
+            p) MKSYSB_FLAGS=${MKSYSB_FLAGS}p;;
+        esac
+    done
+
+    # Make sure that both $REP_SRC and $SOURCE are not specified together
+    if [[ -n ${REP_SRC} ]] && [[ -n ${SOURCE} ]]
+    then
+       # include the error definitions
+       . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh
+
+       # display an error message
+       dspmsg -s ${ERR_SET} cmdnim.cat ${ERR_M_EXCLUS_REP_SRC} "0042-313 The \"Source for Replication\" option and the
+	\"NIM CLIENT to backup\" option may not 
+	be specified together.
+" 
+       return -1
+    elif [[ -n ${REP_SRC} ]] && [[ -n ${MK_IMAGE} ]]
+    then
+
+       # include the error definitions
+       . /usr/lpp/bos.sysmgt/nim/methods/cmdnim_errors.shh
+
+       # display an error message
+       dspmsg -s ${ERR_SET} cmdnim.cat ${ERR_M_EXCLUS_MKIMAGE_SRC} "0042-314 The \"Source for Replication\" option and the
+	\"CREATE system backup image\" option may not 
+	be specified together.
+"
+       return -1
+    fi
+
+
+
+    nim -o define -t ${TYPE} ${FORCE} ${SERVER} ${LOCATION} ${SOURCE}         ${MK_IMAGE} ${MKSYSB_FLAGS:+-amksysb_flags=$MKSYSB_FLAGS}             ${NFS_SEC:+-a nfs_sec=$NFS_SEC} ${NFS_VERS:+-a nfs_vers=$NFS_VERS}         ${EXCLUDE_FILES} ${SIZE_PREVIEW}                                      ${REP_SRC:+-a source=$REP_SRC}                                        ${COMMENTS:+-acomments="${COMMENTS}"} ${NAME}
+    exit $?
+}
+mkres -N 'aix7_mksysb' -t 'mksysb' -s 'master' -l '/nim/mksysb/aix71'  '-T' '-A'

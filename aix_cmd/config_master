@@ -1,0 +1,40 @@
+#
+#     [Mar 05 2020, 21:13:19]
+#
+config_master()
+{
+RING_SPEED=
+CABLE_TYPE=
+REGISTRATION_PORT=
+MASTER_PORT=
+CLIENT_REG=
+while getopts n:p:r:m:c:i: option
+do
+  case $option in
+    n) NETNAME=$OPTARG;;
+    p) PIF_NAME=$OPTARG;;
+    r) REGISTRATION_PORT=$OPTARG;;
+    m) MASTER_PORT=$OPTARG;;
+    c) CLIENT_REG=$OPTARG;;
+    i) IP_VERS=$OPTARG;;
+  esac
+done
+
+if [[ $PIF_NAME = tr* ]]
+then
+  RING_SPEED=`mktcpip -S ${PIF_NAME} 2>&1 | 	awk 'BEGIN { RS="\n"; FS=":" } 	  { for (i=1;i<=NF;i++) 	  { if ( match($i,/speed/) ) (j=i) } 	  if (NR==2){print $j} }'`
+else
+  if [[ $PIF_NAME = e[nt]* ]]
+  then
+    CABLE_TYPE=`mktcpip -S ${PIF_NAME} 2>&1 | 	awk 'BEGIN { RS="\n"; FS=":" } 	  { for (i=1;i<=NF;i++) 	  { if ( match($i,/type/) ) (j=i) } 	  if (NR==2){print $j} }'`
+  fi
+fi
+
+PLATFORM=`bootinfo -p`
+NETBOOT_KERNEL=64
+
+nimconfig -anetname=$NETNAME           -apif_name=$PIF_NAME 	  -aplatform=$PLATFORM 	  -anetboot_kernel=$NETBOOT_KERNEL           ${RING_SPEED:+-aring_speed=$RING_SPEED}           ${CABLE_TYPE:+-acable_type=$CABLE_TYPE}           ${REGISTRATION_PORT:+-aregistration_port=$REGISTRATION_PORT}           ${MASTER_PORT:+-amaster_port=$MASTER_PORT}           ${CLIENT_REG:+-aclient_reg=$CLIENT_REG}           ${IP_VERS:+-aip_vers=$IP_VERS}
+}
+
+# config_master  -n 'nim-server01' -p 'en0'
+

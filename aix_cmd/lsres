@@ -1,0 +1,9 @@
+#
+#     [Mar 05 2020, 21:54:24]
+#
+lsres() 
+{
+	lsnim ${1:--c resources} 
+	exit $?
+}
+lsres
