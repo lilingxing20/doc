@@ -1,0 +1,5 @@
+[Wed Jan 10 11:38:01.331932 2018] [suexec:notice] [pid 25667] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Wed Jan 10 11:38:01.342893 2018] [auth_digest:notice] [pid 25667] AH01757: generating secret for digest authentication ...
+[Wed Jan 10 11:38:01.420503 2018] [mpm_prefork:notice] [pid 25667] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Wed Jan 10 11:38:01.420541 2018] [core:notice] [pid 25667] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Sun Jan 14 03:26:01.899792 2018] [mpm_prefork:notice] [pid 25667] AH00171: Graceful restart requested, doing restart

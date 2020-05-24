@@ -1,0 +1,23 @@
+[Sun Jan 14 03:26:02.072179 2018] [:error] [pid 25947] Exception in thread Thread-2 (most likely raised during interpreter shutdown):
+[Sun Jan 14 03:26:02.123442 2018] [:error] [pid 26057] Exception in thread Thread-1 (most likely raised during interpreter shutdown):
+[Sun Jan 14 03:26:02.123517 2018] [:error] [pid 26057] Traceback (most recent call last):
+[Sun Jan 14 03:26:02.123535 2018] [:error] [pid 26057]   File "/usr/lib64/python2.7/threading.py", line 812, in __bootstrap_inner
+[Sun Jan 14 03:26:02.123546 2018] [:error] [pid 26057]   File "/usr/lib64/python2.7/threading.py", line 765, in run
+[Sun Jan 14 03:26:02.123556 2018] [:error] [pid 26057]   File "/usr/lib/python2.7/site-packages/oslo_messaging/_drivers/impl_rabbit.py", line 914, in _heartbeat_thread_job
+[Sun Jan 14 03:26:02.123565 2018] [:error] [pid 26057]   File "/usr/lib64/python2.7/threading.py", line 622, in wait
+[Sun Jan 14 03:26:02.123573 2018] [:error] [pid 26057]   File "/usr/lib64/python2.7/threading.py", line 354, in wait
+[Sun Jan 14 03:26:02.123584 2018] [:error] [pid 26057] <type 'exceptions.TypeError'>: 'NoneType' object is not callable
+[Sun Jan 14 03:26:02.125501 2018] [:error] [pid 26119] Exception in thread Thread-2 (most likely raised during interpreter shutdown):
+[Sun Jan 14 03:26:02.125582 2018] [:error] [pid 26119] Traceback (most recent call last):
+[Sun Jan 14 03:26:02.125603 2018] [:error] [pid 26119]   File "/usr/lib64/python2.7/threading.py", line 812, in __bootstrap_inner
+[Sun Jan 14 03:26:02.125623 2018] [:error] [pid 26119]   File "/usr/lib64/python2.7/threading.py", line 765, in run
+[Sun Jan 14 03:26:02.125635 2018] [:error] [pid 26119]   File "/usr/lib/python2.7/site-packages/oslo_messaging/_drivers/impl_rabbit.py", line 885, in _heartbeat_thread_job
+[Sun Jan 14 03:26:02.125645 2018] [:error] [pid 26119]   File "/usr/lib64/python2.7/contextlib.py", line 84, in helper
+[Sun Jan 14 03:26:02.125658 2018] [:error] [pid 26119] <type 'exceptions.TypeError'>: 'NoneType' object is not callable
+[Sun Jan 14 03:26:02.234178 2018] [:error] [pid 25724] Exception in thread Thread-1 (most likely raised during interpreter shutdown):
+[Sun Jan 14 03:26:02.234250 2018] [:error] [pid 25724] Traceback (most recent call last):
+[Sun Jan 14 03:26:02.234268 2018] [:error] [pid 25724]   File "/usr/lib64/python2.7/threading.py", line 812, in __bootstrap_inner
+[Sun Jan 14 03:26:02.234278 2018] [:error] [pid 25724]   File "/usr/lib64/python2.7/threading.py", line 765, in run
+[Sun Jan 14 03:26:02.234288 2018] [:error] [pid 25724]   File "/usr/lib/python2.7/site-packages/oslo_messaging/_drivers/impl_rabbit.py", line 885, in _heartbeat_thread_job
+[Sun Jan 14 03:26:02.234297 2018] [:error] [pid 25724]   File "/usr/lib64/python2.7/contextlib.py", line 84, in helper
+[Sun Jan 14 03:26:02.234307 2018] [:error] [pid 25724] <type 'exceptions.TypeError'>: 'NoneType' object is not callable

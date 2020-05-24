@@ -1,0 +1,62 @@
+[Sun Jan 14 03:26:02.668165 2018] [auth_digest:notice] [pid 25667] AH01757: generating secret for digest authentication ...
+[Sun Jan 14 03:26:02.735803 2018] [mpm_prefork:notice] [pid 25667] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Sun Jan 14 03:26:02.735839 2018] [core:notice] [pid 25667] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Mon Jan 15 03:24:01.763096 2018] [mpm_prefork:notice] [pid 25667] AH00171: Graceful restart requested, doing restart
+[Mon Jan 15 03:24:02.530318 2018] [auth_digest:notice] [pid 25667] AH01757: generating secret for digest authentication ...
+[Mon Jan 15 03:24:02.601964 2018] [mpm_prefork:notice] [pid 25667] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Mon Jan 15 03:24:02.601993 2018] [core:notice] [pid 25667] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 15:20:53.378451 2018] [mpm_prefork:notice] [pid 25667] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 15:21:10.553925 2018] [suexec:notice] [pid 12594] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 15:21:10.564753 2018] [auth_digest:notice] [pid 12594] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 15:21:10.643279 2018] [mpm_prefork:notice] [pid 12594] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 15:21:10.643313 2018] [core:notice] [pid 12594] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 15:22:56.481657 2018] [mpm_prefork:notice] [pid 12594] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 15:23:12.817133 2018] [suexec:notice] [pid 22339] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 15:23:12.825393 2018] [auth_digest:notice] [pid 22339] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 15:23:12.903741 2018] [mpm_prefork:notice] [pid 22339] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 15:23:12.903774 2018] [core:notice] [pid 22339] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 15:43:23.136755 2018] [mpm_prefork:notice] [pid 22339] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 15:43:40.215515 2018] [suexec:notice] [pid 9571] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 15:43:40.224630 2018] [auth_digest:notice] [pid 9571] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 15:43:40.301761 2018] [mpm_prefork:notice] [pid 9571] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 15:43:40.301801 2018] [core:notice] [pid 9571] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 17:28:59.882455 2018] [mpm_prefork:notice] [pid 9571] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 17:29:17.033112 2018] [suexec:notice] [pid 8075] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 17:29:17.043648 2018] [auth_digest:notice] [pid 8075] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 17:29:17.121872 2018] [mpm_prefork:notice] [pid 8075] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 17:29:17.121908 2018] [core:notice] [pid 8075] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 17:33:56.236656 2018] [mpm_prefork:notice] [pid 8075] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 17:34:12.813468 2018] [suexec:notice] [pid 29777] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 17:34:12.822631 2018] [auth_digest:notice] [pid 29777] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 17:34:12.897869 2018] [mpm_prefork:notice] [pid 29777] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 17:34:12.897912 2018] [core:notice] [pid 29777] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 17:38:49.892414 2018] [mpm_prefork:notice] [pid 29777] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 17:39:34.839130 2018] [suexec:notice] [pid 5991] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 17:39:34.849924 2018] [auth_digest:notice] [pid 5991] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 17:39:34.926950 2018] [mpm_prefork:notice] [pid 5991] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 17:39:34.926987 2018] [core:notice] [pid 5991] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 17:39:54.096912 2018] [mpm_prefork:notice] [pid 5991] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 17:40:10.832198 2018] [suexec:notice] [pid 9783] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 17:40:10.841992 2018] [auth_digest:notice] [pid 9783] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 17:40:10.925012 2018] [mpm_prefork:notice] [pid 9783] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 17:40:10.925064 2018] [core:notice] [pid 9783] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 18:21:19.645153 2018] [mpm_prefork:notice] [pid 9783] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 18:21:36.272640 2018] [suexec:notice] [pid 21251] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 18:21:36.279715 2018] [auth_digest:notice] [pid 21251] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 18:21:36.362376 2018] [mpm_prefork:notice] [pid 21251] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 18:21:36.362422 2018] [core:notice] [pid 21251] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Thu Jan 18 18:21:36.652755 2018] [mpm_prefork:notice] [pid 21251] AH00170: caught SIGWINCH, shutting down gracefully
+[Thu Jan 18 18:21:53.425898 2018] [suexec:notice] [pid 24002] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Thu Jan 18 18:21:53.432874 2018] [auth_digest:notice] [pid 24002] AH01757: generating secret for digest authentication ...
+[Thu Jan 18 18:21:53.523895 2018] [mpm_prefork:notice] [pid 24002] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Thu Jan 18 18:21:53.524340 2018] [core:notice] [pid 24002] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Fri Jan 19 10:32:23.089698 2018] [mpm_prefork:notice] [pid 24002] AH00170: caught SIGWINCH, shutting down gracefully
+[Fri Jan 19 10:38:28.009235 2018] [suexec:notice] [pid 15909] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Jan 19 10:38:28.016971 2018] [auth_digest:notice] [pid 15909] AH01757: generating secret for digest authentication ...
+[Fri Jan 19 10:38:28.108662 2018] [mpm_prefork:notice] [pid 15909] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Fri Jan 19 10:38:28.108702 2018] [core:notice] [pid 15909] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
+[Fri Jan 19 10:51:42.716317 2018] [mpm_prefork:notice] [pid 15909] AH00170: caught SIGWINCH, shutting down gracefully
+[Fri Jan 19 10:53:14.212117 2018] [suexec:notice] [pid 31694] AH01232: suEXEC mechanism enabled (wrapper: /usr/sbin/suexec)
+[Fri Jan 19 10:53:14.219635 2018] [auth_digest:notice] [pid 31694] AH01757: generating secret for digest authentication ...
+[Fri Jan 19 10:53:14.292793 2018] [mpm_prefork:notice] [pid 31694] AH00163: Apache/2.4.6 (CentOS) mod_wsgi/3.4 Python/2.7.5 configured -- resuming normal operations
+[Fri Jan 19 10:53:14.300211 2018] [core:notice] [pid 31694] AH00094: Command line: '/usr/sbin/httpd -D FOREGROUND'
