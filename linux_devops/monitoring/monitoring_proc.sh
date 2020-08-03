@@ -90,7 +90,7 @@ ulimit_all() {
 get_ceph_service() {
     run_log "Running get_ceph_service."
     NOW=$(date "+%Y-%m-%d,%H:%M:%S")
-    ps -ef | grep '/usr/bin/ceph' | grep -v grep | awk '{print $2" "$8"@"$10}' | sed 's;/usr/bin/;;' | while read pid name
+    ps -ef | grep '/usr/bin/ceph' | grep -v '/bin/bash' | grep -v grep | awk '{print $2" "$8"@"$10}' | sed 's;/usr/bin/;;' | while read pid name
     do
         pid_fd_num=$(ls -d /proc/${pid}/fd/* 2>/dev/null | wc -l)
         pid_task_num=$(ls -d /proc/${pid}/task/* 2>/dev/null | wc -l)
