@@ -25,14 +25,10 @@ variable "datacenter" {
 variable "cluster" {
   default = "terraform-cluster01"
 }
-variable "host" {
-  default = "172.30.126.62"
-}
-variable "host_user" {
-  default = "root"
-}
-variable "host_pass" {
-  default = "P@ssw0rd"
+variable "hosts" {
+  default = [
+    {"host": "172.30.126.62", "user": "root", "pass": "P@ssw0rd"}
+  ]
 }
 variable "host_license" {
   default = "JJ2WR-25L9P-H71A8-6J20P-C0K3F"
@@ -66,9 +62,10 @@ resource "vsphere_compute_cluster" "cluster" {
  
 ### 在集群中添加主机 Host
 resource "vsphere_host" "hs1" {
-  hostname   = "${var.host}"
-  username   = "${var.host_user}"
-  password   = "${var.host_pass}"
+  count      = "${length(var.hosts)}"
+  hostname   = "${var.hosts[count.index].host}"
+  username   = "${var.hosts[count.index].user}"
+  password   = "${var.hosts[count.index].pass}"
   license    = "${var.host_license}"
   cluster    = vsphere_compute_cluster.cluster.id
   depends_on = [vsphere_compute_cluster.cluster]
@@ -79,9 +76,13 @@ resource "vsphere_distributed_virtual_switch" "dvs1" {
   name             = "${var.dvs}"
   datacenter_id    = vsphere_datacenter.dc1.moid
   host {
-    host_system_id = vsphere_host.hs1.id
+    host_system_id = vsphere_host.hs1.0.id
     devices        = "${var.dvs_uplink_nic}"
   }
+  # host {
+  #   host_system_id = vsphere_host.hs1.1.id
+  #   devices        = "${var.dvs_uplink_nic}"
+  # }
   depends_on       = [vsphere_host.hs1]
 }
 
@@ -95,7 +96,8 @@ resource "vsphere_distributed_port_group" "dvs_pg1" {
 
 ### 创建 VMkernel 适配器
 # resource "vsphere_vnic" "vnic1" {
-#   host                    = vsphere_host.hs1.id
+#   count                   = "${length(vsphere_datacenter.hs1)}"
+#   host                    = vsphere_host.hs1[count.index].id
 #   distributed_switch_port = vsphere_distributed_virtual_switch.dvs1.id
 #   distributed_port_group  = vsphere_distributed_port_group.dvs_pg1.id
 #   ipv4 {
@@ -108,7 +110,7 @@ resource "vsphere_distributed_port_group" "dvs_pg1" {
 
 ### 过滤数据存储使用的存储设备
 data "vsphere_vmfs_disks" "available" {
-  host_system_id = vsphere_host.hs1.id
+  host_system_id = vsphere_host.hs1.0.id
   rescan         = true
   filter         = "mpx.vmhba0:C0:T0:L0"
 }
@@ -116,7 +118,7 @@ data "vsphere_vmfs_disks" "available" {
 ### 创建 VMFS 类型的数据存储 Datastore
 resource "vsphere_vmfs_datastore" "datastore" {
   name           = "terraform-test"
-  host_system_id = vsphere_host.hs1.id
+  host_system_id = vsphere_host.hs1.0.id
   depends_on     = [vsphere_host.hs1]
 
   disks = "${data.vsphere_vmfs_disks.available.disks}"
@@ -150,7 +152,7 @@ resource "vsphere_vmfs_datastore" "datastore" {
 #   datacenter_id              = vsphere_datacenter.dc1.moid
 #   resource_pool_id           = vsphere_compute_cluster.cluster.resource_pool_id
 #   datastore_id               = vsphere_vmfs_datastore.datastore.id
-#   host_system_id             = vsphere_host.hs1.id
+#   host_system_id             = vsphere_host.hs1.0.id
 #   wait_for_guest_net_timeout = 0
 #   wait_for_guest_ip_timeout  = 0
 #   ovf_deploy {
@@ -172,7 +174,7 @@ resource "vsphere_virtual_machine" "vmFromRemoteOvf" {
   datacenter_id              = vsphere_datacenter.dc1.moid
   resource_pool_id           = vsphere_compute_cluster.cluster.resource_pool_id
   datastore_id               = vsphere_vmfs_datastore.datastore.id
-  host_system_id             = vsphere_host.hs1.id
+  host_system_id             = vsphere_host.hs1.0.id
   wait_for_guest_net_timeout = 0
   wait_for_guest_ip_timeout  = 0
   ovf_deploy {
