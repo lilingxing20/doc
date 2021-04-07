@@ -1,0 +1,8 @@
+#cloud-config
+chpasswd:
+  list: |
+    root:123456
+  expire: False
+ssh_pwauth: True
+manage_etc_hosts: True
+preserve_hostname: False
