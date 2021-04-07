@@ -1,0 +1,13 @@
+# Database
+cinder
+glance
+# information_schema
+keystone
+mysql
+neutron
+nova
+nova_api
+nova_cell0
+nova_placement
+# performance_schema
+# test
