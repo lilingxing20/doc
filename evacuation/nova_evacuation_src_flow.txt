@@ -1,0 +1,107 @@
+一. 当实例所在的节点发生故障不可用时，可执行evacuate操作，在另外一个新节点rebuild该实例，实现高可用。
+这可以是OpenStack计算节点HA的一种实现方案。
+
+二. API调用
+nova.servers.evacuate(server=fm['id']), on_shared_storage=True
+1. on_shared_storage参数在2.14版本后废除，自动检查是否为共享存储。
+共享存储能够保证实例在另外新节点重建后数据不丢失
+
+2. 可以设置目的主机host
+如果不设置host，nova会通过scheduler选择一个新的主机（不会分到原主机，因为rebuild函数中过滤了原主机）
+
+3. 这个调用只是发送了evacuate操作命令，具体是否真正疏散成功，无法知道
+
+
+三. 源码分析
+对应的是/nova/compute/api.py
+    @check_instance_state(vm_state=[vm_states.ACTIVE, vm_states.STOPPED,
+                                    vm_states.ERROR])
+    def evacuate(self, context, instance, host, on_shared_storage,
+                admin_password=None)
+
+1. 函数上方有装饰符 @check_instance_state
+表示在执行evacuate方法前先执行check_instance_state：检测传入的instance的vm_state是否为ACTIVE、STOPPED或ERROR。如果不是这三种状态，不能执行evacuate方法。
+
+2. 首先检测instance所在主机的状态是否为down，如果不是down（比如up），执行会出错。
+    LOG.debug('vm evacuation scheduled', instance=instance)
+    # 原实例所在主机
+    inst_host = instance.host
+    service = objects.Service.get_by_compute_host(context, inst_host)
+    # 首先确保compute主机的状态为down
+    if self.servicegroup_api.service_is_up(service):
+        LOG.error(_LE('Instance compute service state on %s '
+                      'expected to be down, but it was up.'), inst_host)
+        raise exception.ComputeServiceInUse(host=inst_host)
+
+3. 记录action执行操作
+    # 实例的任务状态设置为REBUILDING
+    instance.task_state = task_states.REBUILDING
+    instance.save(expected_task_state=[None])
+    self._record_action_start(context, instance, instance_actions.EVACUATE)
+
+4. 初始化迁移类
+    migration = objects.Migration(context,
+                                  source_compute=instance.host,
+                                  source_node=instance.node,
+                                  instance_uuid=instance_uuid,
+                                  status='accepted',
+                                  migration_type='evacuation')
+
+5. 创建迁移（这里为什么要创建migration，并没有执行迁移）
+    # 如果提供了目的主机
+    if host:
+        migration.dest_compute = host
+    migration.create()
+
+
+6. 发送消息通知实例的使用配额
+    compute_utils.notify_about_instance_usage(
+        self.notifier, context, instance, "evacuate")
+
+
+7. 最后执行task任务：rebuild_instance
+所以evacuate的本质是在新节点上执行rebuild操作
+    return self.compute_task_api.rebuild_instance(context,
+                instance=instance,
+                new_pass=admin_password,
+                injected_files=None,
+                image_ref=None,
+                orig_image_ref=None,
+                orig_sys_metadata=None,
+                bdms=None,
+                recreate=True,
+                on_shared_storage=on_shared_storage,
+                host=host)
+
+
+深入分析rebuild_instance方法，通过各种rpc调用，最终具体执行的是 /nova/conductor/manager.py
+    def rebuild_instance(self, context, instance, orig_image_ref, image_ref,
+                        injected_files, new_pass, orig_sys_metadata,
+                        bdms, recreate, on_shared_storage,
+                        preserve_ephemeral=False, host=None):
+
+（1）在选择新目的主机时先排除instance所在主机，这样能确保不会在原主机上执行rebuild操作
+    # 排除原实例所在的主机，即不能在同一个主机里进行rebuild
+    filter_properties = {'ignore_hosts': [instance.host]}
+
+    hosts = self.scheduler_client.select_destinations(context,
+                                            request_spec,
+                                            filter_properties)
+
+（2）接下来会通过scheduler模块筛选出合适的新主机
+
+（3）如果没有选出足够的合适新主机，则抛出异常
+    except exception.NoValidHost as ex:
+        with excutils.save_and_reraise_exception():
+            self._set_vm_state_and_notify(context, instance.uuid,
+                'rebuild_server',
+                {'vm_state': instance.vm_state,
+                'task_state': None}, ex, request_spec)
+            LOG.warning(_LW("No valid host found for rebuild"),
+                        instance=instance)
+
+不能选出合适的新主机，有可能是除了原节点外，其他节点都不可用（computer service status:disabled）或网络不通（computer service state:down），导致没有合适的新主机。
+
+
+--------------------- 
+参考：https://blog.csdn.net/u011692924/article/details/80618374 
