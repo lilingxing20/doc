@@ -138,6 +138,28 @@ function set_vm_root_pwd() {
     fi
 }
 
+function set_vm_root_authorized_keys() {
+    vm_boot_disk=$1
+    pub_key_file=$2
+    if [ -f "$pub_key_file" ];then
+        virt-sysprep -a ${vm_boot_disk} --ssh-inject root:file:${vm_boot_disk} --quiet
+    else
+        virt-sysprep -a ${vm_boot_disk} --ssh-inject root --quiet
+    fi
+}
+
+function check_gen_ssh_key() {
+    pub_key_file=${1:-"$HOME/.ssh/id_rsa.pub"}
+    if [ -f "$pub_key_file" ]
+    then
+        echo "Current env ssh pub key is ${pub_key_file}."
+    else
+        echo "Warnning: Current env ssh key($pub_key_file) not exist."
+        echo "Gen ssh key:"
+        ssh-keygen -f ${pub_key_file%.*} -N ""
+    fi
+}
+
 function set_vm_firstboot_script() {
     vm_boot_disk=$1
     firstboot_script_dir=$2

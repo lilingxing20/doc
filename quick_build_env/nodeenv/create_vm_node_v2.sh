@@ -119,12 +119,9 @@ for idx in $(seq "$NODE_NUM"); do
         echo "Set vm root password: ${PASSWORD:-$DEFAULT_PASSWORD}"
         set_vm_root_pwd "$vm_boot_disk" "${PASSWORD:-$DEFAULT_PASSWORD}"
         
-        # authorized_keys
-        #newvm_ssh_dir=${vm_mount_dir}root/.ssh/
-        #test -d ${newvm_ssh_dir} || mkdir -m 700 ${newvm_ssh_dir}
-        #test -f "$HOME/.ssh/id_rsa.pub" || ssh-keygen -f $HOME/.ssh/id_rsa -N ""
-        #cat $HOME/.ssh/id_rsa.pub >> ${newvm_ssh_dir}/authorized_keys
-        #chmod 600 ${newvm_ssh_dir}/authorized_keys
+        echo "Set vm root authorized_keys"
+        check_gen_ssh_key
+        set_vm_root_authorized_keys "$vm_boot_disk"
     
         echo "Make vm($VM_NAME) domain."
         make_vm_domain "$VM_NAME" "$CPU" "$MEM" "$vm_boot_disk" "$VM_NICS"
