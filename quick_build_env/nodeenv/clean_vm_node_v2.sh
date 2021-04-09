@@ -32,7 +32,10 @@ echo ${NODE_ARRAY[$idx]} | while read  VM_NAME OTHER; do
     test -d $tmp_vm_eth_dir && rm -rfv $tmp_vm_eth_dir
     test -d $tmp_vm_dir && rmdir -v $tmp_vm_dir
     vm_boot_disk=$VM_DISK_DIR/${VM_NAME}.qcow2
-    ls ${VM_DISK_DIR} |grep $VM_NAME |while read vol; do virsh vol-delete --pool $pool_name $vol; done
+    virsh vol-list --pool "$pool_name" | grep $VM_NAME | awk '{print $1}' | while read vol
+    do
+        virsh vol-delete --pool "$pool_name" "$vol"
+    done
     test -f $vm_boot_disk && rm -fv $vm_boot_disk
 done
 done

@@ -22,6 +22,9 @@ NODE_NUM=$((${#NODE_ARRAY[@]}-1))
 # VM virtual disk path.
 VM_DISK_DIR=${VM_DISK_DIR:-"/var/lib/libvirt/images"}
 
+# Set yum repo.
+REPO_FILE=${REPO_FILE:-"${SCRIPTS_DIR}/repo/CentOS-7-reg-huawei.repo"}
+
 # VM first boot script.
 FIRST_BOOT_SCRIPT_DIR="${SCRIPTS_DIR}/custom_script"
 
@@ -88,35 +91,18 @@ for idx in $(seq "$NODE_NUM"); do
         check_vm_disk_size "$base_image_size" "$vm_boot_disk_size"
         make_vm_boot_disk "$vm_boot_disk" "$vm_boot_disk_size" "$BASE_IMAGE" "$base_image_root_patition"
 
-        echo "Set vm($VM_NAME) selinux relabel"
-        set_vm_selinux_relabel "$vm_boot_disk"
-
-        echo "Set vm($VM_NAME) hostname($HOST_NAME)"
-        set_vm_hostname "$vm_boot_disk" "$HOST_NAME"
-
-        echo "Set vm($VM_NAME) etc hosts"
-        set_vm_etc_hosts "$vm_boot_disk" "$ETC_HOSTS_FILE"
-
-        echo "Set vm($VM_NAME) timezone: Asia/Shanghai"
-        set_vm_time_zone "$vm_boot_disk" "Asia/Shanghai"
-
-        echo "Set vm($VM_NAME) root password: ${PASSWORD:-$DEFAULT_PASSWORD}"
-        set_vm_root_pwd "$vm_boot_disk" "${PASSWORD:-$DEFAULT_PASSWORD}"
-        
-        echo "Set vm($VM_NAME) firstboot script:"
-        set_vm_firstboot_script "$vm_boot_disk" "$FIRST_BOOT_SCRIPT_DIR"
-
-        # set network eth* config file
-        eth_cfg_dir="$TMP_DIR/${VM_NAME}/eth/"
         echo "Make vm($VM_NAME) network eth* config file"
+        eth_cfg_dir="$TMP_DIR/${VM_NAME}/eth/"
         make_vm_eth_cfg "$eth_cfg_dir" "$VM_NETS"
-        echo "Set vm($VM_NAME) network eth* config"
-        set_vm_eth_cfg "$vm_boot_disk" "$eth_cfg_dir"
 
-        echo "Set vm($VM_NAME) root authorized_keys"
-        check_gen_ssh_key
-        set_vm_root_authorized_keys "$vm_boot_disk"
-    
+        echo "Set vm($VM_NAME) sysprep"
+        set_vm_sysprep "$vm_boot_disk" "${PASSWORD:-$DEFAULT_PASSWORD}" "$HOST_NAME" "$ETC_HOSTS_FILE" "$eth_cfg_dir" "$FIRST_BOOT_SCRIPT_DIR"
+        
+        # add repo
+        #mkdir -pv ${vm_mount_dir}etc/yum.repos.d/bak
+        #mv ${vm_mount_dir}etc/yum.repos.d/*.repo ${vm_mount_dir}etc/yum.repos.d/bak/
+        #test -f ${REPO_FILE} && cp -v ${REPO_FILE} ${vm_mount_dir}etc/yum.repos.d/
+        
         echo "Make vm($VM_NAME) domain."
         make_vm_domain "$VM_NAME" "$CPU" "$MEM" "$vm_boot_disk" "$VM_NICS"
 

@@ -3,12 +3,8 @@
 # VM virtual disk path.
 VM_DISK_DIR="/image"
 
-# Set yum repo.
-## curl -o ./repo/CentOS-7-reg-huawei.repo https://repo.huaweicloud.com/repository/conf/CentOS-7-reg.repo
-#REPO_FILE="/etc/yum.repos.d/CentOS-7-reg-huawei.repo"
-
 # VM template image.
-BASE_IMAGE="/image/CentOS-7-x86_64-Minimal-2003-passw0rd.qcow2"
+BASE_IMAGE="./image/CentOS-7-x86_64-Minimal-1810-passw0rd.qcow2"
 
 # VM password
 DEFAULT_PASSWORD="123456"
@@ -18,9 +14,9 @@ vm2_net="172.30.250.172,172.30.250.254,114.114.114.114;172.30.126.172"
 vm3_net="172.30.250.173,172.30.250.254,114.114.114.114;172.30.126.173"
 vm4_net="172.30.250.174,172.30.250.254,114.114.114.114;172.30.126.174"
 NODE_ARRAY=(
-"vm_name	hostname	cpu	memory	disks	nics		control-ip,gateway,dns1;business-ip	password"
-"k8s-node1	node1		4	8192	100;50;	net10;net20	$vm1_net				$DEFAULT_PASSWORD"
-"k8s-node2	node2		4	8192	100;	net10;net20	$vm2_net				$DEFAULT_PASSWORD"
-"k8s-node3	node3		4	8192	100;	net10;net20	$vm3_net				$DEFAULT_PASSWORD"
-"k8s-node4	node4		4	8192	100;	net10;net20	$vm4_net				$DEFAULT_PASSWORD"
+"vm_name	hostname	cpu	memory	disks	nics				control-ip,gateway,dns1;business-ip	password"
+"k8s-node1	node1		4	8192	100;50;	net10,network;br20,bridge	$vm1_net				$DEFAULT_PASSWORD"
+"k8s-node2	node2		4	8192	100;	net10,network;			$vm2_net				$DEFAULT_PASSWORD"
+"k8s-node3	node3		4	8192	100;	net10,network;			$vm3_net				$DEFAULT_PASSWORD"
+"k8s-node4	node4		4	8192	100;	net10,network;			$vm4_net				$DEFAULT_PASSWORD"
 )
