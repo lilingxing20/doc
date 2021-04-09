@@ -1,0 +1,20 @@
+# VM virtual disk path.
+VM_DISK_DIR="/image"
+
+# Set yum repo.
+## curl -o ./repo/CentOS-7-reg-huawei.repo https://repo.huaweicloud.com/repository/conf/CentOS-7-reg.repo
+REPO_FILE="/etc/yum.repos.d/CentOS-7-reg-huawei.repo"
+
+# VM template image.
+BASE_IMAGE="/image/CentOS-7-x86_64-Minimal-2003-passw0rd.qcow2"
+
+# VM password
+DEFAULT_PASSWORD="123456"
+
+vm1_net="192.168.1.211;172.30.126.211,172.30.126.254,114.114.114.114;192.168.100.211;10.10.10.211"
+vm2_net="192.168.1.212/2018:1::212;172.30.126.212/2018:126::212,172.30.126.254,114.114.114.114;192.168.100.212/2018:100::212;10.10.10.212/2018:10::212"
+NODE_ARRAY=(
+"vm_name	hostname	cpu	memory	disks	nics		bm-mgmt-ip;control-ip,gateway,dns1;tenant-ip;storage-ip	password"
+"test-node1	node1		2	2048	100;10;	net10;net20	$vm1_net						passw0rd1"
+"test-node2	node2		2	2048	100;	net10;net20	$vm2_net						passw0rd2"
+)

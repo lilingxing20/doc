@@ -3,7 +3,7 @@
 SCRIPTS_DIR=$(cd $(dirname "$0") && pwd)
 
 if [ ! -f "$1" ]; then
-    tmp=($(ls $SCRIPTS_DIR/../scene/*))
+    tmp=($(ls $SCRIPTS_DIR/scene/*))
     echo -e "\nNeed node env file: ${tmp[@]#*.}\n"
     exit 1
 fi
