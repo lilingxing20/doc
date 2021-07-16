@@ -129,6 +129,15 @@ function set_vm_etc_hosts() {
     fi
 }
 
+function set_vm_upload_file() {
+    vm_boot_disk=$1
+    upload_file_dir=$2
+    for _file in $(ls $upload_file_dir)
+    do
+      virt-sysprep -a ${vm_boot_disk} --selinux-relabel --upload $upload_file_dir/$_file:/opt/$_file --quiet
+    done
+}
+
 function set_vm_time_zone() {
     vm_boot_disk=$1
     time_zone=${2:-"Asia/Shanghai"}
@@ -150,6 +159,14 @@ function set_vm_root_authorized_keys() {
         virt-sysprep -a ${vm_boot_disk} --selinux-relabel --ssh-inject root:file:${vm_boot_disk} --quiet
     else
         virt-sysprep -a ${vm_boot_disk} --selinux-relabel --ssh-inject root --quiet
+    fi
+}
+
+function set_vm_mkdir() {
+    vm_boot_disk=$1
+    vm_new_dir=$2
+    if [ -n "$vm_new_dir" ];then
+        virt-sysprep -a ${vm_boot_disk} --selinux-relabel --mkdir $vm_new_dir --quiet
     fi
 }
 
@@ -234,27 +251,41 @@ function attach_volumes() {
     done
 }
 
+
 function set_vm_sysprep() {
     vm_boot_disk=$1
     vm_root_pwd=$2
     vm_host_name=$3
     etc_hosts_file=$4
     eth_cfg_dir=$5
-    firstboot_script_dir=$6
+    firstboot_custom_script_dir=$6
+    firstboot_deploy_script_dir=$7
+    upload_file_dir=$8
     sysprep_cmd="virt-sysprep -a ${vm_boot_disk} --selinux-relabel --quiet"
     sysprep_cmd="$sysprep_cmd --timezone Asia/Shanghai"
     [ -n "$vm_root_pwd" ] && sysprep_cmd="$sysprep_cmd --root-password password:${vm_root_pwd}"
     [ -n "$vm_host_name" ] && sysprep_cmd="$sysprep_cmd --hostname $vm_host_name"
     [ -f "$etc_hosts_file" ] && sysprep_cmd="$sysprep_cmd --upload $etc_hosts_file:/etc/hosts"
     sysprep_cmd="$sysprep_cmd --ssh-inject root"
-    for script_file in $(ls $FIRST_BOOT_SCRIPT_DIR)
-    do
-        sysprep_cmd="$sysprep_cmd --firstboot ${FIRST_BOOT_SCRIPT_DIR}/${script_file}"
-    done
     for eth_file in $(ls $eth_cfg_dir)
     do
         sysprep_cmd="$sysprep_cmd --upload $eth_cfg_dir/$eth_file:/etc/sysconfig/network-scripts/$eth_file"
     done
+    for script_file in $(ls $firstboot_custom_script_dir)
+    do
+        sysprep_cmd="$sysprep_cmd --firstboot ${firstboot_custom_script_dir}/${script_file}"
+    done
+    if [ "deploy" == "$vm_host_name" ]; then
+        for script_file in $(ls $firstboot_deploy_script_dir)
+        do
+            sysprep_cmd="$sysprep_cmd --firstboot ${firstboot_deploy_script_dir}/${script_file}"
+        done
+        for upload_file in $(ls $upload_file_dir)
+        do
+            [ -d "$upload_file_dir/$upload_file" ] && continue
+            sysprep_cmd="$sysprep_cmd --upload $upload_file_dir/$upload_file:/opt/$upload_file"
+        done
+    fi
     $sysprep_cmd
 }
 

@@ -23,7 +23,11 @@ NODE_NUM=$((${#NODE_ARRAY[@]}-1))
 VM_DISK_DIR=${VM_DISK_DIR:-"/var/lib/libvirt/images"}
 
 # VM first boot script.
-FIRST_BOOT_SCRIPT_DIR="${SCRIPTS_DIR}/custom_script"
+FIRST_BOOT_CUSTOM_SCRIPT_DIR="${SCRIPTS_DIR}/custom_script"
+FIRST_BOOT_DEPLOY_SCRIPT_DIR="${SCRIPTS_DIR}/deploy_script"
+
+# Upload file to vm /opt
+UPLOAD_FILE_DIR="${SCRIPTS_DIR}/upload_file"
 
 ENV_NAME=$(basename $1)
 TMP_DIR="${SCRIPTS_DIR}/run/${ENV_NAME}"
@@ -88,9 +92,6 @@ for idx in $(seq "$NODE_NUM"); do
         check_vm_disk_size "$base_image_size" "$vm_boot_disk_size"
         make_vm_boot_disk "$vm_boot_disk" "$vm_boot_disk_size" "$BASE_IMAGE" "$base_image_root_patition"
 
-        echo "Set vm($VM_NAME) selinux relabel"
-        set_vm_selinux_relabel "$vm_boot_disk"
-
         echo "Set vm($VM_NAME) hostname($HOST_NAME)"
         set_vm_hostname "$vm_boot_disk" "$HOST_NAME"
 
@@ -102,9 +103,15 @@ for idx in $(seq "$NODE_NUM"); do
 
         echo "Set vm($VM_NAME) root password: ${PASSWORD:-$DEFAULT_PASSWORD}"
         set_vm_root_pwd "$vm_boot_disk" "${PASSWORD:-$DEFAULT_PASSWORD}"
-        
-        echo "Set vm($VM_NAME) firstboot script:"
-        set_vm_firstboot_script "$vm_boot_disk" "$FIRST_BOOT_SCRIPT_DIR"
+
+        echo "Set vm($VM_NAME) firstboot custom script:"
+        set_vm_firstboot_script "$vm_boot_disk" "$FIRST_BOOT_CUSTOM_SCRIPT_DIR"
+        if [ "deploy" == "$HOST_NAME" ]; then
+            echo "Set vm($VM_NAME) firstboot deploy script:"
+            set_vm_firstboot_script "$vm_boot_disk" "$FIRST_BOOT_DEPLOY_SCRIPT_DIR"
+            echo "Set vm($VM_NAME) upload files:"
+            set_vm_upload_file "$vm_boot_disk" "$UPLOAD_FILE_DIR"
+        fi
 
         # set network eth* config file
         eth_cfg_dir="$TMP_DIR/${VM_NAME}/eth/"
@@ -116,7 +123,7 @@ for idx in $(seq "$NODE_NUM"); do
         echo "Set vm($VM_NAME) root authorized_keys"
         check_gen_ssh_key
         set_vm_root_authorized_keys "$vm_boot_disk"
-    
+
         echo "Make vm($VM_NAME) domain."
         make_vm_domain "$VM_NAME" "$CPU" "$MEM" "$vm_boot_disk" "$VM_NICS"
 

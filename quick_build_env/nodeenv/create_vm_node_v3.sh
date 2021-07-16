@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SCRIPTS_DIR=$(cd $(dirname "$0") && pwd)
+start_time="$(date -u +%s)"
 
 if [ ! -f "$1" ]; then
     tmp=($(ls $SCRIPTS_DIR/scene/*))
@@ -22,11 +23,12 @@ NODE_NUM=$((${#NODE_ARRAY[@]}-1))
 # VM virtual disk path.
 VM_DISK_DIR=${VM_DISK_DIR:-"/var/lib/libvirt/images"}
 
-# Set yum repo.
-REPO_FILE=${REPO_FILE:-"${SCRIPTS_DIR}/repo/CentOS-7-reg-huawei.repo"}
-
 # VM first boot script.
-FIRST_BOOT_SCRIPT_DIR="${SCRIPTS_DIR}/custom_script"
+FIRST_BOOT_CUSTOM_SCRIPT_DIR="${SCRIPTS_DIR}/custom_script"
+FIRST_BOOT_DEPLOY_SCRIPT_DIR="${SCRIPTS_DIR}/deploy_script"
+
+# Upload file to vm /opt
+UPLOAD_FILE_DIR="${SCRIPTS_DIR}/upload_file"
 
 ENV_NAME=$(basename $1)
 TMP_DIR="${SCRIPTS_DIR}/run/${ENV_NAME}"
@@ -96,13 +98,8 @@ for idx in $(seq "$NODE_NUM"); do
         make_vm_eth_cfg "$eth_cfg_dir" "$VM_NETS"
 
         echo "Set vm($VM_NAME) sysprep"
-        set_vm_sysprep "$vm_boot_disk" "${PASSWORD:-$DEFAULT_PASSWORD}" "$HOST_NAME" "$ETC_HOSTS_FILE" "$eth_cfg_dir" "$FIRST_BOOT_SCRIPT_DIR"
-        
-        # add repo
-        #mkdir -pv ${vm_mount_dir}etc/yum.repos.d/bak
-        #mv ${vm_mount_dir}etc/yum.repos.d/*.repo ${vm_mount_dir}etc/yum.repos.d/bak/
-        #test -f ${REPO_FILE} && cp -v ${REPO_FILE} ${vm_mount_dir}etc/yum.repos.d/
-        
+        set_vm_sysprep "$vm_boot_disk" "${PASSWORD:-$DEFAULT_PASSWORD}" "$HOST_NAME" "$ETC_HOSTS_FILE" "$eth_cfg_dir" "$FIRST_BOOT_CUSTOM_SCRIPT_DIR" "$FIRST_BOOT_DEPLOY_SCRIPT_DIR" "$UPLOAD_FILE_DIR"
+
         echo "Make vm($VM_NAME) domain."
         make_vm_domain "$VM_NAME" "$CPU" "$MEM" "$vm_boot_disk" "$VM_NICS"
 
@@ -113,3 +110,5 @@ for idx in $(seq "$NODE_NUM"); do
     done
 done
 
+end_time="$(date -u +%s)"
+echo "Time elapsed $(($end_time-$start_time)) second"
