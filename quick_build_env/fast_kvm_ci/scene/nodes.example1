@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# 配置说明
+#
+# VM_DISK_DIR: 虚拟机存储目录
+#
+# BASE_IMAGE: 虚拟机模板镜像
+#
+# vm_name: 虚拟机名称
+#
+# hostname: 虚拟机系统主机名
+#
+# cpu: 虚拟机虚拟cpu数量
+#
+# memory: 虚拟机内存大小
+#
+# disks: 配置虚拟机磁盘大小，单位G，多磁盘用';'隔开
+#
+# nics: 配置虚拟机网卡配置<网络名称>,<网络类型>，多网卡用';'隔开
+#   网络类型有效值有network/bridge
+#     network: 可通过virsh net-list查询
+#     bridge: 可通过brctl show查询
+#
+# 虚拟机的网络配置格式 <ip>[,gateway][,dns1] 多网络配置用';'隔开
+#
+# password: 虚拟机的密码,可以修改默认配置为指定值
+#
+# role: 可选值[deploy,mon,osd]且多个用','隔开配置如mon,osd
+#   deploy: 部署节点
+#   mon: mon服务节点
+#   osd: osd服务节点
+#   ctl: OpenStack控制服务节点
+#   com: OpenStack计算服务节点
+#   bm: 模拟裸机节点
+#
+# 注意:
+#   修改配置注意保持格式
+#   部署节点主机名必须为'deploy'
+#
+
+CURRENT_DIR=$(cd $(dirname "$0") && pwd)
+
+# VM virtual disk path.
+VM_DISK_DIR="/home/image"
+
+# VM template image.
+BASE_IMAGE="${CURRENT_DIR}/image/CentOS-7-x86_64-Minimal-1810-passw0rd-50G.qcow2"
+IMAGE_OS_RELEASE_ID="openEuler"
+
+# VM password
+DEFAULT_PASSWORD="123456"
+
+# VM attach volume targetbus: virtio,scsi
+VOLUME_TARGETBUS="scsi"
+
+# VM cnofig
+vm1_net="172.30.126.83,172.30.126.254,114.114.114.114;192.168.200.83"
+vm2_net="172.30.126.84,172.30.126.254,114.114.114.114;192.168.200.84"
+vm3_net="172.30.126.85,172.30.126.254,114.114.114.114;192.168.200.85"
+vm4_net="172.30.126.86,172.30.126.254,114.114.114.114;192.168.200.86"
+NODE_ARRAY=(
+"vm_name  hostname  cpu  memory  disks   nics                        control-ip,gateway,dns1  password           role"
+"node1    deploy    8    16384   100     br100,bridge;net200,nework  $vm1_net                 $DEFAULT_PASSWORD  deploy"
+"node2    node2     8    16384   100;50  br100,bridge;net200,nework  $vm2_net                 $DEFAULT_PASSWORD  mon,osd"
+"node3    node3     8    16384   100;50  br100,bridge;net200,nework  $vm3_net                 $DEFAULT_PASSWORD  mon,osd"
+"node4    node4     8    16384   100;50  br100,bridge;net200,nework  $vm4_net                 $DEFAULT_PASSWORD  mon,osd"
+"node5    node5     8    16384   100;50  br100,bridge;net200,nework  $vm4_net                 $DEFAULT_PASSWORD  ctl,com"
+)
+
+
+# vim: tabstop=4 shiftwidth=4 softtabstop=4

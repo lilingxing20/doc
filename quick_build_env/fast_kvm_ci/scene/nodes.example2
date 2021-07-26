@@ -1,0 +1,36 @@
+#!/bin/bash
+
+
+CURRENT_DIR=$(cd $(dirname "$0") && pwd)
+
+# VM virtual disk path.
+VM_DISK_DIR="/home/image"
+
+# VM template image.
+BASE_IMAGE=/home/openEuler-20.03-LTS-SP2-aarch64-mini-50G.qcow2
+IMAGE_OS_RELEASE_NAME="openEuler"
+
+# VM password
+DEFAULT_PASSWORD="passw0rd"
+
+# VM attach volume targetbus: virtio,scsi
+VOLUME_TARGETBUS="scsi"
+
+node_nic="pxe,net;mgmt,net;tenant,net;storpub,net;storpri,net"
+
+# VM cnofig
+vm1_net="192.168.40.31;192.168.41.31,192.168.41.254,114.114.114.114;dhcp;192.168.42.31;192.168.43.31"
+vm2_net="192.168.40.32;192.168.41.32,192.168.41.254,114.114.114.114;dhcp;192.168.42.32;192.168.43.32"
+vm3_net="192.168.40.33;192.168.41.33,192.168.41.254,114.114.114.114;dhcp;192.168.42.33;192.168.43.33"
+vm4_net="192.168.40.34;192.168.41.34,192.168.41.254,114.114.114.114;dhcp;192.168.42.34;192.168.43.34"
+
+NODE_ARRAY=(
+"vm_name hostname cpu memory disks        nics       control-ip,gateway,dns1  password           role"
+"node1   node1    8   16384  100          $node_nic  $vm1_net                 $DEFAULT_PASSWORD  node"
+"node2   node2    8   16384  100;30;30;30 $node_nic  $vm2_net                 $DEFAULT_PASSWORD  node"
+"node3   node3    8   16384  100;30;30;30 $node_nic  $vm3_net                 $DEFAULT_PASSWORD  node"
+"node4   node4    8   16384  100;30;30;30 $node_nic  $vm4_net                 $DEFAULT_PASSWORD  node"
+)
+
+
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
